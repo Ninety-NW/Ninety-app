@@ -44,4 +44,4 @@ Ninety doesn't just track; it acts. The system is designed around a precision mo
 - **Hardware**: iPhone (XS or newer) + Apple Watch (Series 4 or newer)
 
 ---
-*Ninety: Precision waking for a better life.*.
+*Ninety: Precision waking for a better life.*
