@@ -1,0 +1,26 @@
+/* AppShortcuts.strings - Siri phrase index for Ninety iOS app.
+   AppShortcut phrases interpolate only AppEnum/AppEntity parameters. */
+
+/* SetNinetyAlarmIntent */
+"Svegliami con ${applicationName} ${weekday}" = "Svegliami con ${applicationName} ${weekday}";
+"Wake me up with ${applicationName} on ${weekday}" = "Wake me up with ${applicationName} on ${weekday}";
+"Imposta la sveglia ${applicationName}" = "Imposta la sveglia ${applicationName}";
+"Set the ${applicationName} alarm" = "Set the ${applicationName} alarm";
+
+/* GetNinetyAlarmIntent */
+"A che ora è la sveglia di ${applicationName}" = "A che ora è la sveglia di ${applicationName}";
+"Dimmi la prossima sveglia ${applicationName}" = "Dimmi la prossima sveglia ${applicationName}";
+"A che ora è la sveglia ${applicationName} di ${weekday}" = "A che ora è la sveglia ${applicationName} di ${weekday}";
+"What time is the ${applicationName} alarm" = "What time is the ${applicationName} alarm";
+"What time is the ${applicationName} alarm on ${weekday}" = "What time is the ${applicationName} alarm on ${weekday}";
+
+/* UpdateNinetyAlarmIntent */
+"Sposta la sveglia ${applicationName} di ${weekday}" = "Sposta la sveglia ${applicationName} di ${weekday}";
+"Move the ${applicationName} alarm on ${weekday}" = "Move the ${applicationName} alarm on ${weekday}";
+"Sposta la sveglia ${applicationName}" = "Sposta la sveglia ${applicationName}";
+"Move the ${applicationName} alarm" = "Move the ${applicationName} alarm";
+
+/* CancelNinetyAlarmIntent */
+"Annulla la sveglia ${applicationName} di ${weekday}" = "Annulla la sveglia ${applicationName} di ${weekday}";
+"Disattiva la sveglia ${applicationName} di ${weekday}" = "Disattiva la sveglia ${applicationName} di ${weekday}";
+"Cancel the ${applicationName} alarm on ${weekday}" = "Cancel the ${applicationName} alarm on ${weekday}";

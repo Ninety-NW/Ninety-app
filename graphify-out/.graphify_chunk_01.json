@@ -1,0 +1,1031 @@
+{
+  "nodes": [
+    {
+      "id": "SleepSessionManager",
+      "label": "SleepSessionManager",
+      "type": "class",
+      "file": "Ninety/SleepSessionManager.swift",
+      "description": "God-node singleton that manages WCSession communication with Apple Watch, receives sensor payloads, aggregates 30s epochs, runs CoreML sleep stage predictions via modello25, applies mode-smoothing, and triggers dynamic alarm via multi-epoch confirmation window. Implements WCSessionDelegate, ObservableObject.",
+      "properties": ["singleton", "NSObject_subclass", "WCSessionDelegate", "ObservableObject"]
+    },
+    {
+      "id": "SmartAlarmManager",
+      "label": "SmartAlarmManager",
+      "type": "class",
+      "file": "Ninety/SmartAlarmManager.swift",
+      "description": "MainActor singleton managing dual-layer alarm scheduling: Layer 1 (absolute failsafe via AlarmKit) and Layer 2 (dynamic heuristic trigger). Handles AlarmKit authorization, monitoring countdown timers, post-alarm speech feedback, and mock alarm fallback via UNUserNotificationCenter.",
+      "properties": ["singleton", "MainActor", "UNUserNotificationCenterDelegate", "ObservableObject"]
+    },
+    {
+      "id": "WatchSensorManager",
+      "label": "WatchSensorManager",
+      "type": "class",
+      "file": "NinetyWatch Watch App/WatchSensorManager.swift",
+      "description": "God-node singleton on watchOS. Manages WKExtendedRuntimeSession (smart alarm type), HealthKit heart rate streaming via HKAnchoredObjectQuery, CoreMotion accelerometer at 50Hz, payload compilation every 5s, and WCSession transmission to iPhone. Handles pending schedule queueing when watch app is backgrounded.",
+      "properties": ["singleton", "WKExtendedRuntimeSessionDelegate", "WCSessionDelegate", "ObservableObject"]
+    },
+    {
+      "id": "HapticWakeUpManager",
+      "label": "HapticWakeUpManager",
+      "type": "class",
+      "file": "NinetyWatch Watch App/HapticWakeUpManager.swift",
+      "description": "MainActor singleton on watchOS that plays a progressive 4-phase haptic wake-up sequence (gentle->medium->strong->urgent) using WKInterfaceDevice, ramping over ~66 seconds total."
+    },
+    {
+      "id": "ScheduleViewModel",
+      "label": "ScheduleViewModel",
+      "type": "class",
+      "file": "Ninety/View/Schedule/ScheduleViewModel.swift",
+      "description": "MainActor ObservableObject managing per-weekday wake times (UserDefaults-backed), scheduled weekday set, alarm scheduling lifecycle via SmartAlarmManager, and user-friendly status string translation. Central MVVM ViewModel for the schedule UI."
+    },
+    {
+      "id": "SleepStage",
+      "label": "SleepStage",
+      "type": "enum",
+      "file": "Ninety/SleepSessionManager.swift",
+      "description": "Nested enum in SleepSessionManager mapping CoreML model output to 4 sleep stages: wake(0), light/N1N2(1), deep/N3(2), REM(3). Light sleep triggers alarm; deep and REM inhibit it."
+    },
+    {
+      "id": "EpochAggregate",
+      "label": "EpochAggregate",
+      "type": "struct",
+      "file": "Ninety/SleepSessionManager.swift",
+      "description": "Private struct holding per-30s-epoch aggregated sensor data: HR mean/std/range, motion magnitude mean/max, and motion jerk for feature engineering."
+    },
+    {
+      "id": "SensorPayload",
+      "label": "SensorPayload",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/WatchSensorManager.swift",
+      "description": "Codable struct transmitted from Watch to iPhone containing UUID, timestamp, HR samples array, motion count, accelerometer variance, and isMockData flag."
+    },
+    {
+      "id": "NinetyApp",
+      "label": "NinetyApp",
+      "type": "struct",
+      "file": "Ninety/NinetyApp.swift",
+      "description": "iOS @main App entry point. Initializes SleepSessionManager.shared and SmartAlarmManager.shared singletons at launch for early WCSession/UNNotification delegate binding. Updates AppShortcut parameters. Root view is OnboardingView."
+    },
+    {
+      "id": "NinetyWatch_Watch_AppApp",
+      "label": "NinetyWatch_Watch_AppApp",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/NinetyWatchApp.swift",
+      "description": "watchOS @main App entry point. Uses WKApplicationDelegateAdaptor for WatchAppDelegate. Root view is ContentView."
+    },
+    {
+      "id": "WatchAppDelegate",
+      "label": "WatchAppDelegate",
+      "type": "class",
+      "file": "NinetyWatch Watch App/NinetyWatchApp.swift",
+      "description": "WKApplicationDelegate that initializes WatchSensorManager.shared, updates NinetyWatchShortcuts parameters, refreshes connection status on activate, arms pending schedules, and handles background tasks."
+    },
+    {
+      "id": "WatchIntentRelay",
+      "label": "WatchIntentRelay",
+      "type": "actor",
+      "file": "NinetyWatch Watch App/Intents/WatchIntentRelay.swift",
+      "description": "Thread-safe actor wrapping WCSession.sendMessage in async/await for cross-device Siri intent relay. Watch intents send action+params to iPhone, await dialog string response."
+    },
+    {
+      "id": "SetNinetyAlarmIntent",
+      "label": "SetNinetyAlarmIntent",
+      "type": "struct",
+      "file": "Ninety/NinetySiriShortcuts.swift",
+      "description": "iOS AppIntent for Siri: 'Set the Ninety alarm'. Takes optional limitTime Date parameter, resolves via ScheduleViewModel fallback, schedules via SmartAlarmManager.scheduleSleepSession()."
+    },
+    {
+      "id": "GetNinetyAlarmIntent",
+      "label": "GetNinetyAlarmIntent",
+      "type": "struct",
+      "file": "Ninety/NinetySiriShortcuts.swift",
+      "description": "iOS AppIntent for Siri: 'Check the Ninety alarm'. Queries ScheduleViewModel for weekday alarm times and SmartAlarmManager.alarmStatus for active state."
+    },
+    {
+      "id": "UpdateNinetyAlarmIntent",
+      "label": "UpdateNinetyAlarmIntent",
+      "type": "struct",
+      "file": "Ninety/NinetySiriShortcuts.swift",
+      "description": "iOS AppIntent for Siri: 'Move the Ninety alarm'. Takes offsetMinutes and direction parameters, cancels existing alarm via SmartAlarmManager, reschedules with offset."
+    },
+    {
+      "id": "NinetyShortcutsProvider",
+      "label": "NinetyShortcutsProvider",
+      "type": "struct",
+      "file": "Ninety/NinetySiriShortcuts.swift",
+      "description": "iOS AppShortcutsProvider registering NinetyPingIntent, SetNinetyAlarmIntent, GetNinetyAlarmIntent, UpdateNinetyAlarmIntent with Italian and English Siri phrases."
+    },
+    {
+      "id": "NinetyWatchShortcuts",
+      "label": "NinetyWatchShortcuts",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/NinetyWatchShortcuts.swift",
+      "description": "watchOS AppShortcutsProvider registering WatchSetNinetyAlarmIntent, WatchGetNinetyAlarmIntent, WatchUpdateNinetyAlarmIntent with Italian and English Siri phrases. Routes through WatchIntentRelay."
+    },
+    {
+      "id": "WatchSetNinetyAlarmIntent",
+      "label": "WatchSetNinetyAlarmIntent",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/Intents/WatchSetNinetyAlarmIntent.swift",
+      "description": "watchOS AppIntent that relays 'set alarm' to iPhone via WatchIntentRelay.relay(action: setAlarm)."
+    },
+    {
+      "id": "WatchGetNinetyAlarmIntent",
+      "label": "WatchGetNinetyAlarmIntent",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+      "description": "watchOS AppIntent that relays 'get alarm' query to iPhone via WatchIntentRelay.relay(action: getAlarm)."
+    },
+    {
+      "id": "WatchUpdateNinetyAlarmIntent",
+      "label": "WatchUpdateNinetyAlarmIntent",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+      "description": "watchOS AppIntent that relays 'update alarm' with offsetMinutes and direction to iPhone via WatchIntentRelay.relay(action: updateAlarm)."
+    },
+    {
+      "id": "NinetyPingIntent",
+      "label": "NinetyPingIntent",
+      "type": "struct",
+      "file": "Ninety/NinetySiriShortcuts.swift",
+      "description": "Minimal diagnostic AppIntent with no parameters to test Siri infrastructure. Returns 'Ninety funziona!' dialog."
+    },
+    {
+      "id": "AlarmOffsetDirection",
+      "label": "AlarmOffsetDirection",
+      "type": "enum",
+      "file": "Ninety/NinetySiriShortcuts.swift",
+      "description": "AppEnum for forward/backward alarm offset direction used by UpdateNinetyAlarmIntent."
+    },
+    {
+      "id": "WatchAlarmOffsetDirection",
+      "label": "WatchAlarmOffsetDirection",
+      "type": "enum",
+      "file": "NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+      "description": "watchOS mirror of AlarmOffsetDirection AppEnum for WatchUpdateNinetyAlarmIntent."
+    },
+    {
+      "id": "DiagnosticsView",
+      "label": "DiagnosticsView",
+      "type": "struct",
+      "file": "Ninety/DiagnosticsView.swift",
+      "description": "SwiftUI diagnostics dashboard showing session info, alarm status, live watch sensor data, ML stage predictions, confirmation window state, test mode controls, AlarmKit debug actions, and scrollable log stream with colored entries."
+    },
+    {
+      "id": "DiagnosticsView_Root",
+      "label": "DiagnosticsView (Root)",
+      "type": "struct",
+      "file": "Ninety/View/Root/DiagnosticsView.swift",
+      "description": "Alternate/original DiagnosticsView in Root directory showing session, status, watch connectivity, sleep classifier, AlarmKit constraints, log stream, and clock debug logs. Slightly different layout from the top-level DiagnosticsView."
+    },
+    {
+      "id": "ScheduleView",
+      "label": "ScheduleView",
+      "type": "struct",
+      "file": "Ninety/View/Schedule/ScheduleView.swift",
+      "description": "Main alarm scheduling screen with custom infinite-scroll wheel time picker, day-of-week selector, alarm on/off toggle, glass pill morphing, guided tour integration, and navigation to Settings/Diagnostics/TestMode."
+    },
+    {
+      "id": "OnboardingView",
+      "label": "OnboardingView",
+      "type": "struct",
+      "file": "Ninety/View/Root/OnboardingView.swift",
+      "description": "First-launch onboarding screen with Ninety logo, tagline, 'Get Started' button. Transitions to ScheduleView and triggers GuidedTourView on first install."
+    },
+    {
+      "id": "GuidedTourView",
+      "label": "GuidedTourView",
+      "type": "struct",
+      "file": "Ninety/View/Root/GuidedTourView.swift",
+      "description": "6-step spotlight-based interactive onboarding tour (welcome, timePicker, daySelector, alarmToggle, privacy, ready). Uses TourFrameStore for geometry-based spotlight cutouts with glass card tooltips."
+    },
+    {
+      "id": "TourFrameStore",
+      "label": "TourFrameStore",
+      "type": "class",
+      "file": "Ninety/View/Root/GuidedTourView.swift",
+      "description": "ObservableObject storing CGRect frames for clockPill, daySelector, and alarmButton captured via onGeometryChange for GuidedTourView spotlight positioning."
+    },
+    {
+      "id": "SettingsView",
+      "label": "SettingsView",
+      "type": "struct",
+      "file": "Ninety/View/Settings/SettingsView.swift",
+      "description": "Settings screen with smart alarm config (wake window, haptic pre-alarm), appearance theme picker (light/night/auto with visual previews), permissions toggles, language picker, about sheet, and replay tour button."
+    },
+    {
+      "id": "SettingsViewModel",
+      "label": "SettingsViewModel",
+      "type": "class",
+      "file": "Ninety/View/Settings/SettingsView.swift",
+      "description": "ObservableObject for SettingsView managing smartWakeWindow, hapticAlarm, selectedTheme, hapticFeedbackEnabled, notification status, and HealthKit save toggle."
+    },
+    {
+      "id": "TabBarView",
+      "label": "TabBarView",
+      "type": "struct",
+      "file": "Ninety/View/Root/TabBarView.swift",
+      "description": "Legacy TabView with Sleep (HomeView) and Settings tabs. Appears to be from the original RestfulNight codebase, likely superseded by the current navigation architecture."
+    },
+    {
+      "id": "ContentView_Watch",
+      "label": "ContentView (Watch)",
+      "type": "struct",
+      "file": "NinetyWatch Watch App/ContentView.swift",
+      "description": "watchOS root view with vertical page TabView containing minimalist node view (connectivity indicator + status) and DebugNodeView (session state, payload info, manual test controls)."
+    },
+    {
+      "id": "AppLanguage",
+      "label": "AppLanguage",
+      "type": "enum",
+      "file": "Ninety/Utilities/AppLanguage.swift",
+      "description": "CaseIterable enum with 5 languages (en, it, es, zh, ar). Provides String.localized(for:) extension backed by comprehensive translation dictionaries for the entire UI."
+    },
+    {
+      "id": "AppTheme",
+      "label": "AppTheme",
+      "type": "enum",
+      "file": "Ninety/View/Schedule/RedesignedComponents.swift",
+      "description": "Theme enum with light, night, system variants. Used via @AppStorage for color scheme selection."
+    },
+    {
+      "id": "HorizonBackground",
+      "label": "HorizonBackground",
+      "type": "struct",
+      "file": "Ninety/View/Schedule/RedesignedComponents.swift",
+      "description": "Reusable background view with elliptical gradient glow at bottom, adapting color intensity based on isActive state and light/dark color scheme. Used across all major screens."
+    },
+    {
+      "id": "CustomWheelPicker",
+      "label": "CustomWheelPicker",
+      "type": "struct",
+      "file": "Ninety/View/Schedule/ScheduleView.swift",
+      "description": "Infinite-scroll vertical wheel picker using VStack (not LazyVStack for pixel-perfect scrollPosition). Implements haptic feedback on value change, 10x multiplier for infinite loop illusion."
+    },
+    {
+      "id": "modello25",
+      "label": "modello25.mlmodelc",
+      "type": "ml_model",
+      "file": "Ninety/SleepSessionManager.swift",
+      "description": "CoreML sleep stage classification model loaded at init. Takes 25 engineered features (rolling HR/motion statistics with log1p transforms) and outputs target integer (0=wake, 1=light, 2=deep, 3=REM)."
+    },
+    {
+      "id": "ScheduledSleepSession",
+      "label": "ScheduledSleepSession",
+      "type": "struct",
+      "file": "Ninety/SmartAlarmManager.swift",
+      "description": "Nested struct in SmartAlarmManager holding wakeUpDate and monitoringStartDate (wakeUp minus 30min lead time)."
+    },
+    {
+      "id": "techdoc",
+      "label": "iOS/watchOS Sleep Tracking Technical Document",
+      "type": "document",
+      "file": "iOS_watchOS Sleep Tracking Technical Document.md",
+      "description": "Comprehensive 6-part architectural document detailing: HealthKit sleep staging limitations, real-time latency constraints, WKExtendedRuntimeSession edge node architecture, WatchConnectivity pipeline, iOS heuristic inference, and AlarmKit dual-layer scheduling strategy."
+    },
+    {
+      "id": "techdoc_rationale_no_healthkit_realtime",
+      "label": "Rationale: HealthKit sleep stages unusable for real-time",
+      "type": "rationale",
+      "file": "iOS_watchOS Sleep Tracking Technical Document.md",
+      "description": "Explains WHY native HKCategoryValueSleepAnalysis cannot trigger alarms: epoch batching delays, retrospective classification needing future context, and HKObserverQuery throttling to max 1x/hour. Forces custom heuristic approach."
+    },
+    {
+      "id": "techdoc_rationale_no_hkworkoutsession",
+      "label": "Rationale: HKWorkoutSession rejected for sleep",
+      "type": "rationale",
+      "file": "iOS_watchOS Sleep Tracking Technical Document.md",
+      "description": "Explains WHY HKWorkoutSession is unsuitable despite continuous sensor access: corrupts Activity Rings with false exercise data during sleep, triggers 'Exercise goal reached' notifications at night, and causes unnecessary battery drain from maximum sensor polling."
+    },
+    {
+      "id": "techdoc_rationale_sendmessage",
+      "label": "Rationale: sendMessage over Context/UserInfo",
+      "type": "rationale",
+      "file": "iOS_watchOS Sleep Tracking Technical Document.md",
+      "description": "Explains WHY WCSession.sendMessage is mandatory: updateApplicationContext overwrites previous data (lossy), transferUserInfo has high latency (minutes to hours). Only sendMessage provides millisecond-latency interactive transfer needed for real-time sleep stage streaming."
+    },
+    {
+      "id": "techdoc_rationale_daisy_chain",
+      "label": "Rationale: Daisy-chained background tasks",
+      "type": "rationale",
+      "file": "iOS_watchOS Sleep Tracking Technical Document.md",
+      "description": "Explains WHY continuous background task renewal is needed: iOS auto-suspends app after seconds, watchdog terminates apps perceived as resource-abusive. Chaining beginBackgroundTask calls on each incoming WC payload maintains execution for full 30-min window."
+    },
+    {
+      "id": "techdoc_rationale_dual_layer_alarm",
+      "label": "Rationale: Dual-layer alarm scheduling",
+      "type": "rationale",
+      "file": "iOS_watchOS Sleep Tracking Technical Document.md",
+      "description": "Explains WHY both a failsafe absolute alarm and dynamic heuristic trigger are needed: edge devices prone to failure (watch battery depletion, Bluetooth disconnect, app termination). AlarmKit failsafe guarantees delivery regardless of app lifecycle."
+    },
+    {
+      "id": "liquidglass_doc",
+      "label": "Liquid Glass Reference Document",
+      "type": "document",
+      "file": "Ninety/Documentation/LiquidGlassReference.md",
+      "description": "Comprehensive reference for iOS 26 Liquid Glass design system covering .glassEffect modifier, GlassEffectContainer, glassEffectID morphing, glassEffectUnion, .glass/.glassProminent button styles, and backward compatibility patterns.",
+      "source_url": "https://conor.fyi/writing/liquid-glass-reference"
+    },
+    {
+      "id": "readme",
+      "label": "README.md",
+      "type": "document",
+      "file": "README.md",
+      "description": "Project README describing Ninety as a SwiftUI sleep tracker with MVVM pattern, iOS 17+ compatibility, sleep insights/trends, and personalized goals."
+    },
+    {
+      "id": "ninety_logo",
+      "label": "Ninety Brand Logo",
+      "type": "image",
+      "file": "Ninety/Assets.xcassets/Logo design.imageset/Ninety Logo.png",
+      "description": "Crescent moon design with overlapping translucent circular shapes in cool blue-teal tones against a dark navy background. A four-pointed star nestles in the crescent opening. Glassmorphic aesthetic with subtle inner glow suggesting sleep/night theme."
+    },
+    {
+      "id": "ninety_ios_appicon",
+      "label": "Ninety iOS App Icon",
+      "type": "image",
+      "file": "Ninety/Assets.xcassets/AppIcon.appiconset/NinetyLogo-ezgif.com-resize.png",
+      "description": "Same crescent moon + star design as the brand logo, formatted as iOS app icon with rounded corners. Dark navy background, blue-teal glassmorphic moon."
+    },
+    {
+      "id": "ninety_watchos_appicon",
+      "label": "Ninety watchOS App Icon",
+      "type": "image",
+      "file": "NinetyWatch Watch App/Assets.xcassets/AppIcon.appiconset/NinetyLogo-ezgif.com-resize.png",
+      "description": "Identical design to iOS app icon, sized for watchOS. Same crescent moon + four-pointed star in blue-teal glassmorphic style."
+    },
+    {
+      "id": "test_any",
+      "label": "test_any.swift",
+      "type": "test_file",
+      "file": "test_any.swift",
+      "description": "Small test script verifying PropertyListSerialization behavior with optional nil values in WatchConnectivity message dictionaries."
+    },
+    {
+      "id": "GlassButtonStyle",
+      "label": "GlassButtonStyle",
+      "type": "struct",
+      "file": "Ninety/View/Schedule/RedesignedComponents.swift",
+      "description": "Custom ButtonStyle providing .glass (translucent) and .glassProminent (opaque) variants using iOS 26 Liquid Glass modifiers."
+    },
+    {
+      "id": "GlassEffectContainer_usage",
+      "label": "GlassEffectContainer usage pattern",
+      "type": "pattern",
+      "file": "Ninety/DiagnosticsView.swift",
+      "description": "Pattern of wrapping diagnostic sections in GlassEffectContainer for unified glass composition and morphing between glass elements."
+    }
+  ],
+  "edges": [
+    {
+      "source": "NinetyApp",
+      "target": "SleepSessionManager",
+      "relationship": "initializes_singleton",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "NinetyApp.init() accesses SleepSessionManager.shared to trigger early WCSession delegate binding"
+    },
+    {
+      "source": "NinetyApp",
+      "target": "SmartAlarmManager",
+      "relationship": "initializes_singleton",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "NinetyApp.init() accesses SmartAlarmManager.shared to bind UNUserNotificationCenter delegate"
+    },
+    {
+      "source": "NinetyApp",
+      "target": "NinetyShortcutsProvider",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "NinetyApp.init() calls NinetyShortcutsProvider.updateAppShortcutParameters()"
+    },
+    {
+      "source": "NinetyApp",
+      "target": "OnboardingView",
+      "relationship": "presents_root_view",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyApp",
+      "target": "ScheduleViewModel",
+      "relationship": "creates_as_StateObject",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "WatchAppDelegate",
+      "target": "WatchSensorManager",
+      "relationship": "initializes_singleton",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "applicationDidFinishLaunching accesses WatchSensorManager.shared"
+    },
+    {
+      "source": "WatchAppDelegate",
+      "target": "NinetyWatchShortcuts",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "applicationDidFinishLaunching calls updateAppShortcutParameters()"
+    },
+    {
+      "source": "NinetyWatch_Watch_AppApp",
+      "target": "WatchAppDelegate",
+      "relationship": "uses_delegate_adaptor",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyWatch_Watch_AppApp",
+      "target": "ContentView_Watch",
+      "relationship": "presents_root_view",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "SleepSessionManager",
+      "target": "SmartAlarmManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "evaluateDynamicAlarmTrigger calls SmartAlarmManager.shared.triggerDynamicAlarm() when light sleep confirmed"
+    },
+    {
+      "source": "SleepSessionManager",
+      "target": "SleepStage",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "SleepSessionManager",
+      "target": "EpochAggregate",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "SleepSessionManager",
+      "target": "modello25",
+      "relationship": "loads_model",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "loadModel() loads modello25.mlmodelc from bundle into MLModel"
+    },
+    {
+      "source": "SleepSessionManager",
+      "target": "SensorPayload",
+      "relationship": "decodes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "handleIncomingPayload decodes SensorPayload from WCSession messages"
+    },
+    {
+      "source": "SleepSessionManager",
+      "target": "ScheduleViewModel",
+      "relationship": "instantiates",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "handleRelayIntent creates ScheduleViewModel() to access nextUpcomingSession for relay update logic"
+    },
+    {
+      "source": "SmartAlarmManager",
+      "target": "SleepSessionManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "scheduleSystemAlarmAfterClearing calls SleepSessionManager.shared.startWatchSession(); triggerDynamicAlarm calls pauseWatchMonitoring and triggerWatchHapticWakeUp"
+    },
+    {
+      "source": "SmartAlarmManager",
+      "target": "ScheduledSleepSession",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "WatchSensorManager",
+      "target": "SensorPayload",
+      "relationship": "creates_and_transmits",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "compileAndTransmitPayload creates SensorPayload and sends via WCSession"
+    },
+    {
+      "source": "WatchSensorManager",
+      "target": "HapticWakeUpManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "processIncomingCommand dispatches HapticWakeUpManager.shared.startGradualWakeUp() on hapticWakeUp action"
+    },
+    {
+      "source": "ScheduleViewModel",
+      "target": "SmartAlarmManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "scheduleSession calls SmartAlarmManager.shared.rescheduleSystemAlarm; cancelSession calls cancelSession; uses ScheduledSleepSession and monitoringLeadTime"
+    },
+    {
+      "source": "ScheduleViewModel",
+      "target": "SleepSessionManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "toggleScheduledWeekday and updateWakeTime call SleepSessionManager.shared.log for UI interaction logging"
+    },
+    {
+      "source": "OnboardingView",
+      "target": "ScheduleView",
+      "relationship": "navigates_to",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "When isOnBoarding is false, body returns ScheduleView()"
+    },
+    {
+      "source": "OnboardingView",
+      "target": "GuidedTourView",
+      "relationship": "triggers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "On first install, sets showGuidedTour=true after Get Started button"
+    },
+    {
+      "source": "ScheduleView",
+      "target": "ScheduleViewModel",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "@EnvironmentObject viewModel: ScheduleViewModel"
+    },
+    {
+      "source": "ScheduleView",
+      "target": "SmartAlarmManager",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "@ObservedObject smartAlarm = SmartAlarmManager.shared"
+    },
+    {
+      "source": "ScheduleView",
+      "target": "SleepSessionManager",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "@ObservedObject sleepManager = SleepSessionManager.shared"
+    },
+    {
+      "source": "ScheduleView",
+      "target": "SettingsView",
+      "relationship": "navigates_to",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "ScheduleView",
+      "target": "DiagnosticsView",
+      "relationship": "presents_sheet",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "ScheduleView",
+      "target": "GuidedTourView",
+      "relationship": "overlays",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Conditionally overlays GuidedTourView when showGuidedTour is true"
+    },
+    {
+      "source": "ScheduleView",
+      "target": "CustomWheelPicker",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "DiagnosticsView",
+      "target": "SleepSessionManager",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "DiagnosticsView",
+      "target": "SmartAlarmManager",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "DiagnosticsView",
+      "target": "ScheduleViewModel",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "ContentView_Watch",
+      "target": "WatchSensorManager",
+      "relationship": "observes",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "SettingsView",
+      "target": "SettingsViewModel",
+      "relationship": "creates_as_StateObject",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "SettingsView",
+      "target": "AppLanguage",
+      "relationship": "uses",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyShortcutsProvider",
+      "target": "SetNinetyAlarmIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyShortcutsProvider",
+      "target": "GetNinetyAlarmIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyShortcutsProvider",
+      "target": "UpdateNinetyAlarmIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyShortcutsProvider",
+      "target": "NinetyPingIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyWatchShortcuts",
+      "target": "WatchSetNinetyAlarmIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyWatchShortcuts",
+      "target": "WatchGetNinetyAlarmIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "NinetyWatchShortcuts",
+      "target": "WatchUpdateNinetyAlarmIntent",
+      "relationship": "registers",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "WatchSetNinetyAlarmIntent",
+      "target": "WatchIntentRelay",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "perform() calls WatchIntentRelay.shared.relay(action: setAlarm)"
+    },
+    {
+      "source": "WatchGetNinetyAlarmIntent",
+      "target": "WatchIntentRelay",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "perform() calls WatchIntentRelay.shared.relay(action: getAlarm)"
+    },
+    {
+      "source": "WatchUpdateNinetyAlarmIntent",
+      "target": "WatchIntentRelay",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "perform() calls WatchIntentRelay.shared.relay(action: updateAlarm)"
+    },
+    {
+      "source": "WatchIntentRelay",
+      "target": "SleepSessionManager",
+      "relationship": "relays_to",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "WCSession.sendMessage with intentRelay key is received by SleepSessionManager.handleIncomingPayloadWithReply"
+    },
+    {
+      "source": "SetNinetyAlarmIntent",
+      "target": "SmartAlarmManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "perform() calls SmartAlarmManager.shared.scheduleSleepSession(endingAt:)"
+    },
+    {
+      "source": "SetNinetyAlarmIntent",
+      "target": "ScheduleViewModel",
+      "relationship": "reads",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Fallback: queries ScheduleViewModel().nextUpcomingSession?.wakeUpDate when no limitTime provided"
+    },
+    {
+      "source": "GetNinetyAlarmIntent",
+      "target": "SmartAlarmManager",
+      "relationship": "reads",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Reads SmartAlarmManager.shared.alarmStatus"
+    },
+    {
+      "source": "GetNinetyAlarmIntent",
+      "target": "ScheduleViewModel",
+      "relationship": "reads",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Queries ScheduleViewModel scheduledWeekdays and wakeTimes for weekday alarm resolution"
+    },
+    {
+      "source": "UpdateNinetyAlarmIntent",
+      "target": "SmartAlarmManager",
+      "relationship": "calls",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Calls manager.cancelSession() then manager.scheduleSleepSession(endingAt:)"
+    },
+    {
+      "source": "UpdateNinetyAlarmIntent",
+      "target": "ScheduleViewModel",
+      "relationship": "reads",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Reads ScheduleViewModel().nextUpcomingSession to get current alarm time"
+    },
+    {
+      "source": "UpdateNinetyAlarmIntent",
+      "target": "AlarmOffsetDirection",
+      "relationship": "uses_parameter",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "WatchUpdateNinetyAlarmIntent",
+      "target": "WatchAlarmOffsetDirection",
+      "relationship": "uses_parameter",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "GuidedTourView",
+      "target": "TourFrameStore",
+      "relationship": "reads",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Uses @EnvironmentObject frameStore for spotlight frame positions"
+    },
+    {
+      "source": "test_any",
+      "target": "SensorPayload",
+      "relationship": "tests_serialization_of",
+      "type": "INFERRED",
+      "confidence_score": 0.7,
+      "detail": "Tests PropertyListSerialization validity of WatchConnectivity-style message dictionaries with optional values, similar to watchStatus payloads"
+    },
+    {
+      "source": "techdoc_rationale_no_healthkit_realtime",
+      "target": "SleepSessionManager",
+      "relationship": "rationale_for",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Explains why SleepSessionManager implements custom epoch-based ML inference instead of using HKCategoryValueSleepAnalysis"
+    },
+    {
+      "source": "techdoc_rationale_no_hkworkoutsession",
+      "target": "WatchSensorManager",
+      "relationship": "rationale_for",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Explains why WatchSensorManager uses WKExtendedRuntimeSession instead of HKWorkoutSession"
+    },
+    {
+      "source": "techdoc_rationale_sendmessage",
+      "target": "WatchSensorManager",
+      "relationship": "rationale_for",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Explains why WatchSensorManager uses sendMessage+transferUserInfo for payload transmission"
+    },
+    {
+      "source": "techdoc_rationale_daisy_chain",
+      "target": "SleepSessionManager",
+      "relationship": "rationale_for",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Explains why SleepSessionManager.extendBackgroundTask() implements UIBackgroundTaskIdentifier daisy-chaining"
+    },
+    {
+      "source": "techdoc_rationale_dual_layer_alarm",
+      "target": "SmartAlarmManager",
+      "relationship": "rationale_for",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "Explains why SmartAlarmManager implements both scheduleSystemAlarm (Layer 1 failsafe) and triggerDynamicAlarm (Layer 2 heuristic)"
+    },
+    {
+      "source": "techdoc",
+      "target": "techdoc_rationale_no_healthkit_realtime",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "techdoc",
+      "target": "techdoc_rationale_no_hkworkoutsession",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "techdoc",
+      "target": "techdoc_rationale_sendmessage",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "techdoc",
+      "target": "techdoc_rationale_daisy_chain",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "techdoc",
+      "target": "techdoc_rationale_dual_layer_alarm",
+      "relationship": "contains",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "liquidglass_doc",
+      "target": "GlassButtonStyle",
+      "relationship": "documents",
+      "type": "INFERRED",
+      "confidence_score": 0.85,
+      "detail": "LiquidGlassReference.md documents the .glass/.glassProminent button styles implemented by GlassButtonStyle"
+    },
+    {
+      "source": "liquidglass_doc",
+      "target": "GlassEffectContainer_usage",
+      "relationship": "documents",
+      "type": "INFERRED",
+      "confidence_score": 0.85,
+      "detail": "LiquidGlassReference.md documents the GlassEffectContainer pattern used in DiagnosticsView"
+    },
+    {
+      "source": "ninety_logo",
+      "target": "ninety_ios_appicon",
+      "relationship": "design_variant_of",
+      "type": "INFERRED",
+      "confidence_score": 0.9,
+      "detail": "Same crescent moon + star design, different asset dimensions"
+    },
+    {
+      "source": "ninety_ios_appicon",
+      "target": "ninety_watchos_appicon",
+      "relationship": "semantically_similar_to",
+      "type": "INFERRED",
+      "confidence_score": 0.95,
+      "detail": "Identical visual design across iOS and watchOS app icon assets"
+    },
+    {
+      "source": "SetNinetyAlarmIntent",
+      "target": "WatchSetNinetyAlarmIntent",
+      "relationship": "semantically_similar_to",
+      "type": "INFERRED",
+      "confidence_score": 0.85,
+      "detail": "Both implement 'set alarm' Siri intent for different platforms; Watch version relays to iPhone which executes the same logic as the iOS intent"
+    },
+    {
+      "source": "GetNinetyAlarmIntent",
+      "target": "WatchGetNinetyAlarmIntent",
+      "relationship": "semantically_similar_to",
+      "type": "INFERRED",
+      "confidence_score": 0.85,
+      "detail": "Both implement 'get alarm' Siri intent; Watch relays to iPhone for same query"
+    },
+    {
+      "source": "UpdateNinetyAlarmIntent",
+      "target": "WatchUpdateNinetyAlarmIntent",
+      "relationship": "semantically_similar_to",
+      "type": "INFERRED",
+      "confidence_score": 0.85,
+      "detail": "Both implement 'update alarm' Siri intent; Watch relays to iPhone for same reschedule logic"
+    },
+    {
+      "source": "AlarmOffsetDirection",
+      "target": "WatchAlarmOffsetDirection",
+      "relationship": "semantically_similar_to",
+      "type": "INFERRED",
+      "confidence_score": 0.9,
+      "detail": "Mirrored AppEnum definitions for forward/backward direction on iOS and watchOS platforms"
+    },
+    {
+      "source": "DiagnosticsView",
+      "target": "DiagnosticsView_Root",
+      "relationship": "semantically_similar_to",
+      "type": "INFERRED",
+      "confidence_score": 0.8,
+      "detail": "Two versions of the same diagnostics view with slightly different layouts and sections; the top-level one adds test mode and colored log entries"
+    },
+    {
+      "source": "ScheduleView",
+      "target": "HorizonBackground",
+      "relationship": "uses",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "OnboardingView",
+      "target": "HorizonBackground",
+      "relationship": "uses",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "SleepStage",
+      "target": "AppLanguage",
+      "relationship": "uses",
+      "type": "EXTRACTED",
+      "confidence_score": 1.0,
+      "detail": "SleepStage.title calls String.localized(for:) from AppLanguage utility"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "siri_intent_relay_pipeline",
+      "label": "Cross-Device Siri Intent Relay Pipeline",
+      "type": "EXTRACTED",
+      "confidence_score": 0.95,
+      "description": "Complete flow from watchOS Siri capture through WCSession relay to iPhone execution: WatchSetNinetyAlarmIntent/WatchGetNinetyAlarmIntent/WatchUpdateNinetyAlarmIntent -> WatchIntentRelay -> SleepSessionManager.handleRelayIntentWithReply -> SmartAlarmManager/ScheduleViewModel",
+      "members": [
+        "WatchSetNinetyAlarmIntent",
+        "WatchGetNinetyAlarmIntent",
+        "WatchUpdateNinetyAlarmIntent",
+        "WatchIntentRelay",
+        "SleepSessionManager",
+        "SmartAlarmManager",
+        "ScheduleViewModel"
+      ]
+    },
+    {
+      "id": "distributed_smart_alarm_pipeline",
+      "label": "Distributed Smart Alarm Pipeline",
+      "type": "EXTRACTED",
+      "confidence_score": 0.95,
+      "description": "Edge-to-alarm data flow: WatchSensorManager (sensor acquisition + WKExtendedRuntimeSession) -> SensorPayload (WCSession transport) -> SleepSessionManager (epoch aggregation + CoreML inference + confirmation window) -> SmartAlarmManager (AlarmKit dual-layer scheduling) -> HapticWakeUpManager (progressive haptic sequence)",
+      "members": [
+        "WatchSensorManager",
+        "SensorPayload",
+        "SleepSessionManager",
+        "modello25",
+        "SmartAlarmManager",
+        "HapticWakeUpManager"
+      ]
+    },
+    {
+      "id": "dual_platform_siri_intents",
+      "label": "Dual-Platform Siri Intent Symmetry",
+      "type": "INFERRED",
+      "confidence_score": 0.85,
+      "description": "iOS and watchOS each register parallel sets of AppIntents (Set/Get/Update alarm) with mirrored Siri phrases in Italian and English. Watch versions relay through WatchIntentRelay; iOS versions execute directly.",
+      "members": [
+        "NinetyShortcutsProvider",
+        "NinetyWatchShortcuts",
+        "SetNinetyAlarmIntent",
+        "GetNinetyAlarmIntent",
+        "UpdateNinetyAlarmIntent",
+        "WatchSetNinetyAlarmIntent",
+        "WatchGetNinetyAlarmIntent",
+        "WatchUpdateNinetyAlarmIntent"
+      ]
+    }
+  ]
+}
