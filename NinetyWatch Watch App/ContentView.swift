@@ -152,68 +152,59 @@ struct WatchSingleAlarmView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-
-            if sensorManager.nextAlarmDate != nil {
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button {
-                            showDiagnostics = true
-                        } label: {
-                            Image(systemName: "waveform.path.ecg")
-                                .font(.system(size: 15, weight: .semibold))
-                                .frame(width: 34, height: 34)
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(.white.opacity(0.82))
-                        .background {
-                            Circle()
-                                .fill(.white.opacity(0.08))
-                                .overlay {
-                                    Circle()
-                                        .strokeBorder(.white.opacity(0.16), lineWidth: 0.8)
-                                }
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(.top, 10)
-                .padding(.trailing, 14)
-            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            diagnosticButton
+                .padding(.trailing, 12)
+                .padding(.bottom, 14)
         }
     }
 
     var editingView: some View {
-        ZStack {
-            CircularAlarmDial(hour: $draftHour, minute: $draftMinute)
-                .padding(.horizontal, 5)
-                .padding(.vertical, 8)
+        GeometryReader { proxy in
+            let buttonSize: CGFloat = 32
+            let edgeInset: CGFloat = 12
+            let cornerCenter = buttonSize / 2 + edgeInset
+            let viewCenter = CGPoint(x: proxy.size.width / 2, y: proxy.size.height / 2)
+            let buttonCenters = [
+                CGPoint(x: cornerCenter, y: cornerCenter),
+                CGPoint(x: cornerCenter, y: proxy.size.height - cornerCenter),
+                CGPoint(x: proxy.size.width - cornerCenter, y: proxy.size.height - cornerCenter)
+            ]
+            let nearestButtonDistance = buttonCenters
+                .map { hypot($0.x - viewCenter.x, $0.y - viewCenter.y) }
+                .min() ?? min(proxy.size.width, proxy.size.height) / 2
+            let dialClearance: CGFloat = 5
+            let dialRadius = min(
+                min(proxy.size.width, proxy.size.height) / 2 - 3,
+                nearestButtonDistance - buttonSize / 2 - dialClearance
+            )
+            let dialSide = max(0, dialRadius * 2)
 
-            VStack {
-                HStack {
-                    roundIconButton(systemName: "xmark", tint: .white.opacity(0.92), fill: .white.opacity(0.12)) {
-                        cancelEditing()
-                    }
-                    Spacer()
+            ZStack {
+                CircularAlarmDial(hour: $draftHour, minute: $draftMinute)
+                    .frame(width: dialSide, height: dialSide)
+                    .position(viewCenter)
+
+                roundIconButton(systemName: "xmark", tint: .white.opacity(0.92), fill: .white.opacity(0.12)) {
+                    cancelEditing()
                 }
+                .position(x: cornerCenter, y: cornerCenter)
 
-                Spacer()
-
-                HStack {
-                    roundIconButton(systemName: "trash", tint: .red, fill: .red.opacity(0.14)) {
-                        deleteAlarm()
-                    }
-
-                    Spacer()
-
-                    roundIconButton(systemName: "checkmark", tint: .white, fill: .green) {
-                        saveAlarm()
-                    }
+                roundIconButton(systemName: "trash", tint: .red, fill: .red.opacity(0.14)) {
+                    deleteAlarm()
                 }
+                .position(x: cornerCenter, y: proxy.size.height - cornerCenter)
+
+                roundIconButton(systemName: "checkmark", tint: .white, fill: .green) {
+                    saveAlarm()
+                }
+                .position(x: proxy.size.width - cornerCenter, y: proxy.size.height - cornerCenter)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 7)
+            .frame(width: proxy.size.width, height: proxy.size.height)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea(.container, edges: .all)
     }
 
     var subtitleText: String {
@@ -227,6 +218,27 @@ struct WatchSingleAlarmView: View {
         )
     }
 
+    var diagnosticButton: some View {
+        Button {
+            showDiagnostics = true
+        } label: {
+            Image(systemName: "waveform.path.ecg")
+                .font(.system(size: 15, weight: .semibold))
+                .frame(width: 36, height: 36)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.white.opacity(0.86))
+        .contentShape(Circle())
+        .background {
+            Circle()
+                .fill(.white.opacity(0.08))
+                .overlay {
+                    Circle()
+                        .strokeBorder(.white.opacity(0.16), lineWidth: 0.8)
+                }
+        }
+    }
+
     func roundIconButton(
         systemName: String,
         tint: Color,
@@ -235,17 +247,18 @@ struct WatchSingleAlarmView: View {
     ) -> some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: 16, weight: .bold))
-                .frame(width: 38, height: 38)
+                .font(.system(size: 13, weight: .bold))
+                .frame(width: 32, height: 32)
         }
         .buttonStyle(.plain)
         .foregroundStyle(tint)
+        .contentShape(Circle())
         .background {
             Circle()
                 .fill(fill)
                 .overlay {
                     Circle()
-                        .strokeBorder(.white.opacity(0.16), lineWidth: 0.8)
+                        .strokeBorder(.white.opacity(0.16), lineWidth: 0.7)
                 }
         }
     }
@@ -273,7 +286,13 @@ struct WatchSingleAlarmView: View {
     }
 
     func saveAlarm() {
-        sensorManager.setNextAlarm(hour: draftHour, minute: roundedFiveMinute(draftMinute))
+        let minute = roundedFiveMinute(draftMinute)
+        let targetDate = nextTwelveHourTargetDate(displayHour: draftHour, minute: minute)
+        let calendar = Calendar.autoupdatingCurrent
+        sensorManager.setNextAlarm(
+            hour: calendar.component(.hour, from: targetDate),
+            minute: calendar.component(.minute, from: targetDate)
+        )
         withAnimation(.snappy(duration: 0.22)) {
             isEditingTime = false
         }
@@ -282,8 +301,29 @@ struct WatchSingleAlarmView: View {
     func syncDraftFromCurrentAlarm() {
         let date = sensorManager.nextAlarmDate ?? defaultDraftDate()
         let calendar = Calendar.autoupdatingCurrent
-        draftHour = calendar.component(.hour, from: date)
+        draftHour = calendar.component(.hour, from: date) % 12
         draftMinute = roundedFiveMinute(calendar.component(.minute, from: date))
+    }
+
+    func nextTwelveHourTargetDate(displayHour: Int, minute: Int, now: Date = Date()) -> Date {
+        let calendar = Calendar.autoupdatingCurrent
+        let dialHour = ((displayHour % 12) + 12) % 12
+        var candidates: [Date] = []
+
+        for hourOffset in [0, 12] {
+            var components = calendar.dateComponents([.year, .month, .day], from: now)
+            components.hour = dialHour + hourOffset
+            components.minute = minute
+            components.second = 0
+
+            guard var candidate = calendar.date(from: components) else { continue }
+            if candidate <= now {
+                candidate = calendar.date(byAdding: .day, value: 1, to: candidate) ?? candidate
+            }
+            candidates.append(candidate)
+        }
+
+        return candidates.min() ?? now.addingTimeInterval(60)
     }
 
     func defaultDraftDate() -> Date {

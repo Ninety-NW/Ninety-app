@@ -21,6 +21,16 @@ struct WatchDiagnosticsView: View {
                         .font(.system(.headline, design: .rounded).weight(.semibold))
 
                     Spacer()
+
+                    Button {
+                        sensorManager.clearDiagnosticLogs()
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.system(size: 14, weight: .semibold))
+                            .frame(width: 32, height: 32)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.red.opacity(0.95))
                 }
 
                 diagnosticSection("Status") {
