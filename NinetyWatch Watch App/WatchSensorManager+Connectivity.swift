@@ -8,6 +8,12 @@ import CoreML
 
 extension WatchSensorManager {
     func setupWatchConnectivity() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else {
+            wcSession = nil
+            connectionStatus = "Phone sync disabled"
+            return
+        }
+
         if WCSession.isSupported() {
             wcSession = WCSession.default
             wcSession?.delegate = self
@@ -16,6 +22,11 @@ extension WatchSensorManager {
     }
 
     func refreshConnectionStatus() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else {
+            connectionStatus = "Phone sync disabled"
+            return
+        }
+
         guard let session = wcSession else {
             connectionStatus = "Disconnected"
             sendWatchStatusUpdate(sessionState)
@@ -40,6 +51,11 @@ extension WatchSensorManager {
     }
 
     func retryPendingPayloadDelivery() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else {
+            refreshConnectionStatus()
+            return
+        }
+
         refreshConnectionStatus()
         flushPendingPayloadsIfNeeded(force: true)
         flushPendingNextAlarmCommandIfNeeded()
@@ -75,10 +91,13 @@ extension WatchSensorManager {
         }
 
         refreshNextAlarmDate()
-        requestAlarmSync()
+        if WatchPhoneSyncConfiguration.isPhoneSyncEnabled {
+            requestAlarmSync()
+        }
     }
 
     func requestAlarmSync() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let session = wcSession, session.activationState == .activated else { return }
         let message = ["action": "requestAlarmSync"]
         if session.isReachable {

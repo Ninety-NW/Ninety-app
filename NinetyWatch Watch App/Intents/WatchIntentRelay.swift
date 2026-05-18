@@ -21,6 +21,7 @@ actor WatchIntentRelay {
         case phoneNotReachable
         case invalidResponse
         case phoneError(String)
+        case watchOnly
 
         var errorDescription: String? {
             switch self {
@@ -32,6 +33,8 @@ actor WatchIntentRelay {
                 return "Risposta non valida dall'iPhone."
             case .phoneError(let msg):
                 return msg
+            case .watchOnly:
+                return "Watch-only: la sincronizzazione con iPhone e disattivata temporaneamente."
             }
         }
     }
@@ -45,6 +48,10 @@ actor WatchIntentRelay {
     ///   - params: Additional key-value pairs to include in the message payload.
     /// - Returns: The dialog string composed by the iPhone-side handler.
     func relay(action: String, params: [String: Any] = [:]) async throws -> String {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else {
+            throw RelayError.watchOnly
+        }
+
         guard WCSession.isSupported() else {
             throw RelayError.sessionNotAvailable
         }

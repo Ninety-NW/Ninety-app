@@ -111,6 +111,7 @@ extension WatchSensorManager {
         
         transmit(payload: payload)
         processPayloadForLocalSmartWake(payload)
+        refreshDiagnosticCounters()
         
         if let alarmDate = nextAlarmDate, Date() >= alarmDate {
             DispatchQueue.main.async {
@@ -123,6 +124,13 @@ extension WatchSensorManager {
     func transmit(payload: SensorPayload) {
         if isActivelyMonitoring && pipelineState != .deliveringBacklog {
             updatePipelineState(.recording, detail: "Recording")
+        }
+
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else {
+            DispatchQueue.main.async {
+                self.lastPayloadSent = "Captured at \(payload.timestamp.formatted(date: .omitted, time: .standard)), HR count: \(payload.hrSamples.count), Watch only"
+            }
+            return
         }
 
         enqueuePendingPayload(payload)

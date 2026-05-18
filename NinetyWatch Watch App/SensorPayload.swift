@@ -25,4 +25,5 @@ struct WatchEpochDiagnostic: Codable {
     let smoothedStage: Int?
     let stageTitle: String
     let isTestInjected: Bool
+    let errorMessage: String?
 }

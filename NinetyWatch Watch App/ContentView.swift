@@ -4,27 +4,28 @@ struct ContentView: View {
     @StateObject var sensorManager = WatchSensorManager.shared
     @StateObject var hapticManager = HapticWakeUpManager.shared
     @State var isEditingTime = false
-
-    var copy: WatchCopy {
-        WatchCopy(localeIdentifier: Locale.autoupdatingCurrent.identifier)
-    }
+    @State var showDiagnostics = false
 
     var body: some View {
         NavigationStack {
             ZStack {
                 WatchPageBackground()
 
-                WatchAlarmSetupView(sensorManager: sensorManager, copy: copy, isEditingTime: $isEditingTime)
-                
+                WatchSingleAlarmView(
+                    sensorManager: sensorManager,
+                    isEditingTime: $isEditingTime,
+                    showDiagnostics: $showDiagnostics
+                )
+
                 if !isEditingTime {
                     VStack {
                         Spacer()
                         WatchStatusFooter(sensorManager: sensorManager)
-                            .padding(.bottom, -2) // Subtle nudge to the absolute edge
+                            .padding(.bottom, -2)
                     }
                     .ignoresSafeArea(.all, edges: .bottom)
                 }
-                
+
                 if hapticManager.isPlaying {
                     AlarmView()
                         .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -32,6 +33,9 @@ struct ContentView: View {
                 }
             }
             .containerBackground(.black.gradient, for: .navigation)
+            .navigationDestination(isPresented: $showDiagnostics) {
+                WatchDiagnosticsView(sensorManager: sensorManager)
+            }
             .onAppear {
                 sensorManager.refreshStoredAlarmStateIfNeeded()
                 sensorManager.requestHealthPermissions { _ in }
@@ -42,13 +46,22 @@ struct ContentView: View {
 
 struct WatchStatusFooter: View {
     @ObservedObject var sensorManager: WatchSensorManager
-    
-    var isSynced: Bool {
-        sensorManager.connectionStatus.contains("reachable") || sensorManager.connectionStatus.contains("enabled")
+
+    var isWatchOnly: Bool {
+        sensorManager.connectionStatus.contains("Watch only") ||
+            sensorManager.connectionStatus.contains("Phone sync disabled")
     }
-    
+
+    var isSynced: Bool {
+        sensorManager.connectionStatus.contains("reachable") ||
+            sensorManager.connectionStatus.contains("enabled") ||
+            isWatchOnly
+    }
+
     var statusText: String {
-        if isSynced {
+        if isWatchOnly {
+            return "Watch only"
+        } else if isSynced {
             return "Synced"
         } else if sensorManager.connectionStatus.contains("unavailable") {
             return "Phone Offline"
@@ -56,17 +69,17 @@ struct WatchStatusFooter: View {
             return "Connecting..."
         }
     }
-    
+
     var body: some View {
         HStack(spacing: 5) {
             Circle()
                 .fill(isSynced ? Color.green : Color.red)
                 .frame(width: 6, height: 6)
                 .shadow(color: (isSynced ? Color.green : Color.red).opacity(0.5), radius: 2)
-            
+
             Text(statusText)
                 .font(.system(size: 10, weight: .medium, design: .rounded))
-                .foregroundStyle(.secondary.opacity(0.8))
+                .foregroundStyle(.secondary.opacity(0.85))
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 4)
@@ -84,291 +97,127 @@ struct WatchPageBackground: View {
     }
 }
 
-// MARK: - Alarm Setup
-
-struct WatchAlarmSetupView: View {
+struct WatchSingleAlarmView: View {
     @ObservedObject var sensorManager: WatchSensorManager
-    let copy: WatchCopy
-
-    @State var wakeTime = WatchAlarmSetupView.defaultWakeTime()
-    @State var internalHour = 7
-    @State var internalMinute = 0
-    @State var isApplyingSyncedAlarm = false
-    @State var initialField: WatchTimeField = .hour
-    @State var idleCrownValue: Double = 0
     @Binding var isEditingTime: Bool
+    @Binding var showDiagnostics: Bool
+
+    @State var draftHour = 7
+    @State var draftMinute = 0
 
     var body: some View {
-        VStack(alignment: .center, spacing: 12) {
+        ZStack {
             if isEditingTime {
-                TimeWheelField(hour: $internalHour, minute: $internalMinute, initialFocus: initialField)
-                    .padding(.bottom, 4)
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .bottom).combined(with: .opacity),
-                        removal: .opacity
-                    ))
-
-                HStack(spacing: 8) {
-                    Button {
-                        cancelEditing()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 15, weight: .bold))
-                            .frame(width: 40, height: 40)
-                    }
-                    .buttonStyle(.plain)
-                    .background {
-                        Circle()
-                        .fill(.white.opacity(0.12))
-                            .overlay {
-                                Circle()
-                                    .strokeBorder(.white.opacity(0.18), lineWidth: 0.8)
-                            }
-                    }
-                    .foregroundStyle(.white.opacity(0.92))
-
-                    Button {
-                        updateWakeTimeFromInternal()
-                        sensorManager.setNextAlarm(wakeTime: wakeTime)
-                        withAnimation(.snappy(duration: 0.22)) {
-                            isEditingTime = false
-                        }
-                    } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: buttonIconName)
-                                Text(buttonTitle)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.75)
-                            }
-                        .font(.subheadline.weight(.semibold))
-                        .padding(.vertical, 3)
-                        .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.small)
-                    .tint(.blue) // Use a more consistent blue for the Watch
-                    .disabled(sensorManager.weeklyAlarmSyncState == .saving)
-                }
-                .frame(maxWidth: .infinity)
-                .transition(.opacity)
+                editingView
+                    .transition(.opacity.combined(with: .scale(scale: 0.96)))
             } else {
-                Button {
-                    initialField = .hour
-                    withAnimation(.snappy(duration: 0.22)) {
-                        isEditingTime = true
-                    }
-                } label: {
-                    VStack(spacing: 4) {
-                        Text(displayedAlarmDate == nil ? copy.text(.noActiveAlarms) : copy.text(.nextAlarm))
-                            .font(.system(.footnote, design: .rounded).weight(.bold))
-                            .foregroundStyle(.blue.opacity(0.92))
-                            .textCase(.uppercase)
-                            .tracking(1.2)
-                            .padding(.bottom, 2)
-
-                        Text(timeText(for: displayedAlarmDate))
-                            .font(.system(size: 44, weight: .light, design: .rounded))
-                            .monospacedDigit()
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.9)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 20)
-                            .background {
-                                Capsule()
-                                    .fill(.white.opacity(0.1))
-                                    .overlay {
-                                        Capsule()
-                                            .strokeBorder(.white.opacity(0.18), lineWidth: 1)
-                                    }
-                            }
-
-                        Text(copy.text(.tapToChange))
-                            .font(.system(.caption2, design: .rounded).weight(.medium))
-                            .foregroundStyle(.white.opacity(0.55))
-
-                        if let date = displayedAlarmDate {
-                            Text(dateText(for: date))
-                                .font(.system(.caption2, design: .rounded).weight(.medium))
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Text(copy.text(.setOnIPhone))
-                                .font(.system(.caption2, design: .rounded).weight(.medium))
-                                .foregroundStyle(.secondary.opacity(0.7))
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
-                .transition(.asymmetric(
-                    insertion: .opacity,
-                    removal: .move(edge: .top).combined(with: .opacity)
-                ))
+                displayView
+                    .transition(.opacity)
             }
         }
-        .padding(.horizontal, 8)
-        .padding(.bottom, 0)
         .animation(.snappy(duration: 0.22), value: isEditingTime)
         .onAppear {
-            applySyncedNextAlarm()
-        }
-        .onChange(of: internalHour) {
-            guard !isApplyingSyncedAlarm else { return }
-            sensorManager.markNextAlarmDraftChanged()
-        }
-        .onChange(of: internalMinute) {
-            guard !isApplyingSyncedAlarm else { return }
-            sensorManager.markNextAlarmDraftChanged()
+            syncDraftFromCurrentAlarm()
         }
         .onChange(of: sensorManager.nextAlarmDate) {
-            applySyncedNextAlarm()
+            guard !isEditingTime else { return }
+            syncDraftFromCurrentAlarm()
         }
-        // Crown rotation: rotating from the main screen (not editing) opens the picker.
-        // Requires ≥3 low-sensitivity clicks to avoid accidental triggers.
-        .focusable(!isEditingTime)
-        .digitalCrownRotation(
-            $idleCrownValue,
-            from: -12,
-            through: 12,
-            by: 1,
-            sensitivity: .low,
-            isContinuous: false,
-            isHapticFeedbackEnabled: true
-        )
-        .onChange(of: idleCrownValue) { _, newValue in
-            guard !isEditingTime else {
-                idleCrownValue = 0
-                return
-            }
-            if abs(newValue) >= 3 {
-                initialField = .hour
-                withAnimation(.snappy(duration: 0.22)) {
-                    isEditingTime = true
+    }
+
+    var displayView: some View {
+        ZStack {
+            Button {
+                openEditor()
+            } label: {
+                VStack(spacing: 8) {
+                    Text(sensorManager.nextAlarmDate == nil ? "Sveglia" : "Sveglia impostata")
+                        .font(.system(.footnote, design: .rounded).weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.82))
+
+                    Text(timeText(for: sensorManager.nextAlarmDate))
+                        .font(.system(size: 50, weight: .light, design: .rounded))
+                        .monospacedDigit()
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                        .foregroundStyle(.white)
+
+                    Text(subtitleText)
+                        .font(.system(.caption2, design: .rounded).weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
-                idleCrownValue = 0
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            if sensorManager.nextAlarmDate != nil {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            showDiagnostics = true
+                        } label: {
+                            Image(systemName: "waveform.path.ecg")
+                                .font(.system(size: 15, weight: .semibold))
+                                .frame(width: 34, height: 34)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.white.opacity(0.82))
+                        .background {
+                            Circle()
+                                .fill(.white.opacity(0.08))
+                                .overlay {
+                                    Circle()
+                                        .strokeBorder(.white.opacity(0.16), lineWidth: 0.8)
+                                }
+                        }
+                    }
+                    Spacer()
+                }
+                .padding(.top, 10)
+                .padding(.trailing, 14)
             }
         }
-        .onChange(of: isEditingTime) { _, editing in
-            if editing { idleCrownValue = 0 }
-        }
     }
 
-    var buttonTitle: String {
-        switch sensorManager.weeklyAlarmSyncState {
-        case .saving:
-            return copy.text(.syncing)
-        case .saved:
-            return copy.text(.saved)
-        case .pending:
-            return copy.text(.syncPending)
-        case .unreachable:
-            return copy.text(.phoneUnavailable)
-        case .failed:
-            return copy.text(.syncFailed)
-        case .synced:
-            return copy.text(.save)
-        }
-    }
+    var editingView: some View {
+        ZStack {
+            CircularAlarmDial(hour: $draftHour, minute: $draftMinute)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 8)
 
-    var buttonIconName: String {
-        switch sensorManager.weeklyAlarmSyncState {
-        case .saved, .synced:
-            return "checkmark"
-        case .saving:
-            return "arrow.triangle.2.circlepath"
-        case .pending:
-            return "clock.arrow.circlepath"
-        case .unreachable, .failed:
-            return "exclamationmark.triangle"
-        }
-    }
+            VStack {
+                HStack {
+                    roundIconButton(systemName: "xmark", tint: .white.opacity(0.92), fill: .white.opacity(0.12)) {
+                        cancelEditing()
+                    }
+                    Spacer()
+                }
 
-    var buttonTint: Color {
-        switch sensorManager.weeklyAlarmSyncState {
-        case .saved, .synced:
-            return .green
-        case .saving:
-            return .blue
-        case .pending:
-            return .yellow
-        case .unreachable, .failed:
-            return .red
-        }
-    }
+                Spacer()
 
-    var displayedAlarmDate: Date? {
-        switch sensorManager.weeklyAlarmSyncState {
-        case .saving, .pending, .unreachable:
-            return wakeTime
-        case .synced, .saved, .failed:
-            return sensorManager.nextAlarmDate
-        }
-    }
+                HStack {
+                    roundIconButton(systemName: "trash", tint: .red, fill: .red.opacity(0.14)) {
+                        deleteAlarm()
+                    }
 
-    static func defaultWakeTime() -> Date {
-        var components = Calendar.autoupdatingCurrent.dateComponents([.year, .month, .day], from: Date())
-        components.hour = 7
-        components.minute = 0
-        components.second = 0
-        return Calendar.autoupdatingCurrent.date(from: components) ?? Date()
-    }
+                    Spacer()
 
-    func applySyncedNextAlarm() {
-        guard let nextAlarmDate = sensorManager.nextAlarmDate else {
-            if sensorManager.weeklyAlarmSyncState != .saving {
-                withAnimation(.snappy(duration: 0.18)) {
-                    isEditingTime = false
+                    roundIconButton(systemName: "checkmark", tint: .white, fill: .green) {
+                        saveAlarm()
+                    }
                 }
             }
-            return
-        }
-
-        let calendar = Calendar.autoupdatingCurrent
-        let syncedHour = calendar.component(.hour, from: nextAlarmDate)
-        let syncedMinute = calendar.component(.minute, from: nextAlarmDate)
-
-        isApplyingSyncedAlarm = true
-        
-        let newDate = Self.todayDate(hour: syncedHour, minute: syncedMinute)
-        withAnimation(.snappy(duration: 0.22)) {
-            wakeTime = newDate
-            internalHour = syncedHour
-            internalMinute = syncedMinute
-        }
-
-        DispatchQueue.main.async {
-            isApplyingSyncedAlarm = false
-        }
-
-        if sensorManager.weeklyAlarmSyncState != .saving {
-            withAnimation(.snappy(duration: 0.18)) {
-                isEditingTime = false
-            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 7)
         }
     }
 
-    func updateWakeTimeFromInternal() {
-        wakeTime = Self.todayDate(hour: internalHour, minute: internalMinute)
-    }
-
-    static func todayDate(hour: Int, minute: Int) -> Date {
-        var components = Calendar.autoupdatingCurrent.dateComponents([.year, .month, .day], from: Date())
-        components.hour = hour
-        components.minute = minute
-        components.second = 0
-        return Calendar.autoupdatingCurrent.date(from: components) ?? Date()
-    }
-
-    func cancelEditing() {
-        applySyncedNextAlarm()
-        withAnimation(.snappy(duration: 0.22)) {
-            isEditingTime = false
-        }
-    }
-
-
-    func dateText(for date: Date) -> String {
+    var subtitleText: String {
+        guard let date = sensorManager.nextAlarmDate else { return "-" }
         return date.formatted(
             .dateTime
                 .weekday(.abbreviated)
@@ -376,6 +225,83 @@ struct WatchAlarmSetupView: View {
                 .month(.abbreviated)
                 .locale(Locale.autoupdatingCurrent)
         )
+    }
+
+    func roundIconButton(
+        systemName: String,
+        tint: Color,
+        fill: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemName)
+                .font(.system(size: 16, weight: .bold))
+                .frame(width: 38, height: 38)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(tint)
+        .background {
+            Circle()
+                .fill(fill)
+                .overlay {
+                    Circle()
+                        .strokeBorder(.white.opacity(0.16), lineWidth: 0.8)
+                }
+        }
+    }
+
+    func openEditor() {
+        syncDraftFromCurrentAlarm()
+        withAnimation(.snappy(duration: 0.22)) {
+            isEditingTime = true
+        }
+    }
+
+    func cancelEditing() {
+        syncDraftFromCurrentAlarm()
+        withAnimation(.snappy(duration: 0.22)) {
+            isEditingTime = false
+        }
+    }
+
+    func deleteAlarm() {
+        sensorManager.deleteCurrentAlarmFromWatch()
+        syncDraftFromCurrentAlarm()
+        withAnimation(.snappy(duration: 0.22)) {
+            isEditingTime = false
+        }
+    }
+
+    func saveAlarm() {
+        sensorManager.setNextAlarm(hour: draftHour, minute: roundedFiveMinute(draftMinute))
+        withAnimation(.snappy(duration: 0.22)) {
+            isEditingTime = false
+        }
+    }
+
+    func syncDraftFromCurrentAlarm() {
+        let date = sensorManager.nextAlarmDate ?? defaultDraftDate()
+        let calendar = Calendar.autoupdatingCurrent
+        draftHour = calendar.component(.hour, from: date)
+        draftMinute = roundedFiveMinute(calendar.component(.minute, from: date))
+    }
+
+    func defaultDraftDate() -> Date {
+        let calendar = Calendar.autoupdatingCurrent
+        let now = Date()
+        let roundedMinute = Int(ceil(Double(calendar.component(.minute, from: now)) / 5.0) * 5.0)
+        var components = calendar.dateComponents([.year, .month, .day, .hour], from: now)
+        components.minute = roundedMinute % 60
+        components.second = 0
+        let base = calendar.date(from: components) ?? now
+        if roundedMinute >= 60 {
+            return calendar.date(byAdding: .hour, value: 1, to: base) ?? base
+        }
+        return base
+    }
+
+    func roundedFiveMinute(_ minute: Int) -> Int {
+        min(55, max(0, Int(round(Double(minute) / 5.0) * 5.0)))
     }
 
     func timeText(for date: Date?) -> String {
@@ -386,5 +312,11 @@ struct WatchAlarmSetupView: View {
                 .hour()
                 .minute()
         )
+    }
+}
+
+struct WatchSingleAlarmContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }

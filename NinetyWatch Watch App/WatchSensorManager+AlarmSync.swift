@@ -72,18 +72,26 @@ extension WatchSensorManager {
         saveLocalAlarmRecord(record)
         UserDefaults.standard.set(targetDate.timeIntervalSince1970, forKey: Self.actualAlarmTimeKey)
         refreshNextAlarmDate()
+        WatchWakeNotificationScheduler.shared.scheduleFinalWakeNotification(at: targetDate)
         scheduleSmartAlarmSession(at: record.monitoringStartDate)
 
         weeklyAlarmSyncState = .saved
-        weeklyAlarmSyncDetail = "Saved on Watch"
+        weeklyAlarmSyncDetail = WatchPhoneSyncConfiguration.isPhoneSyncEnabled ? "Saved on Watch" : "Watch only"
 
-        let command = PendingNextAlarmCommand(record: record)
-        sendNextAlarmCommand(command)
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
+
+        sendNextAlarmCommand(PendingNextAlarmCommand(record: record))
+    }
+
+    func deleteCurrentAlarmFromWatch() {
+        let tombstone = currentStopTombstone()
+        applyStopTombstone(tombstone, notifyPhone: WatchPhoneSyncConfiguration.isPhoneSyncEnabled)
     }
 
     // MARK: - Next Alarm Commands
 
     func restorePendingNextAlarmCommand() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard pendingNextAlarmCommand() != nil else { return }
         weeklyAlarmSyncState = .pending
         weeklyAlarmSyncDetail = nil
@@ -178,6 +186,7 @@ extension WatchSensorManager {
     }
 
     func flushPendingNextAlarmCommandIfNeeded() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard !isSendingNextAlarmCommand, let command = pendingNextAlarmCommand() else {
             return
         }
@@ -186,6 +195,7 @@ extension WatchSensorManager {
     }
 
     func sendNextAlarmCommand(_ command: PendingNextAlarmCommand) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard !isSendingNextAlarmCommand else {
             persistPendingNextAlarmCommand(command, state: .pending)
             return
@@ -269,6 +279,7 @@ extension WatchSensorManager {
     }
 
     func restorePendingStopAlarmCommand() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard pendingStopAlarmCommand() != nil else { return }
         flushPendingStopAlarmCommandIfNeeded()
     }
@@ -296,11 +307,13 @@ extension WatchSensorManager {
     }
 
     func flushPendingStopAlarmCommandIfNeeded() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let command = pendingStopAlarmCommand() else { return }
         sendStopAlarmCommand(command)
     }
 
     func sendStopAlarmCommand(_ command: PendingStopAlarmCommand) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let session = wcSession, session.activationState == .activated else {
             persistPendingStopAlarmCommand(command)
             return

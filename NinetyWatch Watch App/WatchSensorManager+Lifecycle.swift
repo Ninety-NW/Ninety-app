@@ -172,6 +172,7 @@ extension WatchSensorManager {
         guard shouldApplyIncomingRecord(record) else { return }
         saveLocalAlarmRecord(record)
         UserDefaults.standard.set(record.targetDate.timeIntervalSince1970, forKey: Self.actualAlarmTimeKey)
+        WatchWakeNotificationScheduler.shared.scheduleFinalWakeNotification(at: record.targetDate)
         refreshNextAlarmDate()
         weeklyAlarmSyncState = .synced
         weeklyAlarmSyncDetail = nil
@@ -269,28 +270,35 @@ extension WatchSensorManager {
         UserDefaults.standard.removeObject(forKey: Self.readyScheduleKey)
     }
 
-    func clearAlarmTracking(preserveLocalAlarmRecord: Bool = false) {
+    func clearAlarmTracking(
+        preserveLocalAlarmRecord: Bool = false,
+        cancelNotifications: Bool = true
+    ) {
         alarmDeadlineTimer?.invalidate()
         alarmDeadlineTimer = nil
+        if cancelNotifications {
+            WatchWakeNotificationScheduler.shared.cancelWakeNotifications()
+        }
         UserDefaults.standard.removeObject(forKey: Self.pendingScheduleKey)
         UserDefaults.standard.removeObject(forKey: Self.readyScheduleKey)
         UserDefaults.standard.removeObject(forKey: Self.actualAlarmTimeKey)
         if !preserveLocalAlarmRecord {
             clearLocalAlarmRecord()
         }
-        let shouldShowSyncedState = pendingNextAlarmCommand() == nil
+        let shouldShowSyncedState = !WatchPhoneSyncConfiguration.isPhoneSyncEnabled ||
+            pendingNextAlarmCommand() == nil
         if Thread.isMainThread {
             nextAlarmDate = nil
             if shouldShowSyncedState {
-                weeklyAlarmSyncState = .synced
-                weeklyAlarmSyncDetail = nil
+                weeklyAlarmSyncState = WatchPhoneSyncConfiguration.isPhoneSyncEnabled ? .synced : .saved
+                weeklyAlarmSyncDetail = WatchPhoneSyncConfiguration.isPhoneSyncEnabled ? nil : "Watch only"
             }
         } else {
             DispatchQueue.main.async {
                 self.nextAlarmDate = nil
                 if shouldShowSyncedState {
-                    self.weeklyAlarmSyncState = .synced
-                    self.weeklyAlarmSyncDetail = nil
+                    self.weeklyAlarmSyncState = WatchPhoneSyncConfiguration.isPhoneSyncEnabled ? .synced : .saved
+                    self.weeklyAlarmSyncDetail = WatchPhoneSyncConfiguration.isPhoneSyncEnabled ? nil : "Watch only"
                 }
             }
         }
@@ -305,9 +313,7 @@ extension WatchSensorManager {
                 return
             }
 
-            // Fire the haptic deadline 60 seconds BEFORE the actual alarm
-            let hapticDeadlineDate = alarmDate.addingTimeInterval(-60)
-            let delay = hapticDeadlineDate.timeIntervalSinceNow
+            let delay = alarmDate.timeIntervalSinceNow
             guard delay > 0 else {
                 _ = self.stopMonitoringIfAlarmDeadlineReached()
                 return
@@ -332,9 +338,7 @@ extension WatchSensorManager {
         }
 
         let alarmDate = Date(timeIntervalSince1970: interval)
-        // Check against the 60-second advanced deadline
-        let hapticDeadlineDate = alarmDate.addingTimeInterval(-60)
-        guard now >= hapticDeadlineDate else {
+        guard now >= alarmDate else {
             return false
         }
 
@@ -351,6 +355,7 @@ extension WatchSensorManager {
     }
 
     func sendWatchStatusUpdate(_ status: String) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let session = wcSession, session.activationState == .activated else { return }
 
         var message: [String: Any] = [
@@ -378,15 +383,17 @@ extension WatchSensorManager {
     }
     func stopActiveAlarmFromWatch() {
         let tombstone = currentStopTombstone()
-        applyStopTombstone(tombstone, notifyPhone: true)
+        applyStopTombstone(tombstone, notifyPhone: WatchPhoneSyncConfiguration.isPhoneSyncEnabled)
     }
 
     func sendStopAlarmMessage() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         let tombstone = currentStopTombstone()
         sendStopAlarmCommand(PendingStopAlarmCommand(tombstone: tombstone))
     }
     
     func sendTriggerAlarmMessage() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let session = wcSession, session.activationState == .activated else { return }
         var message: [String: Any] = ["action": "triggerAlarm"]
         if let record = localAlarmRecord() {

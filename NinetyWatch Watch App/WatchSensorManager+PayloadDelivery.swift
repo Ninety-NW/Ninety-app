@@ -20,6 +20,7 @@ extension WatchSensorManager {
     }
 
     func restorePendingPayloadQueue() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let url = pendingPayloadsURL else { return }
 
         guard FileManager.default.fileExists(atPath: url.path) else { return }
@@ -58,13 +59,22 @@ extension WatchSensorManager {
     func clearScheduledAlarmAndMonitoring(
         detail: String,
         state: WatchPipelineState,
-        keepHapticsRunning: Bool = false
+        keepHapticsRunning: Bool = false,
+        cancelFinalNotification: Bool = true
     ) {
         if !keepHapticsRunning {
+            WatchWakeNotificationScheduler.shared.cancelWakeNotifications()
             invalidateRuntimeSessionIfNeeded()
-            HapticWakeUpManager.shared.stop()
+            Task { @MainActor in
+                HapticWakeUpManager.shared.stop()
+            }
+        } else if cancelFinalNotification {
+            WatchWakeNotificationScheduler.shared.cancelFinalWakeNotification()
         }
-        clearAlarmTracking(preserveLocalAlarmRecord: keepHapticsRunning)
+        clearAlarmTracking(
+            preserveLocalAlarmRecord: keepHapticsRunning,
+            cancelNotifications: false
+        )
         stopSensors()
         resetLocalAnalysis()
         clearPendingPayloadQueue()
@@ -73,29 +83,33 @@ extension WatchSensorManager {
     }
 
     func handleScheduledAlarmReached(reason: String) {
-        let phoneReachable = wcSession?.activationState == .activated && wcSession?.isReachable == true
-        
-        // Start the silent Watch phase of the same Ninety alarm locally.
         startWatchHapticWakePhase()
         sendTriggerAlarmMessage()
+
+        let phoneReachable = WatchPhoneSyncConfiguration.isPhoneSyncEnabled &&
+            wcSession?.activationState == .activated &&
+            wcSession?.isReachable == true
 
         if phoneReachable {
             clearScheduledAlarmAndMonitoring(
                 detail: "Watch smart wake active",
                 state: .completed,
-                keepHapticsRunning: true
+                keepHapticsRunning: true,
+                cancelFinalNotification: false
             )
         } else {
-            // Watch-only path: haptics are the available alert surface.
             clearScheduledAlarmAndMonitoring(
                 detail: reason,
                 state: .completed,
-                keepHapticsRunning: true
+                keepHapticsRunning: true,
+                cancelFinalNotification: false
             )
         }
+        smartWakeConfirmationSummary = "Final wake"
     }
 
     func enqueuePendingPayload(_ payload: SensorPayload) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard !pendingPayloads.contains(where: { $0.payload.id == payload.id }) else { return }
 
         pendingPayloads.append(
@@ -117,6 +131,7 @@ extension WatchSensorManager {
     }
 
     func acknowledgePayloads(withIDs ids: [UUID]) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard !ids.isEmpty else { return }
 
         let acknowledgedIDs = Set(ids)
@@ -146,6 +161,7 @@ extension WatchSensorManager {
     }
 
     func flushPendingPayloadsIfNeeded(force: Bool = false) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard !pendingPayloads.isEmpty else { return }
         guard let session = wcSession, session.activationState == .activated else { return }
 
@@ -169,6 +185,7 @@ extension WatchSensorManager {
     }
 
     func sendPendingPayloads(at indices: [Int], reason: String) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let session = wcSession, session.activationState == .activated else { return }
         guard !indices.isEmpty else { return }
 
@@ -213,6 +230,7 @@ extension WatchSensorManager {
     }
 
     func savePendingPayloadQueue() {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         guard let url = pendingPayloadsURL else { return }
 
         if pendingPayloads.isEmpty {

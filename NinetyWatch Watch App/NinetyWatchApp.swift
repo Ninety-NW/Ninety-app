@@ -10,6 +10,7 @@ import WatchKit
 
 final class WatchAppDelegate: NSObject, WKApplicationDelegate {
     func applicationDidFinishLaunching() {
+        WatchWakeNotificationScheduler.shared.configure()
         _ = WatchSensorManager.shared
     }
 

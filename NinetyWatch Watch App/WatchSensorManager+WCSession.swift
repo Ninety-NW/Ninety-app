@@ -10,6 +10,7 @@ extension WatchSensorManager {
     // MARK: - WCSessionDelegate
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         DispatchQueue.main.async {
             self.refreshConnectionStatus()
             if activationState == .activated {
@@ -20,6 +21,7 @@ extension WatchSensorManager {
     }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         DispatchQueue.main.async {
             self.refreshConnectionStatus()
             if session.isReachable {
@@ -29,18 +31,22 @@ extension WatchSensorManager {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         processIncomingCommand(message)
     }
     
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         processIncomingCommand(userInfo)
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         processIncomingCommand(applicationContext)
     }
     
     func processIncomingCommand(_ payload: [String: Any]) {
+        guard WatchPhoneSyncConfiguration.isPhoneSyncEnabled else { return }
         if let action = payload["action"] as? String {
             if action == "ackPayloads" {
                 let idStrings = payload["ids"] as? [String] ?? []

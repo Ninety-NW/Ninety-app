@@ -57,8 +57,7 @@ struct WatchUpdateNinetyAlarmIntent: AppIntent {
             )
             return .result(dialog: IntentDialog(stringLiteral: dialog))
         } catch {
-            let errorMsg = "Non sono riuscito a comunicare con l'iPhone: \(error.localizedDescription)"
-            return .result(dialog: IntentDialog(stringLiteral: errorMsg))
+            return .result(dialog: IntentDialog(stringLiteral: error.localizedDescription))
         }
     }
 }
