@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import WatchConnectivity
 
+
 final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
     enum WatchCommandKey {
         static let sequence = "NinetyPhoneToWatchCommandSequence"
