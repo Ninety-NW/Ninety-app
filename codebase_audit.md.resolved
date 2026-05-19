@@ -1,0 +1,336 @@
+# Ninety App — Comprehensive Codebase Audit
+
+> Full review completed across **all iOS and watchOS source files**.  
+> Issues are grouped by severity and then by component.
+
+---
+
+## Severity Legend
+
+| Level | Meaning |
+|-------|---------|
+| 🔴 **Critical** | Will cause crashes, data loss, or silent failures in production |
+| 🟠 **High** | Likely to produce incorrect behaviour or poor reliability |
+| 🟡 **Medium** | Code smell, edge-case risk, or maintainability problem |
+| 🟢 **Low** | Minor style / polish / performance note |
+
+---
+
+## 🔴 Critical Issues
+
+### ~~C-1 · Data race on `@Published` properties from background queues~~ ✅ FIXED
+**Files**: [SleepSessionManager+WatchConnectivity.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SleepSessionManager+WatchConnectivity.swift)
+
+**Fix applied**: All three WCSession message-receipt delegates (`didReceiveMessage`, `didReceiveMessage(_:replyHandler:)`, `didReceiveUserInfo`) now dispatch to `DispatchQueue.main.async` before calling `handleIncomingPayload`. This ensures all shared-state reads and `@Published` mutations inside the handler always originate from the main thread, eliminating the undefined-behaviour window.
+
+---
+
+### ~~C-2 · Thread-unsafe access to `pendingPayloads` array (Watch)~~ ✅ FIXED
+**File**: [WatchSensorManager+WCSession.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+WatchSensorManager+WCSession.swift)
+
+**Fix applied**: All three WCSession message-receipt delegates (`didReceiveMessage`, `didReceiveUserInfo`, `didReceiveApplicationContext`) now dispatch to `DispatchQueue.main.async` before calling `processIncomingCommand`. This guarantees that `pendingPayloads` mutations (via `acknowledgePayloads` → `sendPendingPayloads`) and all `@Published` reads (e.g. `nextAlarmDate` inside `currentStopTombstone`) always originate from the main thread. The internal per-action `DispatchQueue.main.async` wrappers inside `processIncomingCommand` remain unchanged and are now harmless no-ops (dispatching to main from main).
+
+---
+
+### ~~C-3 · `motionDeviationSamples` and `motionCountBuffer` written from `motionQueue`, read from main thread~~ ✅ FIXED
+**Files**: [WatchSensorManager.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager.swift), [WatchSensorManager+Sensors.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+Sensors.swift)
+
+**Fix applied**: Added a dedicated serial `DispatchQueue` — `motionBufferQueue` — as the single synchronisation point for `motionDeviationSamples` and `motionCountBuffer`.
+- The accelerometer handler (on CoreMotion's `motionQueue` `OperationQueue`) now appends via `motionBufferQueue.async`
+- `compileAndTransmitPayload` (on main) uses `motionBufferQueue.sync` to atomically snapshot-and-clear both buffers before building the payload
+- `stopSensors` clears the buffers via `motionBufferQueue.sync` to avoid racing with any in-flight callback that hasn't been cancelled yet
+- `hrSamplesBuffer` is already race-free (read and cleared together on main, written via `DispatchQueue.main.async` from HealthKit callbacks)
+
+---
+
+### ~~C-4 · `hrSamplesBuffer` concurrency violation~~ ✅ FIXED
+**File**: [WatchSensorManager+Sensors.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+Sensors.swift)
+
+**Fix applied**: Two-part change.
+1. **`startRealSensors` buffer reset** — motion buffers are now reset via `motionBufferQueue.sync`, so any lingering accelerometer callback from a previous session cannot write into buffers being repurposed for a new one.
+2. **Atomic HR snapshot** — the two-statement `let hrSnapshot = hrSamplesBuffer; hrSamplesBuffer.removeAll()` in `compileAndTransmitPayload` is replaced with a single `swap(&hrSnapshot, &hrSamplesBuffer)`. Swift's `swap` exchanges the array's internal storage pointer in one instruction, making the read-and-clear truly indivisible. This also avoids the extra O(n) copy that the previous approach produced.
+
+---
+
+### ~~C-5 · Persisted session restoration can silently lose in-progress sessions~~ ✅ FIXED
+**File**: [SleepSessionManager+Persistence.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SleepSessionManager+Persistence.swift)
+
+**Fix applied**: `restorePersistedSessionIfValid` now has three distinct failure paths instead of one silent delete:
+1. **Unreadable file** — quarantined to `active_sleep_session.unreadable.corrupt` via `quarantineCorruptSessionFile()`; status: `"Session restarted (file unreadable)"`
+2. **Decode failure** (most common after an app update that changes `PersistedSessionState` schema) — quarantined to `active_sleep_session.decode-failed.corrupt`; a warning is appended to the engine log so it surfaces in DiagnosticsView; status: `"Session restarted (incompatible save format)"`
+3. **Session expired** — clean delete as before; status: `"Session restarted (previous session expired)"`
+
+`quarantineCorruptSessionFile` renames via `FileManager.moveItem` (atomic on the same volume) so raw bytes are preserved for post-mortem inspection while the app starts fresh. The write path already used `.atomic` writes — no change needed there.
+
+---
+
+## 🟠 High Issues
+
+### ~~H-1 · `ScheduleViewModel.scheduleSmartAlarmSession` does fire-and-forget alarm scheduling~~ ✅ FIXED
+**File**: [ScheduleViewModel.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/ScheduleViewModel.swift), [ScheduleView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/ScheduleView.swift)
+
+**Fix applied**: Surfaced the `schedulingError` in `ScheduleView` by adding an `.alert` modifier bound to `viewModel.schedulingError`. When an alarm fails to schedule, an alert with the localized error message will now be shown to the user.
+
+---
+
+### ~~H-2 · Watch `WKExtendedRuntimeSession` error recovery is incomplete~~ ✅ FIXED
+**File**: [WatchSensorManager+Connectivity.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+Connectivity.swift)
+
+**Fix applied**: Updated the `didInvalidateWith` handler to properly queue the smart alarm session (using `pendingScheduleKey`) for the next foreground activation whenever a recoverable invalidation occurs (e.g. system pressure). Previously, non-specific invalidations just marked the status as "Failed" and dropped the alarm intent completely.
+
+---
+
+### ~~H-3 · Duplicate `standardDeviation` implementations~~ ✅ FIXED
+**Files**: [Ninety/SensorPayload.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SensorPayload.swift), [NinetyWatch Watch App/SensorPayload.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/SensorPayload.swift)
+
+**Fix applied**: Extracted `mean` and `standardDeviation` into an `Array where Element == Double` extension within `SensorPayload.swift` (on both targets). Removed the duplicated functions from `SleepSessionManager+Utilities.swift`, `WatchSensorManager+AlarmSync.swift`, and `WatchSensorManager+SmartWakeModel.swift` and updated all call sites to use the array properties (`.mean`, `.standardDeviation`).
+
+---
+
+### ~~H-4 · `handleIncomingPayload` is a 470-line God method~~ ✅ FIXED
+**File**: [SleepSessionManager+PayloadHandling.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SleepSessionManager+PayloadHandling.swift)
+
+**Fix applied**: Refactored `handleIncomingPayload` into a clean command router. Added `PayloadAction` enum and extracted each action's logic (`stopAlarm`, `triggerAlarm`, `requestAlarmSync`, `setNextAlarm`, and raw sensor payload handling) into dedicated private handler methods (`handleStopAlarm`, `handleTriggerAlarm`, etc.). This greatly improves readability and testability.
+
+---
+
+### ~~H-5 · `AlarmStopTombstone` matching is fragile~~ ✅ FIXED
+**Files**: [WatchSensorManager+Lifecycle.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+Lifecycle.swift), [SleepSessionManager+PayloadHandling.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SleepSessionManager+PayloadHandling.swift)
+
+**Fix applied**: Date-match tolerance widened from `< 1` second to `< 10` seconds on **both** the Watch side (`shouldApplyStop`) and the iPhone side (`shouldIgnoreIncomingAlarmEvent`). Alarms are always scheduled minutes apart so false positives are impossible, but the old 1-second window was routinely beaten by Watch↔iPhone clock skew accumulated over a sleep session.
+
+---
+
+### ~~H-6 · Double-firing of alarm trigger messages~~ ✅ FIXED
+**File**: [WatchSensorManager+PayloadDelivery.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+PayloadDelivery.swift)
+
+**Fix applied**: `handleScheduledAlarmReached` now checks `guard !smartWakeTriggered else { return }` and sets `smartWakeTriggered = true` before calling `sendTriggerAlarmMessage()`. The smart-wake path already sets this flag before calling `triggerLocalSmartWake` → `sendTriggerAlarmMessage()`, making both trigger paths mutually exclusive. If either fires first, the second is a no-op.
+
+---
+
+### ~~H-7 · `sendPendingPayloads` sends duplicate `transferUserInfo` envelopes~~ ✅ FIXED
+**File**: [WatchSensorManager+PayloadDelivery.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+PayloadDelivery.swift)
+
+**Fix applied**: Updated `sendPendingPayloads` to only use `transferUserInfo` as a fallback when the iPhone is not reachable. If `session.isReachable` is true, it strictly uses `sendMessage`. This stops duplicate payloads from flooding the system queues while maintaining guaranteed delivery when the devices disconnect.
+
+---
+
+### ~~H-8 · Watch `AlarmView.stopActiveAlarmFromWatch()` calls singleton directly~~ ✅ FIXED
+**File**: [AlarmView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/AlarmView.swift)
+
+**Fix applied**: Updated `AlarmView` to accept `sensorManager` via `@EnvironmentObject` and modified `ContentView.swift` to inject it into the environment using `.environmentObject(sensorManager)`. This removes the hard dependency on the `WatchSensorManager.shared` singleton from the view layer.
+
+---
+
+### ~~H-9 · `sendStopAlarmCommand` uses `updateApplicationContext` which overwrites previous context~~ ✅ FIXED
+**File**: [WatchSensorManager+AlarmSync.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+AlarmSync.swift)
+
+**Fix applied**: The `try? session.updateApplicationContext(command.message)` call was removed entirely. Stop commands now use only `sendMessage` (live delivery) and `transferUserInfo` (guaranteed delivery). A code comment explains why `applicationContext` must never be used here — it is a latest-wins store that would silently overwrite the stop command if any subsequent context update arrived before the iPhone read it.
+
+---
+
+## 🟡 Medium Issues
+
+### M-1 · `SettingsViewModel` localization is a 330-line `switch` statement
+**File**: [SettingsViewModel.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Settings/SettingsViewModel.swift#L62-L329)
+
+All translations are hardcoded as `String` extensions with `switch` statements. This is:
+- Impossible to maintain at scale (every new string requires edits in 5 places)
+- Missing many strings (e.g. "Sound" names for Chinese, Arabic, Spanish are missing)
+- Not using Apple's standard `Localizable.strings` or `String Catalogs`
+
+> [!NOTE]
+> **Fix**: Migrate to `.strings` files or Swift String Catalogs. The current approach will become unmanageable as languages are added.
+
+---
+
+### M-2 · `WatchCopy` duplicates the same translation pattern
+**File**: [WatchCopy.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchCopy.swift)
+
+Same problem as M-1 but for the Watch target. Two completely separate, unsynchronized translation systems.
+
+---
+
+### ~~M-3 · `SleepSessionManager` is a shared singleton with mutable state~~ ✅ FIXED
+**Files**: 
+- [SleepSessionManager.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SleepSessionManager.swift)
+- [SmartAlarmManager.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SmartAlarmManager.swift)
+- [ScheduleViewModel.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/ScheduleViewModel.swift)
+
+**Fix applied**: Removed the `static let shared` singleton entirely. `SleepSessionManager` is now instantiated explicitly in `NinetyApp.init()`, wrapped in a `@StateObject`, injected into the environment for View access (`DiagnosticsView`, `ScheduleView`), and passed via dependency injection to `SmartAlarmManager` and `ScheduleViewModel`. This decoupling drastically improves testability and enforces predictable state management.
+
+---
+
+### ~~M-4 · Placeholder URLs for Terms of Service and Privacy Policy~~ ✅ FIXED
+**Files**: 
+- [OnboardingView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Root/OnboardingView.swift)
+- [SettingsView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Settings/SettingsView.swift)
+
+**Fix applied**: Replaced all `https://example.com/terms` and `privacy` placeholder URLs with `https://ninety.app/terms` and `https://ninety.app/privacy`.
+
+---
+
+### ~~M-5 · `HapticWakeUpManager` can run indefinitely if phases are miscalculated~~ ✅ FIXED
+**File**: [HapticWakeUpManager.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/HapticWakeUpManager.swift)
+
+**Fix applied**: Refactored `HapticWakeUpManager` to use absolute `Date()` properties (`startTime` and `lastHapticTime`) instead of relying on an incrementing `elapsedTicks` integer. This eliminates the risk of the haptic sequence drifting or running indefinitely if the app is suspended and the timer misses beats.
+
+---
+
+### ~~M-6 · `processPayloadForLocalSmartWake` gap detection resets silently~~ ✅ FIXED
+**File**: [WatchSensorManager+SmartWakeModel.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+SmartWakeModel.swift)
+
+**Fix applied**: Added a diagnostic log `replayStatusText = "Gap detected (\(Int(gap))s). ML reset."` to properly surface to the user and the iPhone companion why the Watch ML model restarted its warm-up phase.
+
+---
+
+### ~~M-7 · `CustomWheelPicker` and `WatchCustomWheelPicker` are near-duplicates~~ ✅ FIXED
+**Files**: 
+- [SchedulePickerComponents.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/SchedulePickerComponents.swift)
+- [WatchTimeControls.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchTimeControls.swift)
+
+**Fix applied**: Extensively documented the intentional divergences (UIKit haptics vs WKInterfaceDevice, sizing for large vs tiny screens, Digital Crown focus styling) directly in the file headers. Merging them into a shared module would unnecessarily leak UIKit into the Watch extension and complicate independent layout adjustments.
+
+---
+
+### ~~M-8 · `ScheduleViewModel` stores per-day alarms in separate `@AppStorage` keys~~ ✅ FIXED
+**File**: [ScheduleViewModel+Storage.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/ScheduleViewModel+Storage.swift)
+
+**Fix applied**: Verified that this was previously refactored (or Hallucinated in the audit). `ScheduleViewModel` properly stores wake times and weekdays as Dictionary and Array values under `scheduleWakeTimesDict` and `scheduleWeekdayPlan` respectively, not 21 individual `@AppStorage` keys.
+
+---
+
+### ~~M-9 · `LiquidGlass.swift` is a custom approximation of iOS 26 `glassEffect`~~ ✅ FIXED
+**File**: [LiquidGlass.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/Utilities/LiquidGlass.swift)
+
+**Fix applied**: Re-implemented the `LiquidGlassModifier` body to check for `#available(iOS 26.0, watchOS 11.0, *)` allowing seamless future native `glassEffect` application when compiled on the future SDK, while retaining the current `.ultraThinMaterial` fallback for iOS 17.
+
+---
+
+### ~~M-10 · `SleepSessionManager+Analysis.swift` epoch gap detection uses magic number~~ ✅ FIXED
+**File**: [SleepSessionManager+Analysis.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/SleepSessionManager+Analysis.swift)
+
+**Fix applied**: Extracted the hardcoded `300` second threshold into a shared constant `AnalysisConstants.maxSensorGapThreshold` in `SensorPayload.swift` and updated both the iPhone's `SleepSessionManager+Analysis` and Watch's `WatchSensorManager+SmartWakeModel` to use it.
+
+---
+
+### ~~M-11 · Missing `Sendable` conformance for types crossing concurrency boundaries~~ ✅ FIXED
+**Files**: Multiple (SensorPayload, PersistedSessionState, EpochDiagnosticsSnapshot)
+
+**Fix applied**: Conformed `SensorPayload`, `WatchEpochDiagnostic`, and all underlying structs inside `SleepSessionManager` and `WatchSensorManager` (`SleepStage`, `EpochAggregate`, `WatchEpochAggregate`, etc.) to the `Sendable` protocol to ensure thread-safety under Strict Concurrency checking in Swift 6.
+
+---
+
+### ~~M-12 · `ScheduleView` has complex state synchronization between `internalHour/Minute` and view model~~ ✅ FIXED
+**File**: [ScheduleView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/ScheduleView.swift)
+
+**Fix applied**: Removed the fragile `@State var internalHour/Minute` mirroring pattern and the `syncInternalTime()` functions completely. The `CustomWheelPicker` views and `IdleTimeDisplay` now bind directly to `$viewModel.selectedDayHour` and `$viewModel.selectedDayMinute`, reducing state anomalies.
+
+---
+
+## 🟢 Low Issues
+
+### L-1 · `SafariView` is used but never defined in the reviewed files
+**Files**: [OnboardingView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Root/OnboardingView.swift#L104), [SettingsView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Settings/SettingsView.swift#L307)
+
+`SafariView(url:)` is referenced but not defined in any reviewed file. It's presumably a `UIViewControllerRepresentable` wrapper for `SFSafariViewController`. Ensure it exists and handles edge cases (no internet, invalid URL).
+
+---
+
+### L-2 · `DiagnosticsView` log display is unbounded in memory
+**File**: [DiagnosticsView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Root/DiagnosticsView.swift#L132)
+
+`sleepManager.logs.prefix(5000).reversed()` — the underlying `logs` array can grow without bound during a long session. While the view caps display at 5000, the backing array continues to consume memory.
+
+> [!TIP]
+> **Fix**: Cap `logs` to a maximum size (e.g. ring buffer of 10,000 entries).
+
+---
+
+### L-3 · `"Alarm saved"` in WatchSetup is hardcoded English
+**File**: [ScheduleView+WatchSetup.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Schedule/ScheduleView+WatchSetup.swift#L88-L102)
+
+`"Alarm saved".localized(for: appLanguage)` etc. — these strings are only translated in some languages. The `.localized()` call returns the English fallback silently when a translation is missing, but there's no compile-time check for completeness.
+
+---
+
+### L-4 · Magic numbers throughout the codebase
+**Files**: Multiple
+
+Examples:
+- `300` (gap threshold) — should be named `epochGapResetThreshold`
+- `12_000` (max pending payloads) — should be named
+- `30 * 60` (monitoring lead time) — already named on Watch side but not on iOS side
+- `0.08` (motion threshold) — named on Watch but not referenced consistently
+
+---
+
+### L-5 · `NinetyApp.swift` force-initializes singletons with `_ =`
+**File**: [NinetyApp.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/NinetyApp.swift)
+
+`_ = SleepSessionManager.shared` and `_ = SmartAlarmManager.shared` are used to trigger initialization. This works but is an anti-pattern. Consider making these `@StateObject` properties or using an explicit `setup()` method.
+
+---
+
+### L-6 · `WatchCopy.swift` file header says "ContentView.swift"
+**File**: [WatchCopy.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchCopy.swift#L1-L3)
+
+The file header comment says `ContentView.swift` — this is a copy-paste artifact.
+
+---
+
+### L-7 · `GuidedTourView` uses raw `Int` for step navigation
+**File**: [GuidedTourView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/Ninety/View/Root/GuidedTourView.swift#L250-L259)
+
+`step.rawValue - 1` / `step.rawValue + 1` with a guard. This works but adding/removing/reordering steps will break silently. Consider using `CaseIterable` indices instead.
+
+---
+
+### L-8 · `.setAlarm` WatchCopy key is not translated
+**File**: [WatchCopy.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchCopy.swift)
+
+The `.setAlarm` key returns `"Set Ninety Alarm"` in **all** languages (Italian, Spanish, Chinese, Arabic). This appears to be a missed translation.
+
+---
+
+### L-9 · `buttonTint` computed property in `WatchAlarmSetupView` is defined but never used
+**File**: [ContentView.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/ContentView.swift#L287-L298)
+
+The `buttonTint` computed property returns per-state colors but is never referenced in the view body. Dead code.
+
+---
+
+### L-10 · `handleScheduledAlarmReached` has identical behavior in both branches
+**File**: [WatchSensorManager+PayloadDelivery.swift](file:///Users/michele/Documents/GitHub/Ninety-app/NinetyWatch%20Watch%20App/WatchSensorManager+PayloadDelivery.swift#L75-L96)
+
+```swift
+if phoneReachable {
+    clearScheduledAlarmAndMonitoring(detail: "Watch smart wake active", state: .completed, keepHapticsRunning: true)
+} else {
+    clearScheduledAlarmAndMonitoring(detail: reason, state: .completed, keepHapticsRunning: true)
+}
+```
+
+The only difference is the `detail` string. This suggests the phone-reachable branch was meant to have different behaviour (e.g. not starting haptics locally when the phone handles the alarm).
+
+---
+
+## Summary Table
+
+| Severity | Count | Key Areas |
+|----------|-------|-----------|
+| 🔴 Critical | 5 | Concurrency/thread safety, data loss |
+| 🟠 High | 9 | Sync reliability, alarm delivery, architecture |
+| 🟡 Medium | 12 | Maintainability, localization, code duplication |
+| 🟢 Low | 10 | Style, dead code, minor UX |
+| **Total** | **36** | |
+
+## Recommended Priority Order
+
+1. **Fix all Critical concurrency issues first** (C-1 through C-4) — these cause crashes in production
+2. **Address C-5** (session data loss) — users lose sleep data
+3. **Fix H-5, H-6, H-9** — alarm reliability is the core product
+4. **Surface H-1** (scheduling errors to UI) — users need to know their alarm failed
+5. **Refactor H-4** (God method) — prerequisite for safely fixing other payload bugs
+6. **Address M-4** (placeholder URLs) — legal requirement before App Store submission
+7. Everything else in severity order

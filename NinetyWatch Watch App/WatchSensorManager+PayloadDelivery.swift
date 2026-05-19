@@ -75,14 +75,14 @@ extension WatchSensorManager {
     }
 
     func invalidateRuntimeSessionIfNeeded() {
-        // Move the session to pendingInvalidationSession before nil-ing runtimeSession.
+        // Park the session in pendingInvalidationSessions before nil-ing runtimeSession.
         // This keeps a strong reference alive until the async invalidate() RPC
         // completes and the didInvalidateWith delegate fires, at which point
-        // pendingInvalidationSession is cleared. Without this, ARC would release
+        // the session is removed from the set. Without this, ARC would release
         // the object while CarouselServices is still processing the cancel request,
         // producing dealloc-while-scheduled/-running warnings.
         if let session = runtimeSession {
-            pendingInvalidationSession = session
+            pendingInvalidationSessions.insert(session)
             runtimeSession = nil
             if session.state == .running || session.state == .scheduled {
                 suppressNextRuntimeInvalidation = true

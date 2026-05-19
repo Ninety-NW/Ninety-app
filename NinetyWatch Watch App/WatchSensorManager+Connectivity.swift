@@ -128,14 +128,14 @@ extension WatchSensorManager {
         self.isMocking = false
         #endif
 
-        // Invalidate the existing session *before* releasing our reference.
-        // Keeping a local strong reference prevents the object from being
-        // deallocated while the async invalidation is still in flight, which
-        // was producing -[WKExtendedRuntimeSession dealloc] warnings.
+        // Invalidate the existing session and park it in pendingInvalidationSessions
+        // so ARC keeps it alive until the async CarouselServices RPC completes.
+        // The delegate callback (didInvalidateWith) removes it from the set.
         if let existing = self.runtimeSession {
+            pendingInvalidationSessions.insert(existing)
             if existing.state == .running || existing.state == .scheduled {
                 suppressNextRuntimeInvalidation = true
-                existing.invalidate()  // async — must not nil runtimeSession yet
+                existing.invalidate()
             }
         }
 
@@ -212,9 +212,7 @@ extension WatchSensorManager {
             // Release the pending-invalidation reference now that the system has
             // confirmed the session is gone. This is the signal that it is safe
             // to let ARC free the session object.
-            if self.pendingInvalidationSession === extendedRuntimeSession {
-                self.pendingInvalidationSession = nil
-            }
+            self.pendingInvalidationSessions.remove(extendedRuntimeSession)
 
             if self.suppressNextRuntimeInvalidation {
                 self.suppressNextRuntimeInvalidation = false

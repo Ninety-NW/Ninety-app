@@ -213,11 +213,13 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     @Published var weeklyAlarmSyncDetail: String? = nil
     
     var runtimeSession: WKExtendedRuntimeSession?
-    /// Holds a strong reference to a session that has been asked to invalidate
-    /// but whose async delegate callback (`didInvalidateWith`) has not yet fired.
-    /// Without this, ARC would release the object mid-flight, producing
+    /// Holds strong references to sessions that have been asked to invalidate
+    /// but whose async delegate callbacks (`didInvalidateWith`) have not yet fired.
+    /// Without this, ARC would release the objects mid-flight, producing
     /// "-[WKExtendedRuntimeSession dealloc] while scheduled/running" warnings.
-    var pendingInvalidationSession: WKExtendedRuntimeSession?
+    /// Uses a Set because rapid clear→set→clear→set bursts from the iPhone can
+    /// cause multiple sessions to be invalidating concurrently.
+    var pendingInvalidationSessions: Set<WKExtendedRuntimeSession> = []
     var suppressNextRuntimeInvalidation = false
     let healthStore = HKHealthStore()
     let motionManager = CMMotionManager()
