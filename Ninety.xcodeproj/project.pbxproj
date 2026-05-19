@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5BB3EDC22C3AD54700CD4274 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */; };
+		5BB3EDC32C3AD54700CD4274 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */; };
 		001E1C922F853DF500AD4DC7 /* SensorPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C8E2F853DF500AD4DC7 /* SensorPayload.swift */; };
 		001E1C932F853DF500AD4DC7 /* SmartAlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C912F853DF500AD4DC7 /* SmartAlarmManager.swift */; };
 		001E1C952F853DF500AD4DC7 /* SleepSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C902F853DF500AD4DC7 /* SleepSessionManager.swift */; };
@@ -70,6 +72,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		001E1C8E2F853DF500AD4DC7 /* SensorPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorPayload.swift; sourceTree = "<group>"; };
 		001E1C902F853DF500AD4DC7 /* SleepSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSessionManager.swift; sourceTree = "<group>"; };
 		D00000000000000000000011 /* SleepSessionManager+WatchConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+WatchConnectivity.swift"; sourceTree = "<group>"; };
@@ -190,6 +193,7 @@
 		5BB3ED682C3AD54600CD4274 /* Ninety */ = {
 			isa = PBXGroup;
 			children = (
+				5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */,
 				001E1C8E2F853DF500AD4DC7 /* SensorPayload.swift */,
 				001E1C902F853DF500AD4DC7 /* SleepSessionManager.swift */,
 				D00000000000000000000011 /* SleepSessionManager+WatchConnectivity.swift */,
@@ -350,6 +354,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BB3EDC32C3AD54700CD4274 /* Localizable.xcstrings in Resources */,
 				00B643242F85305E00CC8B51 /* NeuralWakeUP.mlmodel in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,6 +363,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BB3EDC22C3AD54700CD4274 /* Localizable.xcstrings in Resources */,
 				5BB3ED712C3AD54700CD4274 /* Preview Assets.xcassets in Resources */,
 				C0D3B0060000000000000001 /* AppShortcuts.strings in Resources */,
 				5BB3ED6E2C3AD54700CD4274 /* Assets.xcassets in Resources */,

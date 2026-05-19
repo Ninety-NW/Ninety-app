@@ -217,7 +217,10 @@ extension WatchSensorManager {
         }
 
         if let targetDate = tombstone.targetDate {
-            return abs(targetDate.timeIntervalSince(record.targetDate)) < 1
+            // 10-second window accounts for Watch↔iPhone clock skew that can
+            // accumulate over a sleep session. Alarms are always scheduled at
+            // least several minutes apart, so false matches are impossible.
+            return abs(targetDate.timeIntervalSince(record.targetDate)) < 10
         }
 
         return true

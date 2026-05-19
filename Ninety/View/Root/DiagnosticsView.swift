@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DiagnosticsView: View {
     @EnvironmentObject private var viewModel: ScheduleViewModel
-    @ObservedObject private var sleepManager = SleepSessionManager.shared
+    @EnvironmentObject private var sleepManager: SleepSessionManager
     @ObservedObject private var smartAlarm = SmartAlarmManager.shared
     @AppStorage("appLanguage") private var appLanguage: String = AppLanguage.english.rawValue
     @Environment(\.colorScheme) private var colorScheme

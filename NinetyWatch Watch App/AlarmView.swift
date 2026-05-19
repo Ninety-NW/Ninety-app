@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AlarmView: View {
     @ObservedObject var hapticManager = HapticWakeUpManager.shared
+    @EnvironmentObject var sensorManager: WatchSensorManager
     
     var body: some View {
         ZStack {
@@ -28,7 +29,7 @@ struct AlarmView: View {
                     .fontWeight(.bold)
                 
                 Button(action: {
-                    WatchSensorManager.shared.stopActiveAlarmFromWatch()
+                    sensorManager.stopActiveAlarmFromWatch()
                 }) {
                     Text("STOP")
                         .fontWeight(.bold)
@@ -46,4 +47,5 @@ struct AlarmView: View {
 
 #Preview {
     AlarmView()
+        .environmentObject(WatchSensorManager.shared)
 }

@@ -27,6 +27,7 @@ struct ContentView: View {
                 
                 if hapticManager.isPlaying {
                     AlarmView()
+                        .environmentObject(sensorManager)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .zIndex(10)
                 }
@@ -97,6 +98,7 @@ struct WatchAlarmSetupView: View {
     @State var initialField: WatchTimeField = .hour
     @State var idleCrownValue: Double = 0
     @Binding var isEditingTime: Bool
+    @FocusState private var isButtonFocused: Bool
 
     var body: some View {
         VStack(alignment: .center, spacing: 12) {
@@ -201,6 +203,26 @@ struct WatchAlarmSetupView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .focused($isButtonFocused)
+                .focusable(true)
+                .digitalCrownRotation(
+                    $idleCrownValue,
+                    from: -12,
+                    through: 12,
+                    by: 1,
+                    sensitivity: .low,
+                    isContinuous: false,
+                    isHapticFeedbackEnabled: true
+                )
+                .onChange(of: idleCrownValue) { _, newValue in
+                    if abs(newValue) >= 3 {
+                        initialField = .hour
+                        withAnimation(.snappy(duration: 0.22)) {
+                            isEditingTime = true
+                        }
+                        idleCrownValue = 0
+                    }
+                }
                 .transition(.asymmetric(
                     insertion: .opacity,
                     removal: .move(edge: .top).combined(with: .opacity)
@@ -212,6 +234,9 @@ struct WatchAlarmSetupView: View {
         .animation(.snappy(duration: 0.22), value: isEditingTime)
         .onAppear {
             applySyncedNextAlarm()
+            if !isEditingTime {
+                isButtonFocused = true
+            }
         }
         .onChange(of: internalHour) {
             guard !isApplyingSyncedAlarm else { return }
@@ -221,36 +246,18 @@ struct WatchAlarmSetupView: View {
             guard !isApplyingSyncedAlarm else { return }
             sensorManager.markNextAlarmDraftChanged()
         }
-        .onChange(of: sensorManager.nextAlarmDate) {
+        .onChange(of: sensorManager.nextAlarmDate) { old, new in
+            // Guard against duplicate syncAlarmState messages delivering the
+            // same date — only sync the UI when the date actually changed.
+            guard old != new else { return }
             applySyncedNextAlarm()
         }
-        // Crown rotation: rotating from the main screen (not editing) opens the picker.
-        // Requires ≥3 low-sensitivity clicks to avoid accidental triggers.
-        .focusable(!isEditingTime)
-        .digitalCrownRotation(
-            $idleCrownValue,
-            from: -12,
-            through: 12,
-            by: 1,
-            sensitivity: .low,
-            isContinuous: false,
-            isHapticFeedbackEnabled: true
-        )
-        .onChange(of: idleCrownValue) { _, newValue in
-            guard !isEditingTime else {
-                idleCrownValue = 0
-                return
-            }
-            if abs(newValue) >= 3 {
-                initialField = .hour
-                withAnimation(.snappy(duration: 0.22)) {
-                    isEditingTime = true
-                }
-                idleCrownValue = 0
-            }
-        }
         .onChange(of: isEditingTime) { _, editing in
-            if editing { idleCrownValue = 0 }
+            idleCrownValue = 0
+            if !editing {
+                // Return focus to the main button when editing ends
+                isButtonFocused = true
+            }
         }
     }
 
@@ -327,6 +334,20 @@ struct WatchAlarmSetupView: View {
         let calendar = Calendar.autoupdatingCurrent
         let syncedHour = calendar.component(.hour, from: nextAlarmDate)
         let syncedMinute = calendar.component(.minute, from: nextAlarmDate)
+
+        // Guard: avoid writing state when nothing has changed.
+        // This breaks the onChange(nextAlarmDate) → applySyncedNextAlarm →
+        // write internalHour → onChange(internalHour) feedback loop that was
+        // causing hundreds of Crown Sequencer re-registrations and the
+        // AttributeGraph cycle warnings.
+        guard syncedHour != internalHour || syncedMinute != internalMinute else {
+            if sensorManager.weeklyAlarmSyncState != .saving {
+                withAnimation(.snappy(duration: 0.18)) {
+                    isEditingTime = false
+                }
+            }
+            return
+        }
 
         isApplyingSyncedAlarm = true
         

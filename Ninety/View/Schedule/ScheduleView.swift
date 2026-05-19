@@ -29,14 +29,12 @@ struct ScheduleView: View {
 
     @EnvironmentObject var viewModel: ScheduleViewModel
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject var sleepManager = SleepSessionManager.shared
+    @EnvironmentObject var sleepManager: SleepSessionManager
     @State var showingSettings = false
     @State var isSettingsNavigationPending = false
     @State var showingDiagnostics = false
     @State var showingWakeTimePicker = false
     @Namespace var glassNamespace
-    @State var internalHour: Int = 0
-    @State var internalMinute: Int = 0
     @AppStorage("appLanguage") var appLanguage: String = AppLanguage.english.rawValue
     @AppStorage("hapticFeedbackEnabled") var hapticFeedbackEnabled: Bool = true
     @AppStorage("showGuidedTour") var showGuidedTour: Bool = false
@@ -121,7 +119,6 @@ struct ScheduleView: View {
                     Color.clear
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            syncInternalTime()
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                 showingWakeTimePicker = false
                             }
@@ -170,7 +167,7 @@ struct ScheduleView: View {
 
                                 HStack(spacing: 12) {
                                     CustomWheelPicker(
-                                        selectedValue: $internalHour,
+                                        selectedValue: $viewModel.selectedDayHour,
                                         range: 0...23,
                                         isMinutes: false,
                                         isActive: true,
@@ -183,7 +180,7 @@ struct ScheduleView: View {
                                         .opacity(0.72)
                                         .offset(y: -3)
                                     CustomWheelPicker(
-                                        selectedValue: $internalMinute,
+                                        selectedValue: $viewModel.selectedDayMinute,
                                         range: 0...59,
                                         isMinutes: true,
                                         isActive: true,
@@ -216,8 +213,8 @@ struct ScheduleView: View {
                         } else {
                             VStack(spacing: 0) {
                                 IdleTimeDisplay(
-                                    hour: internalHour,
-                                    minute: internalMinute,
+                                    hour: viewModel.selectedDayHour,
+                                    minute: viewModel.selectedDayMinute,
                                     isActive: isSelectedDayActive
                                 )
                                 .transition(.asymmetric(
@@ -277,13 +274,6 @@ struct ScheduleView: View {
                                 }
                         }
                     }
-                    .onAppear(perform: syncInternalTime)
-                    .onChange(of: viewModel.selectedDayHour) { _, _ in
-                        if !showingWakeTimePicker { syncInternalTime() }
-                    }
-                    .onChange(of: viewModel.selectedDayMinute) { _, _ in
-                        if !showingWakeTimePicker { syncInternalTime() }
-                    }
                     Spacer().frame(height: 40)
                     if viewModel.isAlarmEnabled && !showingWakeTimePicker {
                         Text("\("Next Up".localized(for: appLanguage)) · \(viewModel.nextUpcomingLabel)")
@@ -341,7 +331,7 @@ struct ScheduleView: View {
                     if showingWakeTimePicker {
                         Button {
                             if hapticFeedbackEnabled { impactHaptic.impactOccurred() }
-                            viewModel.updateWakeTime(hour: internalHour, minute: internalMinute)
+                            viewModel.updateWakeTime(hour: viewModel.selectedDayHour, minute: viewModel.selectedDayMinute)
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                                 showingWakeTimePicker = false
                             }
@@ -437,6 +427,18 @@ struct ScheduleView: View {
                             .transition(.opacity)
                     }
                 }
+            }
+            .alert(
+                "Scheduling Error".localized(for: appLanguage),
+                isPresented: Binding(
+                    get: { viewModel.schedulingError != nil },
+                    set: { if !$0 { viewModel.schedulingError = nil } }
+                ),
+                presenting: viewModel.schedulingError
+            ) { _ in
+                Button("OK".localized(for: appLanguage), role: .cancel) { }
+            } message: { errorText in
+                Text(errorText)
             }
         }
     }

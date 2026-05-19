@@ -97,6 +97,14 @@ struct DayOfWeekSelector: View {
     }
 }
 
+/// Note: This is an iOS-specific implementation of the custom wheel picker.
+/// It intentionally diverges from `WatchCustomWheelPicker` in the Watch target.
+/// Divergences include:
+/// - iOS uses `UISelectionFeedbackGenerator` for haptics, whereas WatchOS uses `WKInterfaceDevice`.
+/// - Item sizes, font weights, and spacing are optimized for larger iOS screens vs small Watch displays.
+/// - Blur and opacity transformations are adapted for the iOS design language.
+/// A shared component was avoided to prevent leaking UIKit dependencies to WatchOS and to allow 
+/// fine-grained platform-specific layout tuning.
 struct CustomWheelPicker: View {
     @Binding var selectedValue: Int
     let range: ClosedRange<Int>

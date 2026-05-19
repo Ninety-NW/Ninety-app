@@ -11,14 +11,20 @@ import AppIntents
 @main
 struct NinetyApp: App {
     @AppStorage("appTheme") private var selectedTheme: AppTheme = .system
-    @StateObject private var scheduleViewModel = ScheduleViewModel()
+    @StateObject private var sleepSessionManager: SleepSessionManager
+    @StateObject private var scheduleViewModel: ScheduleViewModel
     @StateObject private var tourFrameStore = TourFrameStore()
     
     init() {
         // Core initialization to bind WCSession & UNUserNotification delegates immediately on launch.
-        // If these are not instantly mapped, WCSession cannot wake the iOS app from suspended states!
-        _ = SleepSessionManager.shared
+        let sleepManager = SleepSessionManager()
+        self._sleepSessionManager = StateObject(wrappedValue: sleepManager)
+        
+        let scheduleVM = ScheduleViewModel(sleepManager: sleepManager)
+        self._scheduleViewModel = StateObject(wrappedValue: scheduleVM)
+        
         _ = SmartAlarmManager.shared
+        SmartAlarmManager.shared.sleepSessionManager = sleepManager
         NinetyShortcutsProvider.updateAppShortcutParameters()
     }
     
@@ -26,6 +32,7 @@ struct NinetyApp: App {
         WindowGroup {
             OnboardingView()
                 .preferredColorScheme(selectedTheme.colorScheme)
+                .environmentObject(sleepSessionManager)
                 .environmentObject(scheduleViewModel)
                 .environmentObject(tourFrameStore)
         }

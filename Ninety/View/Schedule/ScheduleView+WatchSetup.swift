@@ -162,9 +162,4 @@ extension ScheduleView {
             .frame(width: 18, height: 2)
             .padding(.top, 11)
     }
-
-    func syncInternalTime() {
-        internalHour = viewModel.selectedDayHour
-        internalMinute = viewModel.selectedDayMinute
-    }
 }

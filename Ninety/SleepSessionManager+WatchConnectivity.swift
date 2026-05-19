@@ -216,10 +216,13 @@ extension SleepSessionManager {
     }
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        // log() already dispatches to main internally, but reading session properties
+        // is safe here since we only read the passed-in activationState value.
         log("WCSession Activated: \(activationState == .activated)")
     }
 
     func sessionReachabilityDidChange(_ session: WCSession) {
+        // session.isReachable is safe to read on the WCSession callback queue.
         let status = session.isReachable ? "Reachable" : "Unreachable"
         log("📱 iPhone WCSession: \(status)")
     }
@@ -231,15 +234,25 @@ extension SleepSessionManager {
     }
 
     func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        handleIncomingPayload(message)
+        // WCSession delivers this callback on a private background queue.
+        // Hop to main so that all shared-state reads inside handleIncomingPayload
+        // happen on a known thread before branching into processingQueue or further main.async blocks.
+        DispatchQueue.main.async {
+            self.handleIncomingPayload(message)
+        }
     }
 
     func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
-        handleIncomingPayload(message, replyHandler: replyHandler)
+        // Same as above; the replyHandler is captured and forwarded unchanged.
+        DispatchQueue.main.async {
+            self.handleIncomingPayload(message, replyHandler: replyHandler)
+        }
     }
 
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
-        handleIncomingPayload(userInfo)
+        DispatchQueue.main.async {
+            self.handleIncomingPayload(userInfo)
+        }
     }
 
 }

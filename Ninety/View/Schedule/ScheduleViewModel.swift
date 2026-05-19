@@ -95,6 +95,7 @@ final class ScheduleViewModel: ObservableObject {
     @Published var selectedDayMinute: Int = 0
     @Published var clockLogs: [String] = []
     var externalScheduleObserver: NSObjectProtocol?
+    weak var sleepManager: SleepSessionManager?
     
     func logClock(_ msg: String) {
         let formatter = DateFormatter()
@@ -112,7 +113,8 @@ final class ScheduleViewModel: ObservableObject {
         }
     }
 
-    init(observesExternalChanges: Bool = true) {
+    init(observesExternalChanges: Bool = true, sleepManager: SleepSessionManager? = nil) {
+        self.sleepManager = sleepManager
         wakeTimes = Self.loadWakeTimesFromStorage()
         currentWakeUpTime = ScheduleViewModel.defaultWakeTime
 
@@ -236,7 +238,7 @@ final class ScheduleViewModel: ObservableObject {
     }
 
     func cancelSession() {
-        SleepSessionManager.shared.log("UI Interaction: Cancelled system scheduled session")
+        sleepManager?.log("UI Interaction: Cancelled system scheduled session")
         SmartAlarmManager.shared.cancelSession()
         lastScheduledSession = nil
     }
@@ -251,7 +253,7 @@ final class ScheduleViewModel: ObservableObject {
 
         lastScheduledSession = nextUpcomingSession
 
-        SleepSessionManager.shared.log("UI Interaction: Toggled alarm for weekday \(weekday). Active: \(scheduledWeekdays.contains(weekday))")
+        sleepManager?.log("UI Interaction: Toggled alarm for weekday \(weekday). Active: \(scheduledWeekdays.contains(weekday))")
 
         Task {
             if scheduledWeekdays.isEmpty {
@@ -271,7 +273,7 @@ final class ScheduleViewModel: ObservableObject {
         storeWakeTime(weekday: selectedWeekday, hour: hour, minute: minute)
         markMutation(for: selectedWeekday)
         
-        SleepSessionManager.shared.log("UI Interaction: Updated wake time to \(String(format: "%02d:%02d", hour, minute)) for weekday \(selectedWeekday)")
+        sleepManager?.log("UI Interaction: Updated wake time to \(String(format: "%02d:%02d", hour, minute)) for weekday \(selectedWeekday)")
         logClock("wakeTimes[\(selectedWeekday)] updated to \(wakeTimes[String(selectedWeekday)]!)")
         
         lastScheduledSession = nextUpcomingSession
@@ -324,7 +326,7 @@ final class ScheduleViewModel: ObservableObject {
         markMutation(for: weekday)
         lastScheduledSession = nextUpcomingSession
 
-        SleepSessionManager.shared.log("Siri: Set weekly alarm for weekday \(weekday) at \(String(format: "%02d:%02d", hour, minute))")
+        sleepManager?.log("Siri: Set weekly alarm for weekday \(weekday) at \(String(format: "%02d:%02d", hour, minute))")
 
         let didSchedule = await scheduleSession()
         return WeeklyAlarmOperationResult(
@@ -341,7 +343,7 @@ final class ScheduleViewModel: ObservableObject {
         let latestMutationInterval = mutationTime(for: weekday)
         guard createdAtInterval >= latestMutationInterval else {
             let nextAlarm = nextUpcomingAlarm
-            SleepSessionManager.shared.log(
+            sleepManager?.log(
                 "Watch UI: Ignored stale weekly alarm for weekday \(weekday) at \(String(format: "%02d:%02d", hour, minute))"
             )
             return WatchWeeklyAlarmApplyResult(
@@ -358,7 +360,7 @@ final class ScheduleViewModel: ObservableObject {
         markMutation(for: weekday, timestamp: createdAtInterval)
         lastScheduledSession = nextUpcomingSession
 
-        SleepSessionManager.shared.log(
+        sleepManager?.log(
             "Watch UI: Updated weekly alarm for weekday \(weekday) to \(String(format: "%02d:%02d", hour, minute))"
         )
 
@@ -389,7 +391,7 @@ final class ScheduleViewModel: ObservableObject {
 
         let hour = newSeconds / 3600
         let minute = (newSeconds % 3600) / 60
-        SleepSessionManager.shared.log("Siri: Move weekly alarm for weekday \(weekday) by \(signedOffset / 60)m")
+        sleepManager?.log("Siri: Move weekly alarm for weekday \(weekday) by \(signedOffset / 60)m")
         return try await setWeeklyAlarm(weekday: weekday, hour: hour, minute: minute)
     }
 
@@ -402,7 +404,7 @@ final class ScheduleViewModel: ObservableObject {
         markMutation(for: weekday)
         lastScheduledSession = nextUpcomingSession
 
-        SleepSessionManager.shared.log("Siri: Cancel weekly alarm for weekday \(weekday)")
+        sleepManager?.log("Siri: Cancel weekly alarm for weekday \(weekday)")
 
         let didSchedule = await scheduleSession()
         return WeeklyAlarmOperationResult(

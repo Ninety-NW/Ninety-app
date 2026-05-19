@@ -137,28 +137,52 @@ extension SleepSessionManager {
             return
         }
 
+        // ── Read ──────────────────────────────────────────────────────────────
         guard let data = try? Data(contentsOf: url) else {
-            clearPersistedSessionState()
-            updateSessionRecoveryStatus("Session restarted")
+            // File exists but is unreadable — quarantine it and start fresh.
+            quarantineCorruptSessionFile(at: url, reason: "unreadable")
+            updateSessionRecoveryStatus("Session restarted (file unreadable)")
             return
         }
 
+        // ── Decode ────────────────────────────────────────────────────────────
+        // Decode failures most commonly happen after an app update that changed
+        // the PersistedSessionState schema. Rather than deleting the file (and
+        // losing all context for debugging), rename it to a .corrupt backup.
         guard let persisted = try? JSONDecoder().decode(PersistedSessionState.self, from: data) else {
-            clearPersistedSessionState()
-            updateSessionRecoveryStatus("Session restarted")
+            quarantineCorruptSessionFile(at: url, reason: "decode-failed")
+            updateSessionRecoveryStatus("Session restarted (incompatible save format)")
+            log("⚠️ Could not decode persisted session — saved as .corrupt for inspection.")
             return
         }
 
+        // ── Validity ──────────────────────────────────────────────────────────
         guard shouldRestore(persisted) else {
+            // Session is valid but too old — clean delete is fine here.
             clearPersistedSessionState()
-            updateSessionRecoveryStatus("Session restarted")
+            updateSessionRecoveryStatus("Session restarted (previous session expired)")
             return
         }
 
+        // ── Restore ───────────────────────────────────────────────────────────
         applyRestoredSession(persisted)
         updateSessionRecoveryStatus("Session restored")
         log("Restored active sleep analysis from disk.")
     }
+
+    /// Renames the session file to a `.corrupt` sibling rather than deleting it.
+    /// This preserves the raw bytes for post-mortem debugging while ensuring the
+    /// app starts fresh on the next launch.
+    private func quarantineCorruptSessionFile(at url: URL, reason: String) {
+        persistenceQueue.async {
+            let backupURL = url.deletingPathExtension()
+                .appendingPathExtension("\(reason).corrupt")
+            // Remove any previous backup so the rename never fails with EEXIST.
+            try? FileManager.default.removeItem(at: backupURL)
+            try? FileManager.default.moveItem(at: url, to: backupURL)
+        }
+    }
+
 
     func applyRestoredSession(_ persisted: PersistedSessionState) {
         performOnProcessingQueueSync {

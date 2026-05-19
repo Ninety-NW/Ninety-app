@@ -100,13 +100,13 @@ struct OnboardingView: View {
                 }
             }
             .sheet(isPresented: $showTermsOfService) {
-                if let url = URL(string: "https://example.com/terms") {
+                if let url = URL(string: "https://ninety.app/terms") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }
             }
             .sheet(isPresented: $showPrivacyPolicy) {
-                if let url = URL(string: "https://example.com/privacy") {
+                if let url = URL(string: "https://ninety.app/privacy") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }

@@ -156,20 +156,6 @@ extension SleepSessionManager {
 
     // MARK: - Math Helpers
 
-    func mean(of values: [Double]) -> Double {
-        guard !values.isEmpty else { return 0 }
-        return values.reduce(0, +) / Double(values.count)
-    }
-
-    func stdDev(of values: [Double]) -> Double {
-        guard values.count > 1 else { return 0 }
-        let avg = mean(of: values)
-        let variance = values.reduce(0) { partialResult, value in
-            partialResult + pow(value - avg, 2)
-        } / Double(values.count)
-        return sqrt(variance)
-    }
-
     func log1p(_ x: Double) -> Double {
         return Foundation.log1p(max(x, 0))
     }

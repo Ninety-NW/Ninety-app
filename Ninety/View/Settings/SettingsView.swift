@@ -303,13 +303,13 @@ private struct AboutView: View {
                 }
             }
             .sheet(isPresented: $showingTerms) {
-                if let url = URL(string: "https://example.com/terms") {
+                if let url = URL(string: "https://ninety.app/terms") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }
             }
             .sheet(isPresented: $showingPrivacy) {
-                if let url = URL(string: "https://example.com/privacy") {
+                if let url = URL(string: "https://ninety.app/privacy") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }

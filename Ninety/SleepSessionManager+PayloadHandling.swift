@@ -4,82 +4,94 @@ import UIKit
 import WatchConnectivity
 
 extension SleepSessionManager {
-    // MARK: - Payload Handling
+    // MARK: - Action Routing
+
+    enum PayloadAction: String {
+        case requestAlarmSync
+        case stopAlarm
+        case watchEpochDiagnostic
+        case triggerAlarm
+        case setNextAlarm
+    }
 
     func handleIncomingPayload(_ payloadDictionary: [String: Any], replyHandler: (([String: Any]) -> Void)? = nil) {
-        // 0. Manual Alarm Sync Request
-        if let action = payloadDictionary["action"] as? String, action == "requestAlarmSync" {
-            DispatchQueue.main.async {
-                if let activeWakeTargetDate = self.activeWakeTargetDate, activeWakeTargetDate > Date() {
-                    self.syncAlarmState(
-                        targetDate: activeWakeTargetDate,
-                        alarmID: SmartAlarmManager.shared.currentAlarmInstanceID()
-                    )
-                } else if let nextSession = ScheduleViewModel(observesExternalChanges: false).nextUpcomingSession {
-                    self.syncAlarmState(
-                        targetDate: nextSession.wakeUpDate,
-                        alarmID: SmartAlarmManager.shared.currentAlarmInstanceID()
-                    )
-                } else {
-                    self.syncAlarmState(targetDate: nil)
-                }
+        if let actionString = payloadDictionary["action"] as? String,
+           let action = PayloadAction(rawValue: actionString) {
+            switch action {
+            case .requestAlarmSync:
+                handleRequestAlarmSync()
+            case .stopAlarm:
+                handleStopAlarm(payloadDictionary)
+            case .watchEpochDiagnostic:
+                handleWatchEpochDiagnostic(payloadDictionary)
+            case .triggerAlarm:
+                handleTriggerAlarm(payloadDictionary)
+            case .setNextAlarm:
+                handleSetNextAlarmFromWatch(payloadDictionary, replyHandler: replyHandler)
             }
             return
         }
 
-        // 0.5. Cancel Alarm Request
-        if let action = payloadDictionary["action"] as? String, action == "stopAlarm" {
-            let tombstone = stopTombstone(from: payloadDictionary)
-            recordStopTombstone(tombstone)
-            DispatchQueue.main.async {
-                SmartAlarmManager.shared.cancelSession(
-                    alarmID: tombstone.alarmInstanceID,
-                    stoppedAt: tombstone.stoppedAt
-                )
-            }
-            return
-        }
-
-        if let action = payloadDictionary["action"] as? String, action == "watchEpochDiagnostic" {
-            handleWatchEpochDiagnostic(payloadDictionary)
-            return
-        }
-
-        // 0.7. Trigger Alarm Request (from Watch smart wake or fallback)
-        if let action = payloadDictionary["action"] as? String, action == "triggerAlarm" {
-            guard !shouldIgnoreIncomingAlarmEvent(payloadDictionary) else {
-                return
-            }
-
-            if let targetDate = dateValue(from: payloadDictionary["targetDate"]),
-               targetDate.addingTimeInterval(5 * 60) < Date() {
-                return
-            }
-
-            let targetDate = dateValue(from: payloadDictionary["targetDate"])
-            DispatchQueue.main.async {
-                self.noteWatchSmartWakeTriggered(targetDate: targetDate)
-            }
-            return
-        }
-
-        // 1. Weekly plan edit command from the native Watch UI
-        if let action = payloadDictionary["action"] as? String, action == "setNextAlarm" {
-            handleSetNextAlarmFromWatch(payloadDictionary, replyHandler: replyHandler)
-            return
-        }
-
-        // 2. Cross-Device Siri Intent Relay Check
         if let relayIntent = payloadDictionary["relayIntent"] as? String {
             handleRelayIntent(relayIntent, payload: payloadDictionary, replyHandler: replyHandler)
             return
         }
 
-        // 3. Original Watch Status Check
         if handleWatchStatus(payloadDictionary) {
             return
         }
 
+        handleSensorPayload(payloadDictionary)
+    }
+
+    // MARK: - Dedicated Handlers
+
+    private func handleRequestAlarmSync() {
+        DispatchQueue.main.async {
+            if let activeWakeTargetDate = self.activeWakeTargetDate, activeWakeTargetDate > Date() {
+                self.syncAlarmState(
+                    targetDate: activeWakeTargetDate,
+                    alarmID: SmartAlarmManager.shared.currentAlarmInstanceID()
+                )
+            } else if let nextSession = ScheduleViewModel(observesExternalChanges: false).nextUpcomingSession {
+                self.syncAlarmState(
+                    targetDate: nextSession.wakeUpDate,
+                    alarmID: SmartAlarmManager.shared.currentAlarmInstanceID()
+                )
+            } else {
+                self.syncAlarmState(targetDate: nil)
+            }
+        }
+    }
+
+    private func handleStopAlarm(_ payloadDictionary: [String: Any]) {
+        let tombstone = stopTombstone(from: payloadDictionary)
+        recordStopTombstone(tombstone)
+        DispatchQueue.main.async {
+            SmartAlarmManager.shared.cancelSession(
+                alarmID: tombstone.alarmInstanceID,
+                stoppedAt: tombstone.stoppedAt
+            )
+        }
+    }
+
+    private func handleTriggerAlarm(_ payloadDictionary: [String: Any]) {
+        guard !shouldIgnoreIncomingAlarmEvent(payloadDictionary) else {
+            return
+        }
+
+        if let targetDate = dateValue(from: payloadDictionary["targetDate"]),
+           targetDate.addingTimeInterval(5 * 60) < Date() {
+            return
+        }
+
+        let targetDate = dateValue(from: payloadDictionary["targetDate"])
+        DispatchQueue.main.async {
+            self.noteWatchSmartWakeTriggered(targetDate: targetDate)
+        }
+    }
+
+    private func handleSensorPayload(_ payloadDictionary: [String: Any]) {
         extendBackgroundTask()
 
         do {
@@ -322,7 +334,9 @@ extension SleepSessionManager {
 
         if let stoppedTarget = tombstone.targetDate,
            let incomingTarget = dateValue(from: payload["targetDate"]) {
-            return abs(stoppedTarget.timeIntervalSince(incomingTarget)) < 1
+            // 10-second window matches the Watch-side tolerance and handles
+            // any clock skew that accumulates over a sleep session.
+            return abs(stoppedTarget.timeIntervalSince(incomingTarget)) < 10
         }
 
         return false

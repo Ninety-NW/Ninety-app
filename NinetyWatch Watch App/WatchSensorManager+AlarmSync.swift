@@ -306,7 +306,11 @@ extension WatchSensorManager {
             return
         }
 
-        try? session.updateApplicationContext(command.message)
+        // NOTE: Do NOT use updateApplicationContext here. applicationContext is
+        // a latest-wins store — any subsequent context update would overwrite the
+        // stop command before the iPhone reads it, silently dropping the signal
+        // and leaving the alarm ringing. Use transferUserInfo (guaranteed delivery)
+        // and sendMessage (live delivery) instead.
 
         guard session.isReachable else {
             session.transferUserInfo(command.message)
@@ -343,13 +347,6 @@ extension WatchSensorManager {
         }
     }
 
-    func standardDeviation(for values: [Double]) -> Double {
-        guard values.count > 1 else { return 0 }
-        let mean = values.reduce(0, +) / Double(values.count)
-        let variance = values.reduce(0) { partialResult, value in
-            partialResult + pow(value - mean, 2)
-        } / Double(values.count)
-        return sqrt(variance)
-    }
+
     
 }

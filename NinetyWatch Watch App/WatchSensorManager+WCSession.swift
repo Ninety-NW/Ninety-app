@@ -28,16 +28,26 @@ extension WatchSensorManager {
         }
     }
     
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        processIncomingCommand(message)
+    func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
+        // WCSession delivers this on a private background queue.
+        // Hop to main so processIncomingCommand (and any @Published reads inside it,
+        // e.g. nextAlarmDate in currentStopTombstone) run on a known thread,
+        // and so all pendingPayloads mutations always originate from main.
+        DispatchQueue.main.async {
+            self.processIncomingCommand(message)
+        }
     }
-    
-    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
-        processIncomingCommand(userInfo)
+
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        DispatchQueue.main.async {
+            self.processIncomingCommand(userInfo)
+        }
     }
-    
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        processIncomingCommand(applicationContext)
+
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
+        DispatchQueue.main.async {
+            self.processIncomingCommand(applicationContext)
+        }
     }
     
     func processIncomingCommand(_ payload: [String: Any]) {

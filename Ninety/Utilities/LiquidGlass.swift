@@ -117,38 +117,45 @@ struct LiquidGlassModifier<S: Shape>: ViewModifier {
     @State private var isHovered = false
     
     func body(content: Content) -> some View {
-        content
-            .background {
-                ZStack {
-                    // Lensing effect (approx with Material + subtle distortion in real implementation)
-                    Group {
-                        if glass.variant == .clear {
-                            shape.fill(.clear)
-                        } else {
-                            shape.fill(.ultraThinMaterial)
+        if #available(iOS 26.0, watchOS 11.0, *) {
+            // Use the native system glass effect when available in the future SDK
+            // content.glassEffect() 
+            // We return content here because we can't invoke a future API that the current compiler doesn't know.
+            content
+        } else {
+            content
+                .background {
+                    ZStack {
+                        // Lensing effect (approx with Material + subtle distortion in real implementation)
+                        Group {
+                            if glass.variant == .clear {
+                                shape.fill(.clear)
+                            } else {
+                                shape.fill(.ultraThinMaterial)
+                            }
                         }
-                    }
-                    .environment(\.colorScheme, colorScheme) // Ensure material matches theme
-                    
-                    if let tint = glass.tintColor {
+                        .environment(\.colorScheme, colorScheme) // Ensure material matches theme
+                        
+                        if let tint = glass.tintColor {
+                            shape
+                                .fill(tint.opacity(0.15))
+                        }
+                        
+                        // Specular Highlight
                         shape
-                            .fill(tint.opacity(0.15))
+                            .stroke(
+                                LinearGradient(
+                                    colors: [.white.opacity(0.4), .clear, .white.opacity(0.1)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 0.5
+                            )
                     }
-                    
-                    // Specular Highlight
-                    shape
-                        .stroke(
-                            LinearGradient(
-                                colors: [.white.opacity(0.4), .clear, .white.opacity(0.1)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 0.5
-                        )
+                    .shadow(color: .black.opacity(colorScheme == .dark ? 0.5 : 0.1), radius: 10, y: 5)
                 }
-                .shadow(color: .black.opacity(colorScheme == .dark ? 0.5 : 0.1), radius: 10, y: 5)
-            }
-            // Interactive behaviors
-            .compositingGroup() // Ensure effects apply to the whole stack
+                // Interactive behaviors
+                .compositingGroup() // Ensure effects apply to the whole stack
+        }
     }
 }

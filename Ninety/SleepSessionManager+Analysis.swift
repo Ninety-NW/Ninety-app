@@ -50,7 +50,7 @@ extension SleepSessionManager {
             isWatchTestInjected: diagnostic.isTestInjected
         )
 
-        if let lastEpoch = epochHistory.last, diagnostic.timestamp.timeIntervalSince(lastEpoch.timestamp) > 300 {
+        if let lastEpoch = epochHistory.last, diagnostic.timestamp.timeIntervalSince(lastEpoch.timestamp) > AnalysisConstants.maxSensorGapThreshold {
             epochHistory.removeAll()
             rawPredictionHistory.removeAll()
             smoothedPredictionHistory.removeAll()

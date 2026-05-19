@@ -71,7 +71,7 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         }
     }
 
-    enum WatchSleepStage: Int, CaseIterable, Codable {
+    enum WatchSleepStage: Int, CaseIterable, Codable, Sendable {
         case wake = 0
         case light = 1
         case deep = 2
@@ -87,7 +87,7 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         }
     }
 
-    struct WatchEpochAggregate {
+    struct WatchEpochAggregate: Sendable {
         let timestamp: Date
         let heartRateMean: Double
         let heartRateStd: Double
@@ -97,14 +97,14 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         let motionJerk: Double
     }
 
-    struct WatchPredictionSnapshot {
+    struct WatchPredictionSnapshot: Sendable {
         let rawStage: WatchSleepStage
         let smoothedStage: WatchSleepStage
         let epoch: WatchEpochAggregate
         let isTestInjected: Bool
     }
 
-    struct PendingPayloadEnvelope: Codable {
+    struct PendingPayloadEnvelope: Codable, Sendable {
         let payload: SensorPayload
         let enqueuedAt: Date
         var lastAttemptAt: Date?
@@ -213,6 +213,11 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     @Published var weeklyAlarmSyncDetail: String? = nil
     
     var runtimeSession: WKExtendedRuntimeSession?
+    /// Holds a strong reference to a session that has been asked to invalidate
+    /// but whose async delegate callback (`didInvalidateWith`) has not yet fired.
+    /// Without this, ARC would release the object mid-flight, producing
+    /// "-[WKExtendedRuntimeSession dealloc] while scheduled/running" warnings.
+    var pendingInvalidationSession: WKExtendedRuntimeSession?
     var suppressNextRuntimeInvalidation = false
     let healthStore = HKHealthStore()
     let motionManager = CMMotionManager()
@@ -242,18 +247,32 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     var motionDeviationSamples: [Double] = []
     var motionCountBuffer: Double = 0
     let motionQueue = OperationQueue()
+    /// Serial queue used as the synchronisation lock for motionDeviationSamples
+    /// and motionCountBuffer. All reads and writes to those buffers must happen
+    /// inside this queue (either async for the accelerometer handler, or sync
+    /// for the snapshot in compileAndTransmitPayload).
+    let motionBufferQueue = DispatchQueue(label: "Ninety.Watch.motionBuffer")
     
     // For Mocking
     var mockTimer: AnyCancellable?
     
     override init() {
         super.init()
-        restorePendingPayloadQueue()
+        // Restore lightweight UserDefaults state synchronously —
+        // these are just tiny reads, safe on main thread at launch.
         restorePendingNextAlarmCommand()
         restorePendingStopAlarmCommand()
         setupWatchConnectivity()
         refreshNextAlarmDate()
-        loadWatchModel()
+
+        // Heavy I/O (pending payload queue) and ML model loading are moved off the
+        // main thread to prevent blocking the SwiftUI render loop during launch.
+        // The Watch app was previously getting stuck on the loading screen because
+        // MLModel(contentsOf:) is synchronous and expensive.
+        Task.detached(priority: .utility) {
+            await self.restorePendingPayloadQueueAsync()
+            await self.loadWatchModelAsync()
+        }
     }
 
     var hasPendingSchedule: Bool {

@@ -24,6 +24,33 @@ extension WatchSensorManager {
         }
     }
 
+    /// Async version that loads the ML model on a background thread to avoid
+    /// blocking the SwiftUI render loop at launch. MLModel(contentsOf:) is an
+    /// expensive synchronous operation that was previously causing the Watch app
+    /// to get stuck on the loading screen.
+    func loadWatchModelAsync() async {
+        guard let modelURL = Bundle.main.url(forResource: "NeuralWakeUP", withExtension: "mlmodelc") else {
+            await MainActor.run { self.replayStatusText = "Watch ML missing" }
+            return
+        }
+
+        do {
+            let configuration = MLModelConfiguration()
+            // MLModel loading is CPU/IO intensive — run off main thread
+            let model = try await Task.detached(priority: .utility) {
+                try MLModel(contentsOf: modelURL, configuration: configuration)
+            }.value
+            await MainActor.run {
+                self.watchStageModel = model
+                self.replayStatusText = "Watch ML ready"
+            }
+        } catch {
+            await MainActor.run {
+                self.replayStatusText = "Watch ML failed: \(error.localizedDescription)"
+            }
+        }
+    }
+
     func resetLocalAnalysis(startDate: Date? = nil) {
         currentEpochPayloads.removeAll()
         epochHistory.removeAll()
@@ -41,8 +68,9 @@ extension WatchSensorManager {
 
         if let lastTimestamp = currentEpochPayloads.last?.timestamp ?? epochHistory.last?.timestamp {
             let gap = payload.timestamp.timeIntervalSince(lastTimestamp)
-            if gap > 300 {
+            if gap > AnalysisConstants.maxSensorGapThreshold {
                 resetLocalAnalysis(startDate: Date())
+                replayStatusText = "Gap detected (\(Int(gap))s). ML reset."
             }
         }
 
@@ -54,7 +82,7 @@ extension WatchSensorManager {
 
         let hrValues = currentEpochPayloads.flatMap(\.hrSamples)
         var hrMean = hrValues.isEmpty ? 0 : hrValues.reduce(0, +) / Double(hrValues.count)
-        var hrStd = standardDeviation(for: hrValues)
+        var hrStd = hrValues.standardDeviation
         var hrRange = hrValues.isEmpty ? 0 : (hrValues.max()! - hrValues.min()!)
 
         if hrMean < 30 {
@@ -347,29 +375,29 @@ extension WatchSensorManager {
         let motionEpochMagMean = epoch.motionMagMean
         let motionEpochMagMax = epoch.motionMagMax
 
-        let motionHist2mMagMean = mean(of: motionMags2m)
-        let motionHist2mMagStd = standardDeviation(for: motionMags2m)
-        let motionHist5mMagMean = mean(of: motionMags5m)
-        let motionHist5mMagStd = standardDeviation(for: motionMags5m)
+        let motionHist2mMagMean = motionMags2m.mean
+        let motionHist2mMagStd = motionMags2m.standardDeviation
+        let motionHist5mMagMean = motionMags5m.mean
+        let motionHist5mMagStd = motionMags5m.standardDeviation
         let motionHist5mMagMax = motionMags5m.max() ?? 0
         let motionHist5mMagSum = motionMags5m.reduce(0, +)
-        let motionHist10mMagMean = mean(of: motionMags10m)
-        let motionHist10mMagStd = standardDeviation(for: motionMags10m)
-        let motionHist5mJerkStd = standardDeviation(for: jerk5m)
+        let motionHist10mMagMean = motionMags10m.mean
+        let motionHist10mMagStd = motionMags10m.standardDeviation
+        let motionHist5mJerkStd = jerk5m.standardDeviation
 
-        let motionEpochJerkMinusHist5mMean = epoch.motionJerk - mean(of: jerk5m)
+        let motionEpochJerkMinusHist5mMean = epoch.motionJerk - jerk5m.mean
         let motionEpochMagMinusHist5mMean = motionEpochMagMean - motionHist5mMagMean
         let motionEpochMagMinusHist2mMean = motionEpochMagMean - motionHist2mMagMean
 
-        let hrHist5mMean = mean(of: hrMeans5m)
-        let hrHist5mStd = standardDeviation(for: hrMeans5m)
-        let hrHist10mMean = mean(of: hrMeans10m)
-        let hrHist10mStd = standardDeviation(for: hrMeans10m)
+        let hrHist5mMean = hrMeans5m.mean
+        let hrHist5mStd = hrMeans5m.standardDeviation
+        let hrHist10mMean = hrMeans10m.mean
+        let hrHist10mStd = hrMeans10m.standardDeviation
         let hrHist5mCV = hrHist5mMean > 0 ? hrHist5mStd / hrHist5mMean : 0
         let hrHist10mCV = hrHist10mMean > 0 ? hrHist10mStd / hrHist10mMean : 0
 
-        let hrEpochRangeMinusHist5mRange = epoch.heartRateRange - mean(of: hrRanges5m)
-        let hrEpochStdMinusHist5mStd = epoch.heartRateStd - mean(of: hrStds5m)
+        let hrEpochRangeMinusHist5mRange = epoch.heartRateRange - hrRanges5m.mean
+        let hrEpochStdMinusHist5mStd = epoch.heartRateStd - hrStds5m.mean
         let hrEpochMeanDivHist10mMean = hrHist10mMean > 0 ? epoch.heartRateMean / hrHist10mMean : 1
 
         let startDate = localAnalysisStartDate ?? epochHistory.first?.timestamp ?? epoch.timestamp
@@ -422,9 +450,10 @@ extension WatchSensorManager {
         return values.last
     }
 
-    func mean(of values: [Double]) -> Double {
-        guard !values.isEmpty else { return 0 }
-        return values.reduce(0, +) / Double(values.count)
+    // MARK: - Math Helpers
+
+    func log1p(_ x: Double) -> Double {
+        return Foundation.log1p(max(x, 0))
     }
     
 }

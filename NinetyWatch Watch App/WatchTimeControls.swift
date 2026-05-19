@@ -7,6 +7,7 @@ struct TimeWheelField: View {
 
     @State var focusedField: WatchTimeField
     @State var crownValue: Double = 0
+    @FocusState private var isFieldFocused: Bool
 
     init(hour: Binding<Int>, minute: Binding<Int>, initialFocus: WatchTimeField) {
         _hour = hour
@@ -62,17 +63,22 @@ struct TimeWheelField: View {
         .onAppear {
             focusedField = initialFocus
             crownValue = Double(selectedValue)
+            isFieldFocused = true
         }
         .onChange(of: focusedField) { _, _ in
             crownValue = Double(selectedValue)
         }
         .onChange(of: hour) { _, newHour in
             guard focusedField == .hour else { return }
-            crownValue = Double(newHour)
+            if Int(round(crownValue)) != newHour {
+                crownValue = Double(newHour)
+            }
         }
         .onChange(of: minute) { _, newMinute in
             guard focusedField == .minute else { return }
-            crownValue = Double(newMinute)
+            if Int(round(crownValue)) != newMinute {
+                crownValue = Double(newMinute)
+            }
         }
         .onChange(of: crownValue) { _, newCrown in
             let rounded = Int(round(newCrown))
@@ -87,6 +93,7 @@ struct TimeWheelField: View {
                 }
             }
         }
+        .focused($isFieldFocused)
         .focusable(true)
         .digitalCrownRotation(
             $crownValue,
@@ -100,6 +107,14 @@ struct TimeWheelField: View {
     }
 }
 
+/// Note: This is a WatchOS-specific implementation of the custom wheel picker.
+/// It intentionally diverges from `CustomWheelPicker` in the iOS target.
+/// Divergences include:
+/// - WatchOS uses `WKInterfaceDevice.current().play(.click)` for haptics instead of UIKit generators.
+/// - Item sizes, spacing, and font sizes (e.g., 28pt) are tightly constrained for small screens.
+/// - Includes focus-state styling (`isFocused` parameter) specifically for Digital Crown integration.
+/// A shared component was avoided to prevent leaking UIKit dependencies to WatchOS and to allow 
+/// fine-grained platform-specific layout tuning.
 struct WatchCustomWheelPicker: View {
     @Binding var selectedValue: Int
     let range: ClosedRange<Int>
@@ -117,7 +132,7 @@ struct WatchCustomWheelPicker: View {
     var body: some View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: 0) {
+                VStack(spacing: 0) {
                     ForEach(0..<(count * multiplier), id: \.self) { index in
                         let value = range.lowerBound + (index % count)
 

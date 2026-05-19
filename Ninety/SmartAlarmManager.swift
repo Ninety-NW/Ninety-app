@@ -33,6 +33,8 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
     @Published var monitoringCountdown: String = ""
     @Published var isWakeAlarmActive: Bool = false
     
+    weak var sleepSessionManager: SleepSessionManager?
+    
     private var absoluteAlarmID: UUID?
     private var monitoringTimer: Timer?   // fires when the 30-minute tracking window opens
     private var countdownTimer: Timer?    // updates the countdown string every second
@@ -111,7 +113,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
                 createdAt: nil
             )
             cancelSystemAlarm(id: alarmID)
-            SleepSessionManager.shared.stopWatchAlarmPlayback(
+            sleepSessionManager?.stopWatchAlarmPlayback(
                 alarmID: alarmID,
                 targetDate: nil,
                 stoppedAt: stopDate
@@ -156,20 +158,20 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
         cancelAllSystemAlarms()
         absoluteAlarmID = nil
 
-        SleepSessionManager.shared.syncAlarmState(
+        sleepSessionManager?.syncAlarmState(
             targetDate: nil,
             alarmID: cancelledAlarmID,
             createdAt: cancelledCreatedAt,
             stoppedAt: stoppedAt
         )
         if resetStatus || stoppedAt != nil {
-            SleepSessionManager.shared.stopWatchAlarmPlayback(
+            sleepSessionManager?.stopWatchAlarmPlayback(
                 alarmID: cancelledAlarmID,
                 targetDate: cancelledTargetDate,
                 stoppedAt: stoppedAt
             )
         }
-        SleepSessionManager.shared.pauseWatchMonitoring()
+        sleepSessionManager?.pauseWatchMonitoring()
 
         if resetStatus {
             self.alarmStatus = "No alarms configured."
@@ -193,7 +195,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
         self.absoluteAlarmID = alarmID
         self.alarmCreatedAt = createdAt
 
-        SleepSessionManager.shared.syncAlarmState(
+        sleepSessionManager?.syncAlarmState(
             targetDate: targetDate,
             alarmID: alarmID,
             createdAt: createdAt
@@ -207,7 +209,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
         countdownTimer?.invalidate()
         wakeTargetDate = targetDate
 
-        SleepSessionManager.shared.startWatchSession(
+        sleepSessionManager?.startWatchSession(
             targetDate: targetDate,
             alarmID: alarmID,
             createdAt: createdAt

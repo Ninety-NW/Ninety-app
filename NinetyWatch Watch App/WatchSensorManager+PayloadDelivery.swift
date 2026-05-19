@@ -39,6 +39,33 @@ extension WatchSensorManager {
         }
     }
 
+    /// Async version that performs disk I/O on a background thread to avoid
+    /// blocking the SwiftUI render loop at launch. Results are published back on main.
+    func restorePendingPayloadQueueAsync() async {
+        guard let url = pendingPayloadsURL else { return }
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+
+        let restored: [PendingPayloadEnvelope]? = await Task.detached(priority: .utility) {
+            guard
+                let data = try? Data(contentsOf: url),
+                let payloads = try? JSONDecoder().decode([PendingPayloadEnvelope].self, from: data)
+            else {
+                try? FileManager.default.removeItem(at: url)
+                return nil
+            }
+            return payloads
+        }.value
+
+        await MainActor.run {
+            guard let restored else { return }
+            self.pendingPayloads = Array(restored.suffix(self.maxPendingPayloads))
+            if !self.pendingPayloads.isEmpty {
+                self.replayStatusText = "Recovered \(self.pendingPayloads.count) pending payloads"
+                self.updatePipelineState(.deliveringBacklog, detail: "Recovered \(self.pendingPayloads.count) pending payloads")
+            }
+        }
+    }
+
     func prepareForNewSession() {
         clearAlarmTracking()
         resetLocalAnalysis()
@@ -48,11 +75,22 @@ extension WatchSensorManager {
     }
 
     func invalidateRuntimeSessionIfNeeded() {
-        if runtimeSession?.state == .running || runtimeSession?.state == .scheduled {
-            suppressNextRuntimeInvalidation = true
-            runtimeSession?.invalidate()
+        // Move the session to pendingInvalidationSession before nil-ing runtimeSession.
+        // This keeps a strong reference alive until the async invalidate() RPC
+        // completes and the didInvalidateWith delegate fires, at which point
+        // pendingInvalidationSession is cleared. Without this, ARC would release
+        // the object while CarouselServices is still processing the cancel request,
+        // producing dealloc-while-scheduled/-running warnings.
+        if let session = runtimeSession {
+            pendingInvalidationSession = session
+            runtimeSession = nil
+            if session.state == .running || session.state == .scheduled {
+                suppressNextRuntimeInvalidation = true
+                session.invalidate()
+            }
+        } else {
+            runtimeSession = nil
         }
-        runtimeSession = nil
     }
 
     func clearScheduledAlarmAndMonitoring(
@@ -73,8 +111,15 @@ extension WatchSensorManager {
     }
 
     func handleScheduledAlarmReached(reason: String) {
+        // Guard against double-firing: if the smart wake path confirmed in the
+        // same run-loop turn as the deadline timer fired, sendTriggerAlarmMessage()
+        // would be called twice. Setting the flag here makes both paths mutually
+        // exclusive through the existing `guard !smartWakeTriggered` checks.
+        guard !smartWakeTriggered else { return }
+        smartWakeTriggered = true
+
         let phoneReachable = wcSession?.activationState == .activated && wcSession?.isReachable == true
-        
+
         // Start the silent Watch phase of the same Ninety alarm locally.
         startWatchHapticWakePhase()
         sendTriggerAlarmMessage()
@@ -186,10 +231,6 @@ extension WatchSensorManager {
             queueDidChange = true
 
             let dict: [String: Any] = ["payloadData": encoded]
-            if !pendingPayloads[index].deferredDeliveryQueued {
-                session.transferUserInfo(dict)
-                pendingPayloads[index].deferredDeliveryQueued = true
-            }
 
             if reachable {
                 session.sendMessage(dict, replyHandler: nil) { [weak self] error in
@@ -197,6 +238,9 @@ extension WatchSensorManager {
                         self?.connectionStatus = "Live send failed: \(error.localizedDescription)"
                     }
                 }
+            } else if !pendingPayloads[index].deferredDeliveryQueued {
+                session.transferUserInfo(dict)
+                pendingPayloads[index].deferredDeliveryQueued = true
             }
 
             sentCount += 1

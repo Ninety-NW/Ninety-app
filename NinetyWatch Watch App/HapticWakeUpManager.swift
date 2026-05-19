@@ -26,7 +26,8 @@ class HapticWakeUpManager: ObservableObject {
     @Published var isPlaying = false
 
     private var hapticTimer: Timer?
-    private var elapsedTicks: Int = 0
+    private var startTime: Date?
+    private var lastHapticTime: Date?
 
     // MARK: - Phase Configuration
 
@@ -56,7 +57,8 @@ class HapticWakeUpManager: ObservableObject {
     func startGradualWakeUp() {
         guard !isPlaying else { return }
         isPlaying = true
-        elapsedTicks = 0
+        startTime = Date()
+        lastHapticTime = nil
 
         // Use a high-frequency timer (0.5s) and gate haptics per-phase interval
         hapticTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
@@ -72,14 +74,15 @@ class HapticWakeUpManager: ObservableObject {
         hapticTimer?.invalidate()
         hapticTimer = nil
         isPlaying = false
-        elapsedTicks = 0
+        startTime = nil
+        lastHapticTime = nil
     }
 
     // MARK: - Internal
 
     private func tick() {
-        guard isPlaying else { return }
-        let elapsed = Double(elapsedTicks) * 0.5  // seconds since start
+        guard isPlaying, let start = startTime else { return }
+        let elapsed = Date().timeIntervalSince(start)
 
         // Determine which phase we're in
         var cumulativeDuration: TimeInterval = 0
@@ -99,15 +102,12 @@ class HapticWakeUpManager: ObservableObject {
             return
         }
 
-        // Only play a haptic at the phase's specified interval
-        let elapsedInPhase = elapsed - cumulativeDuration
-        let tickInterval: TimeInterval = 0.5
-        let shouldPlay = Int(elapsedInPhase / tickInterval) % Int(phase.interval / tickInterval) == 0
-
-        if shouldPlay {
+        // Only play a haptic if enough time has passed since the last one
+        let timeSinceLastHaptic = lastHapticTime.map { Date().timeIntervalSince($0) } ?? .greatestFiniteMagnitude
+        
+        if timeSinceLastHaptic >= phase.interval {
             WKInterfaceDevice.current().play(phase.hapticType)
+            lastHapticTime = Date()
         }
-
-        elapsedTicks += 1
     }
 }

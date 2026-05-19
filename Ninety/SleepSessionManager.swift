@@ -4,7 +4,6 @@ import UIKit
 import WatchConnectivity
 
 final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
-    static let shared = SleepSessionManager()
     enum WatchCommandKey {
         static let sequence = "NinetyPhoneToWatchCommandSequence"
     }
@@ -15,7 +14,7 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
 
     // MARK: - Sleep Stage Classification
     // Model output: 0=Wake, 1=N1/N2(light), 2=N3(deep), 3=REM
-    enum SleepStage: Int, CaseIterable, Codable {
+    enum SleepStage: Int, CaseIterable, Codable, Sendable {
         case wake = 0
         case light = 1   // N1/N2 light sleep — TRIGGERS alarm
         case deep = 2    // N3 deep sleep — do NOT trigger
@@ -38,7 +37,7 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
 
     // MARK: - Per-Epoch Aggregate
     // Stores all raw data needed for feature engineering across rolling windows.
-    struct EpochAggregate: Codable {
+    struct EpochAggregate: Codable, Sendable {
         let timestamp: Date
         let processedAt: Date?
         let heartRateMean: Double
@@ -51,7 +50,7 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
         let isWatchTestInjected: Bool?
     }
 
-    enum AnalysisSessionState: String, Codable {
+    enum AnalysisSessionState: String, Codable, Sendable {
         case idle
         case scheduled
         case recording
@@ -77,7 +76,7 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
 
-    struct PersistedSessionState: Codable {
+    struct PersistedSessionState: Codable, Sendable {
         let savedAt: Date
         let lastAcceptedPayloadAt: Date?
         let activeWakeTargetDate: Date?
@@ -109,7 +108,7 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
         let sessionStateDisplay: String
     }
 
-    struct EpochDiagnosticsSnapshot: Identifiable {
+    struct EpochDiagnosticsSnapshot: Identifiable, Sendable {
         var id: Date { timestamp }
 
         let timestamp: Date
@@ -122,7 +121,7 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
         let modelStage: String
     }
 
-    struct AlarmStopTombstone: Codable {
+    struct AlarmStopTombstone: Codable, Sendable {
         let alarmInstanceID: UUID?
         let targetDate: Date?
         let stoppedAt: Date

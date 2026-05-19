@@ -101,23 +101,49 @@ extension WatchSensorManager {
     }
     
     func scheduleSmartAlarmSession(at date: Date) {
+        // Guard: watchOS rejects sessions scheduled > 36 hours in advance.
+        // Queue it as a pending schedule — it will be retried when the app
+        // becomes active closer to the alarm time.
+        let maxScheduleLeadTime: TimeInterval = 35.5 * 3600
+        if date.timeIntervalSinceNow > maxScheduleLeadTime {
+            UserDefaults.standard.set(date.timeIntervalSince1970, forKey: Self.pendingScheduleKey)
+            let formatted = date.formatted(date: .abbreviated, time: .shortened)
+            updatePipelineState(.scheduled, detail: "Queued: \(formatted)")
+            sendWatchStatusUpdate(sessionState)
+            return
+        }
+
+        // Guard: avoid recreating the session when already scheduled for the same date.
+        if let existing = runtimeSession,
+           (existing.state == .scheduled || existing.state == .running),
+           let readyDate = readyScheduledStartDate,
+           abs(readyDate.timeIntervalSince(date)) < 5 {
+            // Same session, same start — nothing to do.
+            return
+        }
+
         #if targetEnvironment(simulator)
         self.isMocking = true
         #else
         self.isMocking = false
         #endif
 
+        // Invalidate the existing session *before* releasing our reference.
+        // Keeping a local strong reference prevents the object from being
+        // deallocated while the async invalidation is still in flight, which
+        // was producing -[WKExtendedRuntimeSession dealloc] warnings.
         if let existing = self.runtimeSession {
             if existing.state == .running || existing.state == .scheduled {
                 suppressNextRuntimeInvalidation = true
-                existing.invalidate()
+                existing.invalidate()  // async — must not nil runtimeSession yet
             }
         }
 
         resetLocalAnalysis(startDate: date)
-        self.runtimeSession = WKExtendedRuntimeSession()
-        self.runtimeSession?.delegate = self
-        self.runtimeSession?.start(at: date)
+        let newSession = WKExtendedRuntimeSession()
+        newSession.delegate = self
+        newSession.start(at: date)
+        self.runtimeSession = newSession
         storeReadySchedule(date)
         clearPendingSchedule()
         refreshNextAlarmDate()
@@ -183,37 +209,49 @@ extension WatchSensorManager {
     
     func extendedRuntimeSession(_ extendedRuntimeSession: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {
         DispatchQueue.main.async {
+            // Release the pending-invalidation reference now that the system has
+            // confirmed the session is gone. This is the signal that it is safe
+            // to let ARC free the session object.
+            if self.pendingInvalidationSession === extendedRuntimeSession {
+                self.pendingInvalidationSession = nil
+            }
+
             if self.suppressNextRuntimeInvalidation {
                 self.suppressNextRuntimeInvalidation = false
                 return
             }
 
+            // Capture the target start date before we clear the state
+            let targetStartDate = self.pendingScheduledStartDate ?? self.readyScheduledStartDate
+
             self.runtimeSession = nil
             self.clearReadySchedule()
-            if
-                let nsError = error as NSError?,
-                nsError.domain == WKExtendedRuntimeSessionErrorDomain,
-                let wkErrorCode = WKExtendedRuntimeSessionErrorCode(rawValue: nsError.code)
-            {
-                switch wkErrorCode {
-                case .scheduledTooFarInAdvance:
-                    // future day (>36h away). Re-queue it so the Watch sets it automatically
-                    // when opened closer to bedtime.
-                    if let startDate = self.pendingScheduledStartDate ?? self.readyScheduledStartDate {
-                        UserDefaults.standard.set(startDate.timeIntervalSince1970, forKey: Self.pendingScheduleKey)
-                        let formatted = startDate.formatted(date: .abbreviated, time: .shortened)
-                        self.updatePipelineState(.scheduled, detail: "Next alarm: \(formatted)")
-                    } else {
-                        self.updatePipelineState(.idle, detail: "Open Ninety to set alarm")
-                    }
-                case .mustBeActiveToStartOrSchedule:
-                    self.updatePipelineState(.failed, detail: "Error: Must be in foreground")
-                default:
-                    self.updatePipelineState(.failed, detail: "Invalidated: \(wkErrorCode.rawValue)")
+            
+            let nsError = error as NSError?
+            let isWkError = nsError?.domain == WKExtendedRuntimeSessionErrorDomain
+            let wkErrorCode = isWkError ? WKExtendedRuntimeSessionErrorCode(rawValue: nsError!.code) : nil
+            
+            if wkErrorCode == .mustBeActiveToStartOrSchedule {
+                self.updatePipelineState(.failed, detail: "Error: Must be in foreground")
+            } else if let startDate = targetStartDate {
+                // H-2 Fix: Recoverable system invalidations (like system pressure or unknown errors) 
+                // should be retried instead of permanently failing. We queue it for the next foreground activation.
+                UserDefaults.standard.set(startDate.timeIntervalSince1970, forKey: Self.pendingScheduleKey)
+                
+                if wkErrorCode == .scheduledTooFarInAdvance {
+                    let formatted = startDate.formatted(date: .abbreviated, time: .shortened)
+                    self.updatePipelineState(.scheduled, detail: "Next alarm: \(formatted)")
+                } else {
+                    self.updatePipelineState(.scheduled, detail: "Retrying when opened...")
                 }
             } else {
-                self.updatePipelineState(.failed, detail: "Session Invalidated")
+                if let wkErrorCode {
+                    self.updatePipelineState(.failed, detail: "Invalidated: \(wkErrorCode.rawValue)")
+                } else {
+                    self.updatePipelineState(.failed, detail: "Session Invalidated")
+                }
             }
+            
             self.sendWatchStatusUpdate(self.sessionState)
             self.stopSensors()
         }

@@ -32,16 +32,25 @@ extension WatchSensorManager {
         }
         payloadTimer?.cancel()
         payloadTimer = nil
-        motionDeviationSamples.removeAll()
-        motionCountBuffer = 0
+        // Clear motion buffers on their own serial queue to avoid racing with any
+        // in-flight accelerometer callback that hasn't been cancelled yet.
+        motionBufferQueue.sync {
+            self.motionDeviationSamples.removeAll()
+            self.motionCountBuffer = 0
+        }
         hrSamplesBuffer.removeAll()
         mockTimer?.cancel()
         mockTimer = nil
     }
     
     func startRealSensors() {
-        motionDeviationSamples.removeAll()
-        motionCountBuffer = 0
+        // Reset motion buffers through the same queue used by the accelerometer
+        // handler, so any lingering callback from a previous session can't write
+        // into buffers we're about to repurpose.
+        motionBufferQueue.sync {
+            self.motionDeviationSamples.removeAll()
+            self.motionCountBuffer = 0
+        }
         hrSamplesBuffer.removeAll()
         enableHeartRateBackgroundDelivery()
         
@@ -49,13 +58,18 @@ extension WatchSensorManager {
             motionManager.accelerometerUpdateInterval = 1.0 / 50.0 // 50 Hz
             motionManager.startAccelerometerUpdates(to: motionQueue) { [weak self] data, _ in
                 guard let self = self, let data = data else { return }
-                
+
                 let magnitude = sqrt(pow(data.acceleration.x, 2) + pow(data.acceleration.y, 2) + pow(data.acceleration.z, 2))
                 let deviation = abs(magnitude - 1.0)
 
-                self.motionDeviationSamples.append(deviation)
-                if deviation >= self.motionThreshold {
-                    self.motionCountBuffer += 1
+                // Serialise all writes to the shared motion buffers through
+                // motionBufferQueue so compileAndTransmitPayload can snapshot
+                // them safely from the main thread using .sync.
+                self.motionBufferQueue.async {
+                    self.motionDeviationSamples.append(deviation)
+                    if deviation >= self.motionThreshold {
+                        self.motionCountBuffer += 1
+                    }
                 }
             }
         }
@@ -95,23 +109,41 @@ extension WatchSensorManager {
     func compileAndTransmitPayload() {
         guard !stopMonitoringIfAlarmDeadlineReached() else { return }
 
-        let motionVariance = standardDeviation(for: motionDeviationSamples)
+        // ── Snapshot motion buffers atomically on motionBufferQueue ──────────
+        // The accelerometer handler appends to these via motionBufferQueue.async
+        // at 50 Hz. A sync dispatch gives us an exclusive read-then-clear window
+        // with no risk of a concurrent write during the snapshot.
+        var motionSamplesSnapshot: [Double] = []
+        var motionCountSnapshot: Double = 0
+        motionBufferQueue.sync {
+            motionSamplesSnapshot = self.motionDeviationSamples
+            motionCountSnapshot   = self.motionCountBuffer
+            self.motionDeviationSamples.removeAll(keepingCapacity: true)
+            self.motionCountBuffer = 0
+        }
+
+        // ── Snapshot HR buffer (already on main thread) ──────────────────────
+        // processHRSamples appends via DispatchQueue.main.async, so all writes
+        // are serialised on main. swap() exchanges the buffer's internal storage
+        // pointer in a single instruction — read and clear are truly indivisible,
+        // with no gap where a pending async append could interleave.
+        var hrSnapshot: [Double] = []
+        swap(&hrSnapshot, &hrSamplesBuffer)
+
+        // ── Build and transmit the payload ───────────────────────────────────
+        let motionVariance = motionSamplesSnapshot.standardDeviation
         let payload = SensorPayload(
             id: UUID(),
             timestamp: Date(),
-            hrSamples: hrSamplesBuffer,
-            motionCount: motionCountBuffer,
+            hrSamples: hrSnapshot,
+            motionCount: motionCountSnapshot,
             accelerometerVariance: motionVariance,
             isMockData: false
         )
-        
-        hrSamplesBuffer.removeAll()
-        motionDeviationSamples.removeAll()
-        motionCountBuffer = 0
-        
+
         transmit(payload: payload)
         processPayloadForLocalSmartWake(payload)
-        
+
         if let alarmDate = nextAlarmDate, Date() >= alarmDate {
             DispatchQueue.main.async {
                 print("WATCH: Reached scheduled wake time.")
@@ -119,6 +151,7 @@ extension WatchSensorManager {
             }
         }
     }
+
     
     func transmit(payload: SensorPayload) {
         if isActivelyMonitoring && pipelineState != .deliveringBacklog {
