@@ -32,10 +32,12 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     static let localAlarmRecordKey = "watchLocalAlarmRecord"
     static let stopTombstoneKey = "watchAlarmStopTombstone"
     static let watchEpochDiagnosticLogKey = "watchEpochDiagnosticLog"
+    static let watchEpochHistoryKey = "watchEpochHistory"
     static let pendingNextAlarmCommandKey = "pendingNextAlarmCommand"
     static let pendingStopAlarmCommandKey = "pendingStopAlarmCommand"
     static let lastProcessedPhoneCommandSequenceKey = "lastProcessedPhoneCommandSequence"
     static let maxLocalDiagnosticLogs = 120
+    static let maxPersistedEpochHistory = 20
     let payloadInterval: TimeInterval = 5
     let motionThreshold = 0.08
     let maxPendingPayloads = 12_000
@@ -93,7 +95,7 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         }
     }
 
-    struct WatchEpochAggregate {
+    struct WatchEpochAggregate: Codable {
         let timestamp: Date
         let heartRateMean: Double
         let heartRateStd: Double
@@ -222,6 +224,9 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     @Published var validEpochCount: Int = 0
     @Published var diagnosticBufferSummary: String = "0 payloads"
     @Published var smartWakeConfirmationSummary: String = "0/3"
+    @Published var runtimeStatus: String = "Runtime idle"
+    @Published var sensorStatus: String = "Sensors idle"
+    @Published var autoLaunchStatus: String = "Auto-launch unknown"
     
     var runtimeSession: WKExtendedRuntimeSession?
     var suppressNextRuntimeInvalidation = false
@@ -246,6 +251,10 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     
     var hrQuery: HKAnchoredObjectQuery?
     var hrSamplesBuffer: [Double] = []
+    var hrQueryStartedAt: Date?
+    var lastHeartRateSampleAt: Date?
+    var heartRateRestartCount = 0
+    var sensorWatchdogTimer: Timer?
     var payloadTimer: AnyCancellable?
     var sensorsRunning = false
     
@@ -260,6 +269,7 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     override init() {
         super.init()
         restoreLocalDiagnosticLogs()
+        restoreLocalEpochHistory()
         if WatchPhoneSyncConfiguration.isPhoneSyncEnabled {
             restorePendingPayloadQueue()
             restorePendingNextAlarmCommand()
@@ -272,6 +282,7 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         }
         refreshNextAlarmDate()
         loadWatchModel()
+        refreshAutoLaunchStatus()
         refreshDiagnosticCounters()
     }
 

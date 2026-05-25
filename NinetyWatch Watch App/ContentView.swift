@@ -39,6 +39,7 @@ struct ContentView: View {
             .onAppear {
                 sensorManager.refreshStoredAlarmStateIfNeeded()
                 sensorManager.requestHealthPermissions { _ in }
+                sensorManager.recoverMonitoringIfNeeded(reason: "view recovery")
             }
         }
     }
@@ -97,6 +98,29 @@ struct WatchPageBackground: View {
     }
 }
 
+enum AlarmPeriod {
+    case am
+    case pm
+
+    var title: String {
+        switch self {
+        case .am: return "AM"
+        case .pm: return "PM"
+        }
+    }
+
+    var hourOffset: Int {
+        switch self {
+        case .am: return 0
+        case .pm: return 12
+        }
+    }
+
+    mutating func toggle() {
+        self = self == .am ? .pm : .am
+    }
+}
+
 struct WatchSingleAlarmView: View {
     @ObservedObject var sensorManager: WatchSensorManager
     @Binding var isEditingTime: Bool
@@ -104,6 +128,7 @@ struct WatchSingleAlarmView: View {
 
     @State var draftHour = 7
     @State var draftMinute = 0
+    @State var draftPeriod: AlarmPeriod = .am
 
     var body: some View {
         ZStack {
@@ -182,7 +207,7 @@ struct WatchSingleAlarmView: View {
             let dialSide = max(0, dialRadius * 2)
 
             ZStack {
-                CircularAlarmDial(hour: $draftHour, minute: $draftMinute)
+                CircularAlarmDial(hour: $draftHour, minute: $draftMinute, period: $draftPeriod)
                     .frame(width: dialSide, height: dialSide)
                     .position(viewCenter)
 
@@ -287,11 +312,9 @@ struct WatchSingleAlarmView: View {
 
     func saveAlarm() {
         let minute = roundedFiveMinute(draftMinute)
-        let targetDate = nextTwelveHourTargetDate(displayHour: draftHour, minute: minute)
-        let calendar = Calendar.autoupdatingCurrent
         sensorManager.setNextAlarm(
-            hour: calendar.component(.hour, from: targetDate),
-            minute: calendar.component(.minute, from: targetDate)
+            hour: draftPeriod.hourOffset + normalizedDraftHour,
+            minute: minute
         )
         withAnimation(.snappy(duration: 0.22)) {
             isEditingTime = false
@@ -299,31 +322,18 @@ struct WatchSingleAlarmView: View {
     }
 
     func syncDraftFromCurrentAlarm() {
-        let date = sensorManager.nextAlarmDate ?? defaultDraftDate()
-        let calendar = Calendar.autoupdatingCurrent
-        draftHour = calendar.component(.hour, from: date) % 12
-        draftMinute = roundedFiveMinute(calendar.component(.minute, from: date))
-    }
-
-    func nextTwelveHourTargetDate(displayHour: Int, minute: Int, now: Date = Date()) -> Date {
-        let calendar = Calendar.autoupdatingCurrent
-        let dialHour = ((displayHour % 12) + 12) % 12
-        var candidates: [Date] = []
-
-        for hourOffset in [0, 12] {
-            var components = calendar.dateComponents([.year, .month, .day], from: now)
-            components.hour = dialHour + hourOffset
-            components.minute = minute
-            components.second = 0
-
-            guard var candidate = calendar.date(from: components) else { continue }
-            if candidate <= now {
-                candidate = calendar.date(byAdding: .day, value: 1, to: candidate) ?? candidate
-            }
-            candidates.append(candidate)
+        guard let date = sensorManager.nextAlarmDate else {
+            draftHour = 7
+            draftMinute = 0
+            draftPeriod = .am
+            return
         }
 
-        return candidates.min() ?? now.addingTimeInterval(60)
+        let calendar = Calendar.autoupdatingCurrent
+        let hour = calendar.component(.hour, from: date)
+        draftHour = hour % 12
+        draftMinute = roundedFiveMinute(calendar.component(.minute, from: date))
+        draftPeriod = hour >= 12 ? .pm : .am
     }
 
     func defaultDraftDate() -> Date {
@@ -342,6 +352,10 @@ struct WatchSingleAlarmView: View {
 
     func roundedFiveMinute(_ minute: Int) -> Int {
         min(55, max(0, Int(round(Double(minute) / 5.0) * 5.0)))
+    }
+
+    var normalizedDraftHour: Int {
+        ((draftHour % 12) + 12) % 12
     }
 
     func timeText(for date: Date?) -> String {

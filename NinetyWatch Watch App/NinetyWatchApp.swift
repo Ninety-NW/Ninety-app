@@ -12,11 +12,14 @@ final class WatchAppDelegate: NSObject, WKApplicationDelegate {
     func applicationDidFinishLaunching() {
         WatchWakeNotificationScheduler.shared.configure()
         _ = WatchSensorManager.shared
+        WatchSensorManager.shared.recoverMonitoringIfNeeded(reason: "launch recovery")
     }
 
     func applicationDidBecomeActive() {
         WatchSensorManager.shared.refreshConnectionStatus()
+        WatchSensorManager.shared.refreshAutoLaunchStatus()
         WatchSensorManager.shared.setPendingScheduleIfPossible()
+        WatchSensorManager.shared.recoverMonitoringIfNeeded(reason: "active recovery")
         WatchSensorManager.shared.retryPendingPayloadDelivery()
     }
 

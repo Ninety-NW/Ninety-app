@@ -16,6 +16,7 @@ extension WatchSensorManager {
             localAnalysisStartDate = Date()
         }
         sensorsRunning = true
+        sensorStatus = "Starting sensors"
         #if targetEnvironment(simulator)
         startMockDataStream()
         #else
@@ -30,6 +31,11 @@ extension WatchSensorManager {
             healthStore.stop(query)
             hrQuery = nil
         }
+        sensorWatchdogTimer?.invalidate()
+        sensorWatchdogTimer = nil
+        hrQueryStartedAt = nil
+        lastHeartRateSampleAt = nil
+        heartRateRestartCount = 0
         payloadTimer?.cancel()
         payloadTimer = nil
         motionDeviationSamples.removeAll()
@@ -37,12 +43,15 @@ extension WatchSensorManager {
         hrSamplesBuffer.removeAll()
         mockTimer?.cancel()
         mockTimer = nil
+        sensorStatus = "Sensors stopped"
     }
     
     func startRealSensors() {
         motionDeviationSamples.removeAll()
         motionCountBuffer = 0
         hrSamplesBuffer.removeAll()
+        heartRateRestartCount = 0
+        sensorStatus = "Starting HR + motion"
         enableHeartRateBackgroundDelivery()
         
         if motionManager.isAccelerometerAvailable {
@@ -66,9 +75,21 @@ extension WatchSensorManager {
                 self?.compileAndTransmitPayload()
             }
         
-        // Start HR
+        startHeartRateQuery(reason: "initial")
+        startSensorWatchdog()
+    }
+
+    func startHeartRateQuery(reason: String) {
+        if let query = hrQuery {
+            healthStore.stop(query)
+            hrQuery = nil
+        }
+
         let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)!
-        let predicate = HKQuery.predicateForSamples(withStart: Date(), end: nil, options: .strictStartDate)
+        let startDate = Date().addingTimeInterval(-120)
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: .strictStartDate)
+        hrQueryStartedAt = Date()
+        sensorStatus = "HR query \(reason)"
         
         hrQuery = HKAnchoredObjectQuery(type: hrType, predicate: predicate, anchor: nil, limit: HKObjectQueryNoLimit) { [weak self] _, samples, _, _, _ in
             self?.processHRSamples(samples)
@@ -82,13 +103,52 @@ extension WatchSensorManager {
             healthStore.execute(query)
         }
     }
+
+    func startSensorWatchdog() {
+        sensorWatchdogTimer?.invalidate()
+        sensorWatchdogTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
+            self?.checkHeartRateWatchdog()
+        }
+    }
+
+    func checkHeartRateWatchdog() {
+        guard sensorsRunning else { return }
+        guard !stopMonitoringIfAlarmDeadlineReached() else { return }
+        guard let hrQueryStartedAt else { return }
+
+        let now = Date()
+        let hasFreshHR = lastHeartRateSampleAt.map { now.timeIntervalSince($0) <= 90 } ?? false
+        if hasFreshHR {
+            sensorStatus = "HR active"
+            return
+        }
+
+        let queryAge = now.timeIntervalSince(hrQueryStartedAt)
+        guard queryAge >= 75 else {
+            sensorStatus = "Waiting HR \(Int(queryAge))s"
+            return
+        }
+
+        guard heartRateRestartCount < 3 else {
+            sensorStatus = "Error: HR sensor silent"
+            updatePipelineState(.recording, detail: "Error: HR sensor silent")
+            return
+        }
+
+        heartRateRestartCount += 1
+        sensorStatus = "Restarting HR query \(heartRateRestartCount)"
+        startHeartRateQuery(reason: "watchdog \(heartRateRestartCount)")
+    }
     
     func processHRSamples(_ samples: [HKSample]?) {
         guard let quantitySamples = samples as? [HKQuantitySample] else { return }
         let newValues = quantitySamples.map { $0.quantity.doubleValue(for: HKUnit(from: "count/min")) }
         
         DispatchQueue.main.async {
+            guard !newValues.isEmpty else { return }
             self.hrSamplesBuffer.append(contentsOf: newValues)
+            self.lastHeartRateSampleAt = Date()
+            self.sensorStatus = "HR active (\(newValues.count) samples)"
         }
     }
     
@@ -112,6 +172,9 @@ extension WatchSensorManager {
         transmit(payload: payload)
         processPayloadForLocalSmartWake(payload)
         refreshDiagnosticCounters()
+        if payload.hrSamples.isEmpty && sensorsRunning {
+            checkHeartRateWatchdog()
+        }
         
         if let alarmDate = nextAlarmDate, Date() >= alarmDate {
             DispatchQueue.main.async {

@@ -3,6 +3,7 @@ import SwiftUI
 struct CircularAlarmDial: View {
     @Binding var hour: Int
     @Binding var minute: Int
+    @Binding var period: AlarmPeriod
 
     @State var crownStep: Double = 0
 
@@ -96,12 +97,33 @@ struct CircularAlarmDial: View {
                     .shadow(color: .green.opacity(0.65), radius: 4)
                     .position(segmentHead)
 
-                Text(String(format: "%02d:%02d", displayHourText, minute))
-                    .font(.system(size: 35, weight: .light, design: .rounded))
-                    .monospacedDigit()
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                    Text(String(format: "%02d:%02d", displayHourText, minute))
+                        .font(.system(size: 29, weight: .light, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+
+                    Button {
+                        period.toggle()
+                    } label: {
+                        Text(period.title)
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                            .frame(width: 29, height: 18)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(period == .am ? .white.opacity(0.9) : .black)
+                    .background {
+                        Capsule()
+                            .fill(period == .am ? Color.white.opacity(0.12) : Color.yellow)
+                            .overlay {
+                                Capsule()
+                                    .strokeBorder(.white.opacity(0.18), lineWidth: 0.7)
+                            }
+                    }
+                }
                     .position(center)
             }
         }

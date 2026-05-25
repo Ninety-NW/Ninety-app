@@ -29,7 +29,7 @@ extension WatchSensorManager {
 
     func resetLocalAnalysis(startDate: Date? = nil) {
         currentEpochPayloads.removeAll()
-        epochHistory.removeAll()
+        clearLocalEpochHistory()
         rawPredictions.removeAll()
         confirmationBuffer.removeAll()
         isConfirmingSmartWake = false
@@ -113,6 +113,10 @@ extension WatchSensorManager {
 
         currentEpochPayloads.removeAll()
         epochHistory.append(epoch)
+        if epochHistory.count > Self.maxPersistedEpochHistory {
+            epochHistory.removeFirst(epochHistory.count - Self.maxPersistedEpochHistory)
+        }
+        persistLocalEpochHistory()
         refreshDiagnosticCounters()
 
         if epochHistory.count >= 2 {

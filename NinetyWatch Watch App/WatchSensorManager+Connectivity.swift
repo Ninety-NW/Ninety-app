@@ -67,9 +67,14 @@ extension WatchSensorManager {
         runtimeSession?.delegate = self
         clearPendingSchedule()
         clearReadySchedule()
+        runtimeStatus = "Resumed by system: \(runtimeStateDescription(extendedRuntimeSession.state))"
         updatePipelineState(.recording, detail: "Session resumed by system")
-        if extendedRuntimeSession.state == .running {
-            startSensors()
+        startSensorsIfRuntimeIsRunning(reason: "resume handle")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.startSensorsIfRuntimeIsRunning(reason: "resume retry")
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.startSensorsIfRuntimeIsRunning(reason: "resume late retry")
         }
         sendWatchStatusUpdate(sessionState)
     }
@@ -91,6 +96,7 @@ extension WatchSensorManager {
         }
 
         refreshNextAlarmDate()
+        recoverMonitoringIfNeeded(reason: "stored alarm recovery")
         if WatchPhoneSyncConfiguration.isPhoneSyncEnabled {
             requestAlarmSync()
         }
@@ -112,6 +118,10 @@ extension WatchSensorManager {
         healthStore.requestAuthorization(toShare: nil, read: [hrType]) { success, _ in
             if success {
                 self.enableHeartRateBackgroundDelivery()
+            } else {
+                DispatchQueue.main.async {
+                    self.sensorStatus = "Health permission denied"
+                }
             }
             DispatchQueue.main.async {
                 completion(success)
@@ -120,6 +130,7 @@ extension WatchSensorManager {
     }
     
     func scheduleSmartAlarmSession(at date: Date) {
+        let startDate = date <= Date() ? Date().addingTimeInterval(2) : date
         #if targetEnvironment(simulator)
         self.isMocking = true
         #else
@@ -133,14 +144,16 @@ extension WatchSensorManager {
             }
         }
 
-        resetLocalAnalysis(startDate: date)
+        refreshAutoLaunchStatus()
+        resetLocalAnalysis(startDate: startDate)
         self.runtimeSession = WKExtendedRuntimeSession()
         self.runtimeSession?.delegate = self
-        self.runtimeSession?.start(at: date)
-        storeReadySchedule(date)
+        self.runtimeSession?.start(at: startDate)
+        runtimeStatus = "Scheduled: \(runtimeStateDescription(self.runtimeSession?.state))"
+        storeReadySchedule(startDate)
         clearPendingSchedule()
         refreshNextAlarmDate()
-        updatePipelineState(.scheduled, detail: "Ready for \(date.formatted(date: .omitted, time: .shortened))")
+        updatePipelineState(.scheduled, detail: "Ready for \(startDate.formatted(date: .omitted, time: .shortened))")
         sendWatchStatusUpdate(sessionState)
     }
 
@@ -156,6 +169,81 @@ extension WatchSensorManager {
         }
 
         scheduleSmartAlarmSession(at: date)
+    }
+
+    func refreshAutoLaunchStatus() {
+        WKExtendedRuntimeSession.requestAutoLaunchAuthorizationStatus { status, error in
+            DispatchQueue.main.async {
+                if let error {
+                    self.autoLaunchStatus = "Error: \(error.localizedDescription)"
+                    return
+                }
+
+                switch status {
+                case .active:
+                    self.autoLaunchStatus = "Active"
+                case .inactive:
+                    self.autoLaunchStatus = "Inactive"
+                case .unknown:
+                    self.autoLaunchStatus = "Unknown"
+                @unknown default:
+                    self.autoLaunchStatus = "Unknown"
+                }
+            }
+        }
+    }
+
+    func runtimeStateDescription(_ state: WKExtendedRuntimeSessionState?) -> String {
+        guard let state else { return "nil" }
+        switch state {
+        case .notStarted:
+            return "not started"
+        case .scheduled:
+            return "scheduled"
+        case .running:
+            return "running"
+        case .invalid:
+            return "invalid"
+        @unknown default:
+            return "unknown"
+        }
+    }
+
+    func startSensorsIfRuntimeIsRunning(reason: String) {
+        guard runtimeSession?.state == .running else {
+            runtimeStatus = "Waiting runtime: \(runtimeStateDescription(runtimeSession?.state))"
+            return
+        }
+
+        runtimeStatus = "Running"
+        updatePipelineState(.recording, detail: "Recording (\(reason))")
+        startSensors()
+    }
+
+    func recoverMonitoringIfNeeded(reason: String) {
+        refreshAutoLaunchStatus()
+        guard !sensorsRunning else { return }
+        guard let targetDate = currentAlarmTargetDate(), Date() < targetDate else { return }
+
+        let monitoringStart = localAlarmRecord()?.monitoringStartDate ??
+            targetDate.addingTimeInterval(-monitoringLeadTime)
+        guard Date() >= monitoringStart else { return }
+
+        if runtimeSession?.state == .running {
+            startSensorsIfRuntimeIsRunning(reason: reason)
+            return
+        }
+
+        guard WKExtension.shared().applicationState == .active else {
+            updatePipelineState(.scheduled, detail: "Monitoring due, waiting auto-launch")
+            runtimeStatus = "Due but app inactive"
+            return
+        }
+
+        let repairDate = Date().addingTimeInterval(2)
+        runtimeStatus = "Repair scheduling now"
+        updatePipelineState(.scheduled, detail: "Repairing monitor start")
+        scheduleSmartAlarmSession(at: repairDate)
     }
     
     func stopSession() {
@@ -178,6 +266,7 @@ extension WatchSensorManager {
         DispatchQueue.main.async {
             self.runtimeSession = extendedRuntimeSession
             self.clearReadySchedule()
+            self.runtimeStatus = "Started"
             self.updatePipelineState(.recording, detail: "Session Started")
             self.startSensors()
             self.sendWatchStatusUpdate(self.sessionState)
@@ -186,6 +275,7 @@ extension WatchSensorManager {
     
     func extendedRuntimeSessionWillExpire(_ extendedRuntimeSession: WKExtendedRuntimeSession) {
         DispatchQueue.main.async {
+            self.runtimeStatus = "Will expire"
             self.updatePipelineState(.recording, detail: "Session Expiring Soon")
             self.sendWatchStatusUpdate(self.sessionState)
 
@@ -209,6 +299,7 @@ extension WatchSensorManager {
 
             self.runtimeSession = nil
             self.clearReadySchedule()
+            self.runtimeStatus = "Invalidated"
             if
                 let nsError = error as NSError?,
                 nsError.domain == WKExtendedRuntimeSessionErrorDomain,

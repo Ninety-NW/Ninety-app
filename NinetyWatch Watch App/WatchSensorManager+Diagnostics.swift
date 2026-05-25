@@ -16,6 +16,21 @@ extension WatchSensorManager {
         epochDiagnostics = Array(restored.suffix(Self.maxLocalDiagnosticLogs))
     }
 
+    func restoreLocalEpochHistory() {
+        guard let data = UserDefaults.standard.data(forKey: Self.watchEpochHistoryKey) else {
+            epochHistory = []
+            return
+        }
+
+        guard let restored = try? JSONDecoder().decode([WatchEpochAggregate].self, from: data) else {
+            UserDefaults.standard.removeObject(forKey: Self.watchEpochHistoryKey)
+            epochHistory = []
+            return
+        }
+
+        epochHistory = Array(restored.suffix(Self.maxPersistedEpochHistory))
+    }
+
     func appendLocalDiagnostic(_ diagnostic: WatchEpochDiagnostic) {
         epochDiagnostics.append(diagnostic)
         if epochDiagnostics.count > Self.maxLocalDiagnosticLogs {
@@ -28,6 +43,18 @@ extension WatchSensorManager {
     func clearDiagnosticLogs() {
         epochDiagnostics.removeAll()
         UserDefaults.standard.removeObject(forKey: Self.watchEpochDiagnosticLogKey)
+        refreshDiagnosticCounters()
+    }
+
+    func persistLocalEpochHistory() {
+        let snapshot = Array(epochHistory.suffix(Self.maxPersistedEpochHistory))
+        guard let data = try? JSONEncoder().encode(snapshot) else { return }
+        UserDefaults.standard.set(data, forKey: Self.watchEpochHistoryKey)
+    }
+
+    func clearLocalEpochHistory() {
+        epochHistory.removeAll()
+        UserDefaults.standard.removeObject(forKey: Self.watchEpochHistoryKey)
         refreshDiagnosticCounters()
     }
 

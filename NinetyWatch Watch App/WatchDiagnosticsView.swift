@@ -21,26 +21,29 @@ struct WatchDiagnosticsView: View {
                         .font(.system(.headline, design: .rounded).weight(.semibold))
 
                     Spacer()
-
-                    Button {
-                        sensorManager.clearDiagnosticLogs()
-                    } label: {
-                        Image(systemName: "trash")
-                            .font(.system(size: 14, weight: .semibold))
-                            .frame(width: 32, height: 32)
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.red.opacity(0.95))
                 }
 
                 diagnosticSection("Status") {
                     statusRow("Pipeline", sensorManager.sessionState)
+                    statusRow("Runtime", sensorManager.runtimeStatus)
+                    statusRow("Sensors", sensorManager.sensorStatus)
+                    statusRow("Auto-launch", sensorManager.autoLaunchStatus)
                     statusRow("Model", sensorManager.watchModelStatus)
                     statusRow("Connection", sensorManager.connectionStatus)
                     statusRow("Last payload", sensorManager.lastPayloadSent)
                     statusRow("Epochs", "\(sensorManager.validEpochCount)")
                     statusRow("Buffer", sensorManager.diagnosticBufferSummary)
                     statusRow("Smart wake", sensorManager.smartWakeConfirmationSummary)
+                }
+
+                diagnosticSection("Epoch Summary") {
+                    statusRow("Logged", "\(totalEpochLogs) total")
+                    statusRow("Accepted", "\(acceptedEpochLogs) valid / green")
+                    statusRow("Dropped", "\(missingHREpochLogs) missing HR, \(invalidHREpochLogs) invalid HR")
+                    statusRow("Warm-up", "\(sensorManager.validEpochCount)/\(sensorManager.minimumEpochsForFeatures) active history")
+                    statusRow("Warm-up logs", "\(warmupEpochLogs) warming, \(predictionEpochLogs) predictions")
+                    statusRow("Rule", "Epochs with HR errors do not advance warm-up")
+                    statusRow("Reset clue", resetClueText)
                 }
 
                 diagnosticSection("Epoch Processing") {
@@ -71,6 +74,37 @@ struct WatchDiagnosticsView: View {
         }
         .background(Color.black.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
+    }
+
+    var totalEpochLogs: Int {
+        sensorManager.epochDiagnostics.count
+    }
+
+    var acceptedEpochLogs: Int {
+        sensorManager.epochDiagnostics.filter { $0.errorMessage == nil }.count
+    }
+
+    var missingHREpochLogs: Int {
+        sensorManager.epochDiagnostics.filter { $0.errorMessage == "Error: missing HR" }.count
+    }
+
+    var invalidHREpochLogs: Int {
+        sensorManager.epochDiagnostics.filter { $0.errorMessage == "Error: invalid HR" }.count
+    }
+
+    var warmupEpochLogs: Int {
+        sensorManager.epochDiagnostics.filter { $0.stageTitle.hasPrefix("Warming") }.count
+    }
+
+    var predictionEpochLogs: Int {
+        sensorManager.epochDiagnostics.filter { $0.errorMessage == nil && $0.rawStage != nil }.count
+    }
+
+    var resetClueText: String {
+        guard acceptedEpochLogs > sensorManager.validEpochCount else {
+            return "Active history matches this run"
+        }
+        return "Logs exceed active history: process restart or >5m gap likely"
     }
 
     func diagnosticSection<Content: View>(
