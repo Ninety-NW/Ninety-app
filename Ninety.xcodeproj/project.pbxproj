@@ -7,16 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5BB3EDC22C3AD54700CD4274 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */; };
-		5BB3EDC32C3AD54700CD4274 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */; };
 		001E1C922F853DF500AD4DC7 /* SensorPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C8E2F853DF500AD4DC7 /* SensorPayload.swift */; };
 		001E1C932F853DF500AD4DC7 /* SmartAlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C912F853DF500AD4DC7 /* SmartAlarmManager.swift */; };
 		001E1C952F853DF500AD4DC7 /* SleepSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C902F853DF500AD4DC7 /* SleepSessionManager.swift */; };
-		D00000000000000000000001 /* SleepSessionManager+WatchConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000011 /* SleepSessionManager+WatchConnectivity.swift */; };
-		D00000000000000000000002 /* SleepSessionManager+PayloadHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000012 /* SleepSessionManager+PayloadHandling.swift */; };
-		D00000000000000000000003 /* SleepSessionManager+Analysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000013 /* SleepSessionManager+Analysis.swift */; };
-		D00000000000000000000004 /* SleepSessionManager+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000014 /* SleepSessionManager+Persistence.swift */; };
-		D00000000000000000000005 /* SleepSessionManager+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000015 /* SleepSessionManager+Utilities.swift */; };
 		001E1C972F853EB100AD4DC7 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1C962F853EB100AD4DC7 /* DiagnosticsView.swift */; };
 		001E1CC72F87FA3B00AD4DC7 /* NinetySiriShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001E1CC62F87FA3B00AD4DC7 /* NinetySiriShortcuts.swift */; };
 		0095803E2F9F98EE005241FF /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0095803D2F9F98EE005241FF /* SafariView.swift */; };
@@ -25,16 +18,15 @@
 		00B643232F85305E00CC8B51 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B643222F85305E00CC8B51 /* CoreMotion.framework */; };
 		00B643242F85305E00CC8B51 /* NeuralWakeUP.mlmodel in Resources */ = {isa = PBXBuildFile; fileRef = E1A2B3C42F96800000112233 /* NeuralWakeUP.mlmodel */; };
 		5B7A310C2C3FDCCB00353790 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A310B2C3FDCCB00353790 /* ScheduleViewModel.swift */; };
-		D00000000000000000000006 /* ScheduleViewModel+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000016 /* ScheduleViewModel+Storage.swift */; };
 		5B7A31132C401F9F00353790 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A31122C401F9F00353790 /* SettingsViewModel.swift */; };
 		5BB3ED6A2C3AD54600CD4274 /* NinetyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3ED692C3AD54600CD4274 /* NinetyApp.swift */; };
 		5BB3ED6E2C3AD54700CD4274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3ED6D2C3AD54700CD4274 /* Assets.xcassets */; };
 		5BB3ED712C3AD54700CD4274 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3ED702C3AD54700CD4274 /* Preview Assets.xcassets */; };
 		5BB3ED7C2C3ADCAB00CD4274 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3ED7B2C3ADCAB00CD4274 /* OnboardingView.swift */; };
+		5BB3EDC22C3AD54700CD4274 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */; };
+		5BB3EDC32C3AD54700CD4274 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */; };
 		5BF32F832C3C056900A528BD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF32F822C3C056900A528BD /* SettingsView.swift */; };
 		5BF32F852C3C05A900A528BD /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF32F842C3C05A900A528BD /* ScheduleView.swift */; };
-		D00000000000000000000007 /* ScheduleView+WatchSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000017 /* ScheduleView+WatchSetup.swift */; };
-		D00000000000000000000008 /* SchedulePickerComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000018 /* SchedulePickerComponents.swift */; };
 		A1B2C3D22C3FDC8200353790 /* LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D12C3FDC8200353790 /* LiquidGlass.swift */; };
 		A1B2C3E12C3FDC8200353790 /* RedesignedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3E02C3FDC8200353790 /* RedesignedComponents.swift */; };
 		B1C2D3E42F90123400AABBCC /* GuidedTourView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E32F90123400AABBCC /* GuidedTourView.swift */; };
@@ -44,6 +36,14 @@
 		C0D3B0040000000000000001 /* UpdateNinetyAlarmIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3F0040000000000000001 /* UpdateNinetyAlarmIntent.swift */; };
 		C0D3B0050000000000000001 /* CancelNinetyAlarmIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3F0050000000000000001 /* CancelNinetyAlarmIntent.swift */; };
 		C0D3B0060000000000000001 /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = C0D3F0060000000000000001 /* AppShortcuts.strings */; };
+		D00000000000000000000001 /* SleepSessionManager+WatchConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000011 /* SleepSessionManager+WatchConnectivity.swift */; };
+		D00000000000000000000002 /* SleepSessionManager+PayloadHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000012 /* SleepSessionManager+PayloadHandling.swift */; };
+		D00000000000000000000003 /* SleepSessionManager+Analysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000013 /* SleepSessionManager+Analysis.swift */; };
+		D00000000000000000000004 /* SleepSessionManager+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000014 /* SleepSessionManager+Persistence.swift */; };
+		D00000000000000000000005 /* SleepSessionManager+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000015 /* SleepSessionManager+Utilities.swift */; };
+		D00000000000000000000006 /* ScheduleViewModel+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000016 /* ScheduleViewModel+Storage.swift */; };
+		D00000000000000000000007 /* ScheduleView+WatchSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000017 /* ScheduleView+WatchSetup.swift */; };
+		D00000000000000000000008 /* SchedulePickerComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000018 /* SchedulePickerComponents.swift */; };
 		E1A2B3C92F96820000112233 /* TestModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A2B3C82F96820000112233 /* TestModeView.swift */; };
 /* End PBXBuildFile section */
 
@@ -72,14 +72,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		001E1C8E2F853DF500AD4DC7 /* SensorPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorPayload.swift; sourceTree = "<group>"; };
 		001E1C902F853DF500AD4DC7 /* SleepSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepSessionManager.swift; sourceTree = "<group>"; };
-		D00000000000000000000011 /* SleepSessionManager+WatchConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+WatchConnectivity.swift"; sourceTree = "<group>"; };
-		D00000000000000000000012 /* SleepSessionManager+PayloadHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+PayloadHandling.swift"; sourceTree = "<group>"; };
-		D00000000000000000000013 /* SleepSessionManager+Analysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+Analysis.swift"; sourceTree = "<group>"; };
-		D00000000000000000000014 /* SleepSessionManager+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+Persistence.swift"; sourceTree = "<group>"; };
-		D00000000000000000000015 /* SleepSessionManager+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+Utilities.swift"; sourceTree = "<group>"; };
 		001E1C912F853DF500AD4DC7 /* SmartAlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartAlarmManager.swift; sourceTree = "<group>"; };
 		001E1C962F853EB100AD4DC7 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
 		001E1CC62F87FA3B00AD4DC7 /* NinetySiriShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NinetySiriShortcuts.swift; sourceTree = "<group>"; };
@@ -90,17 +84,15 @@
 		00B643202F7EC82E00CC8B51 /* AlarmKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlarmKit.framework; path = System/Library/Frameworks/AlarmKit.framework; sourceTree = SDKROOT; };
 		00B643222F85305E00CC8B51 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.4.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		5B7A310B2C3FDCCB00353790 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
-		D00000000000000000000016 /* ScheduleViewModel+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleViewModel+Storage.swift"; sourceTree = "<group>"; };
 		5B7A31122C401F9F00353790 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		5BB3ED662C3AD54600CD4274 /* Ninety.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ninety.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB3ED692C3AD54600CD4274 /* NinetyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NinetyApp.swift; sourceTree = "<group>"; };
 		5BB3ED6D2C3AD54700CD4274 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BB3ED702C3AD54700CD4274 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5BB3ED7B2C3ADCAB00CD4274 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		5BB3EDC12C3AD54700CD4274 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5BF32F822C3C056900A528BD /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5BF32F842C3C05A900A528BD /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
-		D00000000000000000000017 /* ScheduleView+WatchSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleView+WatchSetup.swift"; sourceTree = "<group>"; };
-		D00000000000000000000018 /* SchedulePickerComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePickerComponents.swift; sourceTree = "<group>"; };
 		A1B2C3D12C3FDC8200353790 /* LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlass.swift; sourceTree = "<group>"; };
 		A1B2C3E02C3FDC8200353790 /* RedesignedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedesignedComponents.swift; sourceTree = "<group>"; };
 		B1C2D3E32F90123400AABBCC /* GuidedTourView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidedTourView.swift; sourceTree = "<group>"; };
@@ -110,6 +102,14 @@
 		C0D3F0040000000000000001 /* UpdateNinetyAlarmIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateNinetyAlarmIntent.swift; sourceTree = "<group>"; };
 		C0D3F0050000000000000001 /* CancelNinetyAlarmIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelNinetyAlarmIntent.swift; sourceTree = "<group>"; };
 		C0D3F0060000000000000001 /* AppShortcuts.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = AppShortcuts.strings; sourceTree = "<group>"; };
+		D00000000000000000000011 /* SleepSessionManager+WatchConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+WatchConnectivity.swift"; sourceTree = "<group>"; };
+		D00000000000000000000012 /* SleepSessionManager+PayloadHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+PayloadHandling.swift"; sourceTree = "<group>"; };
+		D00000000000000000000013 /* SleepSessionManager+Analysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+Analysis.swift"; sourceTree = "<group>"; };
+		D00000000000000000000014 /* SleepSessionManager+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+Persistence.swift"; sourceTree = "<group>"; };
+		D00000000000000000000015 /* SleepSessionManager+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SleepSessionManager+Utilities.swift"; sourceTree = "<group>"; };
+		D00000000000000000000016 /* ScheduleViewModel+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleViewModel+Storage.swift"; sourceTree = "<group>"; };
+		D00000000000000000000017 /* ScheduleView+WatchSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleView+WatchSetup.swift"; sourceTree = "<group>"; };
+		D00000000000000000000018 /* SchedulePickerComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePickerComponents.swift; sourceTree = "<group>"; };
 		E1A2B3C42F96800000112233 /* NeuralWakeUP.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = NeuralWakeUP.mlmodel; sourceTree = "<group>"; };
 		E1A2B3C82F96820000112233 /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
