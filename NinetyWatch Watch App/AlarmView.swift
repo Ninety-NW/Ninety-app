@@ -32,13 +32,12 @@ struct AlarmView: View {
                     sensorManager.stopActiveAlarmFromWatch()
                 }) {
                     Text("STOP")
-                        .fontWeight(.bold)
+                        .font(.system(.body, design: .rounded).weight(.bold))
                         .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(10)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+                .buttonBorderShape(.capsule)
             }
             .padding()
         }

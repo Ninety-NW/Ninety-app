@@ -32,6 +32,7 @@ enum WatchCopyKey {
     case syncFailed
     case syncing
     case wakeUp
+    case deleteAlarm
 
     var englishKey: String {
         switch self {
@@ -59,6 +60,7 @@ enum WatchCopyKey {
         case .syncFailed: return "Sync failed"
         case .syncing: return "Syncing"
         case .wakeUp: return "Wake Up!"
+        case .deleteAlarm: return "Delete Alarm"
         }
     }
 }
@@ -82,9 +84,25 @@ struct WatchCopy {
         let englishKey = key.englishKey
         guard let path = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
               let bundle = Bundle(path: path) else {
-            return NSLocalizedString(englishKey, comment: "")
+            return fallbackText(key)
         }
-        return bundle.localizedString(forKey: englishKey, value: nil, table: nil)
+        let localized = bundle.localizedString(forKey: englishKey, value: "KEY_NOT_FOUND", table: nil)
+        if localized == "KEY_NOT_FOUND" || localized == englishKey {
+            return fallbackText(key)
+        }
+        return localized
+    }
+
+    private func fallbackText(_ key: WatchCopyKey) -> String {
+        switch key {
+        case .deleteAlarm:
+            if languageCode == "it" { return "Elimina sveglia" }
+            if languageCode == "es" { return "Eliminar alarma" }
+            if languageCode == "zh-Hans" { return "删除闹钟" }
+            return "Delete Alarm"
+        default:
+            return NSLocalizedString(key.englishKey, comment: "")
+        }
     }
 
     static var current: WatchCopy {
