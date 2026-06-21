@@ -28,6 +28,7 @@ struct ContentView: View {
 
                 if hapticManager.isPlaying {
                     AlarmView()
+                        .environmentObject(sensorManager)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .zIndex(10)
                 }
