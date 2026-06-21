@@ -1,0 +1,23 @@
+{
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/SensorPayload.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/SensorPayload.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/SensorPayload.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/SensorPayload.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/SensorPayload.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/SensorPayload.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/WatchCopy.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchCopy.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchCopy.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchCopy.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchCopy.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchCopy.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/WatchDiagnosticsView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchDiagnosticsView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchDiagnosticsView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchDiagnosticsView.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchDiagnosticsView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchDiagnosticsView.swiftdeps"
+  }
+}

@@ -1,0 +1,319 @@
+{
+  "" : {
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/Ninety-primary.dia",
+    "emit-module-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/Ninety-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/Ninety-primary-emit-module.dia",
+    "pch" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/Ninety-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/Ninety-primary.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Intents/CancelNinetyAlarmIntent.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/CancelNinetyAlarmIntent~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Intents/GetNinetyAlarmIntent.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GetNinetyAlarmIntent~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Intents/NinetyAlarmIntentSupport.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyAlarmIntentSupport~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Intents/SetNinetyAlarmIntent.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SetNinetyAlarmIntent~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Intents/UpdateNinetyAlarmIntent.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/UpdateNinetyAlarmIntent~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/NinetyApp.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetyApp~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/NinetySiriShortcuts.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/NinetySiriShortcuts~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SensorPayload.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SensorPayload~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SleepSessionManager+Analysis.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Analysis~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SleepSessionManager+PayloadHandling.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+PayloadHandling~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SleepSessionManager+Persistence.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Persistence~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SleepSessionManager+Utilities.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+Utilities~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SleepSessionManager+WatchConnectivity.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager+WatchConnectivity~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SleepSessionManager.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SleepSessionManager~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/SmartAlarmManager.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SmartAlarmManager~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Utilities/LiquidGlass.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/LiquidGlass~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/Utilities/SafariView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SafariView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Root/DiagnosticsView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/DiagnosticsView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Root/GuidedTourView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GuidedTourView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Root/OnboardingView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/OnboardingView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Root/TestModeView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/TestModeView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Schedule/RedesignedComponents.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/RedesignedComponents~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Schedule/SchedulePickerComponents.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SchedulePickerComponents~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Schedule/ScheduleView+WatchSetup.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView+WatchSetup~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Schedule/ScheduleView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Schedule/ScheduleViewModel+Storage.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel+Storage~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Schedule/ScheduleViewModel.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/ScheduleViewModel~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Settings/SettingsView.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsView~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/Ninety/View/Settings/SettingsViewModel.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/SettingsViewModel~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/DerivedSources/GeneratedStringSymbols_Localizable.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.dia",
+    "index-unit-output-path" : "/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.o",
+    "llvm-bc" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.bc",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.swiftdeps",
+    "swiftmodule" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-iphonesimulator/Ninety.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable~partial.swiftmodule"
+  }
+}

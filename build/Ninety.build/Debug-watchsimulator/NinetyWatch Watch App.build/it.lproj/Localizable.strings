@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>APPEARANCE</key>
+	<string>ASPETTO</string>
+	<key>About Ninety</key>
+	<string>Informazioni su Ninety</string>
+	<key>Alarm</key>
+	<string>Sveglia</string>
+	<key>Alarm Off</key>
+	<string>Sveglia disattivata</string>
+	<key>Alarm On</key>
+	<string>Sveglia attiva</string>
+	<key>Alarm scheduled</key>
+	<string>Sveglia programmata</string>
+	<key>Anticipate</key>
+	<string>Anticipazione</string>
+	<key>Apple Health</key>
+	<string>Apple Health</string>
+	<key>Attention</key>
+	<string>Attenzione</string>
+	<key>Automatic</key>
+	<string>Automatico</string>
+	<key>Bloom</key>
+	<string>Fioritura</string>
+	<key>By continuing, you agree to Ninety's \n**Terms of Service** and **Privacy Policy.**</key>
+	<string>Continuando, accetti i **Termini di servizio** e la **Privacy Policy** di Ninety.</string>
+	<key>Calypso</key>
+	<string>Calypso</string>
+	<key>Chimes</key>
+	<string>Rintocchi</string>
+	<key>Connected</key>
+	<string>Connesso</string>
+	<key>Customize Every Day</key>
+	<string>Personalizza ogni giorno</string>
+	<key>Default</key>
+	<string>Predefinito</string>
+	<key>Diagnostics</key>
+	<string>Diagnostica</string>
+	<key>Done</key>
+	<string>Chiudi</string>
+	<key>Each day can have its own wake-up time. Tap a day to select it and adjust the schedule.</key>
+	<string>Ogni giorno può avere un orario diverso. Tocca un giorno per selezionarlo e impostare la sua sveglia.</string>
+	<key>Everything is set up. Sweet dreams.</key>
+	<string>È tutto pronto. Sogni d'oro.</string>
+	<key>Fanfare</key>
+	<string>Fanfara</string>
+	<key>GENERAL</key>
+	<string>GENERALE</string>
+	<key>Get Started</key>
+	<string>Inizia</string>
+	<key>Haptic Feedback</key>
+	<string>Feedback aptico</string>
+	<key>Haptic Pre-Alarm</key>
+	<string>Pre-sveglia aptica</string>
+	<key>Language</key>
+	<string>Lingua</string>
+	<key>Light</key>
+	<string>Chiaro</string>
+	<key>Monitoring active</key>
+	<string>Monitoraggio attivo</string>
+	<key>Next</key>
+	<string>Avanti</string>
+	<key>Next Up</key>
+	<string>Prossima sveglia</string>
+	<key>Next alarm</key>
+	<string>Prossima sveglia</string>
+	<key>Night</key>
+	<string>Notte</string>
+	<key>Ninety</key>
+	<string>Ninety</string>
+	<key>Ninety logo</key>
+	<string>Logo di Ninety</string>
+	<key>Ninety uses on-device machine learning to find the ideal moment to wake you — within the time you set.</key>
+	<string>Ninety usa il machine learning on-device per trovare il momento ideale in cui svegliarti, entro l'orario che hai impostato.</string>
+	<key>No active alarms</key>
+	<string>Nessuna sveglia attiva</string>
+	<key>Noir</key>
+	<string>Noir</string>
+	<key>Notifications</key>
+	<string>Notifiche</string>
+	<key>On or Off. Your Call.</key>
+	<string>Attiva o disattiva</string>
+	<key>Open the Watch app to set it</key>
+	<string>Apri l'app su Watch per impostarla</string>
+	<key>Opens the main sleep schedule</key>
+	<string>Apre la schermata principale della sveglia</string>
+	<key>PERMISSIONS</key>
+	<string>PERMESSI</string>
+	<key>Pending sync</key>
+	<string>Da sincronizzare</string>
+	<key>Private by Design</key>
+	<string>Privacy integrata</string>
+	<key>Replay Tour</key>
+	<string>Ripeti il tour</string>
+	<key>SMART ALARM</key>
+	<string>SVEGLIA INTELLIGENTE</string>
+	<key>Save</key>
+	<string>Salva</string>
+	<key>Saved</key>
+	<string>Salvato</string>
+	<key>Select</key>
+	<string>Seleziona</string>
+	<key>Set Ninety Alarm</key>
+	<string>Set Ninety Alarm</string>
+	<key>Set Wake Time</key>
+	<string>Imposta orario</string>
+	<key>Set Your Wake Time</key>
+	<string>Imposta il tuo orario</string>
+	<key>Set your next alarm on iPhone</key>
+	<string>Imposta la prossima su iPhone</string>
+	<key>Settings</key>
+	<string>Impostazioni</string>
+	<key>Smart sleep tracking powered by on-device ML. Your data stays on your devices.</key>
+	<string>Monitoraggio del sonno intelligente con ML on-device. I tuoi dati restano sui tuoi dispositivi.</string>
+	<key>Sound</key>
+	<string>Suono</string>
+	<key>Sync failed</key>
+	<string>Sync non riuscito</string>
+	<key>Synced</key>
+	<string>Sincronizzato</string>
+	<key>Syncing</key>
+	<string>Sincronizzo</string>
+	<key>System</key>
+	<string>Sistema</string>
+	<key>Tap the clock to choose when you need to be up. Ninety wakes you at the best point in your sleep cycle.</key>
+	<string>Tocca l'orologio per scegliere entro quando vuoi essere svegliato. Ninety ti sveglierà nel momento ideale del tuo ciclo di sonno.</string>
+	<key>Tap to change</key>
+	<string>Tocca per modificare</string>
+	<key>Tiptoe</key>
+	<string>Punta di piedi</string>
+	<key>Today</key>
+	<string>Oggi</string>
+	<key>Toggle the alarm for each day independently — keep your weekdays and weekends perfectly balanced.</key>
+	<string>Accendi o spegni la sveglia per ogni singolo giorno in modo indipendente.</string>
+	<key>Tomorrow</key>
+	<string>Domani</string>
+	<key>Track your sleep pattern and wake up refreshed.</key>
+	<string>Monitora il tuo sonno e svegliati riposato.</string>
+	<key>Version</key>
+	<string>Versione</string>
+	<key>Waiting for the next alarm</key>
+	<string>In attesa della prossima sveglia</string>
+	<key>Wake Up!</key>
+	<string>Sveglia!</string>
+	<key>Wake Window</key>
+	<string>Finestra di sveglia</string>
+	<key>Wake up by</key>
+	<string>Sveglia entro</string>
+	<key>Watch only</key>
+	<string>Solo Watch</string>
+	<key>Welcome to Ninety</key>
+	<string>Benvenuto in Ninety</string>
+	<key>You're All Set</key>
+	<string>È tutto pronto</string>
+	<key>Your sleep data never leaves your device. No servers, no cloud — everything runs locally on your iPhone.</key>
+	<string>I tuoi dati sul sonno non lasciano mai il dispositivo. Niente server, niente cloud: tutto gira localmente sul tuo iPhone.</string>
+	<key>iPhone unavailable</key>
+	<string>iPhone non raggiungibile</string>
+</dict>
+</plist>

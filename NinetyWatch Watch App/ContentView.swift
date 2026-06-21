@@ -61,13 +61,13 @@ struct WatchStatusFooter: View {
 
     var statusText: String {
         if isWatchOnly {
-            return "Watch only"
+            return WatchCopy.current.text(.watchOnly)
         } else if isSynced {
-            return "Synced"
+            return WatchCopy.current.text(.synced)
         } else if sensorManager.connectionStatus.contains("unavailable") {
-            return "Phone Offline"
+            return WatchCopy.current.text(.phoneUnavailable)
         } else {
-            return "Connecting..."
+            return WatchCopy.current.text(.syncing)
         }
     }
 
@@ -194,7 +194,7 @@ struct WatchSingleAlarmView: View {
                 openEditor()
             } label: {
                 VStack(spacing: 8) {
-                    Text(sensorManager.nextAlarmDate == nil ? "Sveglia" : "Sveglia impostata")
+                    Text(sensorManager.nextAlarmDate == nil ? WatchCopy.current.text(.alarm) : WatchCopy.current.text(.scheduled))
                         .font(.system(.footnote, design: .rounded).weight(.semibold))
                         .foregroundStyle(.white.opacity(0.82))
 

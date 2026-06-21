@@ -1,0 +1,23 @@
+{
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchNinetyWeekday.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchNinetyWeekday.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchNinetyWeekday.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchNinetyWeekday.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchNinetyWeekday.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchNinetyWeekday.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchSetNinetyAlarmIntent.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchSetNinetyAlarmIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchSetNinetyAlarmIntent.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchSetNinetyAlarmIntent.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchSetNinetyAlarmIntent.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchSetNinetyAlarmIntent.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchUpdateNinetyAlarmIntent.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchUpdateNinetyAlarmIntent.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchUpdateNinetyAlarmIntent.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchUpdateNinetyAlarmIntent.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/x86_64/WatchUpdateNinetyAlarmIntent.swiftdeps"
+  }
+}

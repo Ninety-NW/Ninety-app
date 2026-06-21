@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum WatchCopyKey {
+    case alarm
     case appName
     case nextAlarm
     case tapToChange
@@ -30,9 +31,11 @@ enum WatchCopyKey {
     case phoneUnavailable
     case syncFailed
     case syncing
+    case wakeUp
 
     var englishKey: String {
         switch self {
+        case .alarm: return "Alarm"
         case .appName: return "Ninety"
         case .nextAlarm: return "Next alarm"
         case .tapToChange: return "Tap to change"
@@ -55,6 +58,7 @@ enum WatchCopyKey {
         case .phoneUnavailable: return "iPhone unavailable"
         case .syncFailed: return "Sync failed"
         case .syncing: return "Syncing"
+        case .wakeUp: return "Wake Up!"
         }
     }
 }
@@ -81,6 +85,10 @@ struct WatchCopy {
             return NSLocalizedString(englishKey, comment: "")
         }
         return bundle.localizedString(forKey: englishKey, value: nil, table: nil)
+    }
+
+    static var current: WatchCopy {
+        WatchCopy(localeIdentifier: Locale.current.identifier)
     }
 }
 

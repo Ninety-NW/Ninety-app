@@ -1,0 +1,891 @@
+[
+  {
+    "typeName": "NinetyWatch_Watch_App.WatchAlarmOffsetDirection",
+    "mangledTypeName": "012NinetyWatch_B4_App0B20AlarmOffsetDirectionO",
+    "kind": "enum",
+    "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+    "line": 4,
+    "conformances": [
+      "Swift.Equatable",
+      "Swift.Hashable",
+      "Swift.RawRepresentable",
+      "AppIntents.AppEnum",
+      "AppIntents.AppValue",
+      "AppIntents.StaticDisplayRepresentable",
+      "AppIntents.PersistentlyIdentifiable",
+      "AppIntents.TypeDisplayRepresentable",
+      "AppIntents._IntentValue",
+      "Swift.Sendable",
+      "AppIntents.CaseDisplayRepresentable",
+      "Swift.SendableMetatype",
+      "Foundation.CustomLocalizedStringResourceConvertible",
+      "Swift.CaseIterable",
+      "Swift.BitwiseCopyable"
+    ],
+    "allConformances": [
+      {
+        "protocolName": "Swift.Equatable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.Hashable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.RawRepresentable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.AppEnum",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.AppValue",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.StaticDisplayRepresentable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.PersistentlyIdentifiable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.TypeDisplayRepresentable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents._IntentValue",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.Sendable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.CaseDisplayRepresentable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.SendableMetatype",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Foundation.CustomLocalizedStringResourceConvertible",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.CaseIterable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.BitwiseCopyable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      }
+    ],
+    "associatedTypeAliases": [
+      {
+        "typeAliasName": "RawValue",
+        "substitutedTypeName": "Swift.String",
+        "substitutedMangledTypeName": "SS"
+      },
+      {
+        "typeAliasName": "ValueType",
+        "substitutedTypeName": "NinetyWatch_Watch_App.WatchAlarmOffsetDirection",
+        "substitutedMangledTypeName": "012NinetyWatch_B4_App0B20AlarmOffsetDirectionO"
+      },
+      {
+        "typeAliasName": "UnwrappedType",
+        "substitutedTypeName": "NinetyWatch_Watch_App.WatchAlarmOffsetDirection",
+        "substitutedMangledTypeName": "012NinetyWatch_B4_App0B20AlarmOffsetDirectionO"
+      },
+      {
+        "typeAliasName": "Specification",
+        "substitutedTypeName": "some AppIntents.ResolverSpecification",
+        "substitutedMangledTypeName": "10AppIntents0A4EnumPAAE28defaultResolverSpecificationQrvpZQOy012NinetyWatch_h1_A00H20AlarmOffsetDirectionO_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.ResolverSpecification"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      },
+      {
+        "typeAliasName": "AllCases",
+        "substitutedTypeName": "Swift.Array<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+        "substitutedMangledTypeName": "Say012NinetyWatch_B4_App0B20AlarmOffsetDirectionOG"
+      }
+    ],
+    "properties": [
+      {
+        "label": "typeDisplayRepresentation",
+        "type": "AppIntents.TypeDisplayRepresentation",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 8,
+        "valueKind": "RawLiteral",
+        "value": "Direzione"
+      },
+      {
+        "label": "caseDisplayRepresentations",
+        "type": "Swift.Dictionary<NinetyWatch_Watch_App.WatchAlarmOffsetDirection, AppIntents.DisplayRepresentation>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 10,
+        "valueKind": "Dictionary",
+        "value": [
+          {
+            "key": {
+              "valueKind": "Enum",
+              "value": {
+                "name": "forward"
+              }
+            },
+            "value": {
+              "valueKind": "InitCall",
+              "value": {
+                "type": "AppIntents.DisplayRepresentation",
+                "arguments": [
+                  {
+                    "label": "title",
+                    "type": "Foundation.LocalizedStringResource",
+                    "valueKind": "RawLiteral",
+                    "value": "in avanti"
+                  },
+                  {
+                    "label": "subtitle",
+                    "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+                    "valueKind": "NilLiteral"
+                  },
+                  {
+                    "label": "image",
+                    "type": "Swift.Optional<AppIntents.DisplayRepresentation.Image>",
+                    "valueKind": "NilLiteral"
+                  },
+                  {
+                    "label": "synonyms",
+                    "type": "Swift.Array<Foundation.LocalizedStringResource>",
+                    "valueKind": "Array",
+                    "value": [
+                      {
+                        "valueKind": "RawLiteral",
+                        "value": "avanti"
+                      },
+                      {
+                        "valueKind": "RawLiteral",
+                        "value": "forward"
+                      },
+                      {
+                        "valueKind": "RawLiteral",
+                        "value": "later"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "key": {
+              "valueKind": "Enum",
+              "value": {
+                "name": "backward"
+              }
+            },
+            "value": {
+              "valueKind": "InitCall",
+              "value": {
+                "type": "AppIntents.DisplayRepresentation",
+                "arguments": [
+                  {
+                    "label": "title",
+                    "type": "Foundation.LocalizedStringResource",
+                    "valueKind": "RawLiteral",
+                    "value": "indietro"
+                  },
+                  {
+                    "label": "subtitle",
+                    "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+                    "valueKind": "NilLiteral"
+                  },
+                  {
+                    "label": "image",
+                    "type": "Swift.Optional<AppIntents.DisplayRepresentation.Image>",
+                    "valueKind": "NilLiteral"
+                  },
+                  {
+                    "label": "synonyms",
+                    "type": "Swift.Array<Foundation.LocalizedStringResource>",
+                    "valueKind": "Array",
+                    "value": [
+                      {
+                        "valueKind": "RawLiteral",
+                        "value": "backward"
+                      },
+                      {
+                        "valueKind": "RawLiteral",
+                        "value": "earlier"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "allCases",
+        "type": "Swift.Array<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "valueKind": "Array",
+        "value": [
+          {
+            "valueKind": "Enum",
+            "value": {
+              "name": "forward"
+            }
+          },
+          {
+            "valueKind": "Enum",
+            "value": {
+              "name": "backward"
+            }
+          }
+        ]
+      },
+      {
+        "label": "rawValue",
+        "type": "Swift.String",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "valueKind": "Runtime"
+      }
+    ],
+    "cases": [
+      {
+        "name": "forward",
+        "rawValue": "forward"
+      },
+      {
+        "name": "backward",
+        "rawValue": "backward"
+      }
+    ]
+  },
+  {
+    "typeName": "NinetyWatch_Watch_App.WatchUpdateNinetyAlarmIntent",
+    "mangledTypeName": "012NinetyWatch_B4_App0b6UpdateA11AlarmIntentV",
+    "kind": "struct",
+    "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+    "line": 16,
+    "conformances": [
+      "AppIntents.AppIntent",
+      "AppIntents.PersistentlyIdentifiable",
+      "AppIntents._SupportsAppDependencies",
+      "Swift.Sendable",
+      "Swift.SendableMetatype"
+    ],
+    "allConformances": [
+      {
+        "protocolName": "AppIntents.AppIntent",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.PersistentlyIdentifiable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents._SupportsAppDependencies",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.Sendable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.SendableMetatype",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      }
+    ],
+    "associatedTypeAliases": [
+      {
+        "typeAliasName": "PerformResult",
+        "substitutedTypeName": "some AppIntents.ProvidesDialog",
+        "substitutedMangledTypeName": "012NinetyWatch_B4_App0b6UpdateA11AlarmIntentV7performQryYaKFQOy_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.ProvidesDialog"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      },
+      {
+        "typeAliasName": "SummaryContent",
+        "substitutedTypeName": "some AppIntents.ParameterSummary",
+        "substitutedMangledTypeName": "012NinetyWatch_B4_App0b6UpdateA11AlarmIntentV16parameterSummaryQrvpZQOy_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.ParameterSummary"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      }
+    ],
+    "properties": [
+      {
+        "label": "_weekday",
+        "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 26,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Giorno"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Il giorno della sveglia da spostare."
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Quale giorno vuoi spostare?"
+            },
+            {
+              "label": "requestDisambiguationDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "supportedValues",
+              "type": "Swift.Array<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "Runtime"
+            }
+          ]
+        }
+      },
+      {
+        "label": "_offsetMinutes",
+        "type": "AppIntents.IntentParameter<Swift.Int>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 34,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<Swift.Int>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Minuti"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Quanti minuti vuoi spostare la sveglia?"
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<Swift.Int>",
+              "valueKind": "RawLiteral",
+              "value": "60"
+            },
+            {
+              "label": "controlStyle",
+              "type": "AppIntents.IntentParameter<Swift.Int>.IntControlStyle",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "inclusiveRange",
+              "type": "Swift.Optional<(lowerBound: Swift.Int, upperBound: Swift.Int)>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Di quanti minuti vuoi spostare la sveglia?"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            }
+          ]
+        }
+      },
+      {
+        "label": "_direction",
+        "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 42,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Direzione"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Vuoi spostare la sveglia in avanti o indietro?"
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+              "valueKind": "Enum",
+              "value": {
+                "name": "forward"
+              }
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Vuoi spostarla in avanti o indietro?"
+            },
+            {
+              "label": "requestDisambiguationDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "supportedValues",
+              "type": "Swift.Array<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+              "valueKind": "Runtime"
+            }
+          ]
+        }
+      },
+      {
+        "label": "title",
+        "type": "Foundation.LocalizedStringResource",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 17,
+        "valueKind": "RawLiteral",
+        "value": "Sposta Sveglia Ninety"
+      },
+      {
+        "label": "description",
+        "type": "AppIntents.IntentDescription",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 18,
+        "valueKind": "RawLiteral",
+        "value": "Sposta la sveglia Ninety dall'Apple Watch inoltrando il comando all'iPhone."
+      },
+      {
+        "label": "openAppWhenRun",
+        "type": "Swift.Bool",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 19,
+        "valueKind": "RawLiteral",
+        "value": "false"
+      },
+      {
+        "label": "weekday",
+        "type": "NinetyWatch_Watch_App.WatchNinetyWeekday",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 26,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Giorno"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Il giorno della sveglia da spostare."
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Quale giorno vuoi spostare?"
+            },
+            {
+              "label": "requestDisambiguationDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "supportedValues",
+              "type": "Swift.Array<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "Runtime"
+            }
+          ]
+        },
+        "propertyWrappers": [
+          {
+            "type": "AppIntents.IntentParameter",
+            "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+            "line": 21,
+            "arguments": [
+              {
+                "label": "title",
+                "type": "Foundation.LocalizedStringResource",
+                "valueKind": "RawLiteral",
+                "value": "Giorno"
+              },
+              {
+                "label": "description",
+                "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+                "valueKind": "RawLiteral",
+                "value": "Il giorno della sveglia da spostare."
+              },
+              {
+                "label": "requestValueDialog",
+                "type": "Swift.Optional<AppIntents.IntentDialog>",
+                "valueKind": "RawLiteral",
+                "value": "Quale giorno vuoi spostare?"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "$weekday",
+        "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 26,
+        "valueKind": "Runtime"
+      },
+      {
+        "label": "offsetMinutes",
+        "type": "Swift.Int",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 34,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<Swift.Int>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Minuti"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Quanti minuti vuoi spostare la sveglia?"
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<Swift.Int>",
+              "valueKind": "RawLiteral",
+              "value": "60"
+            },
+            {
+              "label": "controlStyle",
+              "type": "AppIntents.IntentParameter<Swift.Int>.IntControlStyle",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "inclusiveRange",
+              "type": "Swift.Optional<(lowerBound: Swift.Int, upperBound: Swift.Int)>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Di quanti minuti vuoi spostare la sveglia?"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            }
+          ]
+        },
+        "propertyWrappers": [
+          {
+            "type": "AppIntents.IntentParameter",
+            "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+            "line": 28,
+            "arguments": [
+              {
+                "label": "title",
+                "type": "Foundation.LocalizedStringResource",
+                "valueKind": "RawLiteral",
+                "value": "Minuti"
+              },
+              {
+                "label": "description",
+                "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+                "valueKind": "RawLiteral",
+                "value": "Quanti minuti vuoi spostare la sveglia?"
+              },
+              {
+                "label": "default",
+                "type": "Swift.Optional<Swift.Int>",
+                "valueKind": "RawLiteral",
+                "value": "60"
+              },
+              {
+                "label": "requestValueDialog",
+                "type": "Swift.Optional<AppIntents.IntentDialog>",
+                "valueKind": "RawLiteral",
+                "value": "Di quanti minuti vuoi spostare la sveglia?"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "$offsetMinutes",
+        "type": "AppIntents.IntentParameter<Swift.Int>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 34,
+        "valueKind": "Runtime"
+      },
+      {
+        "label": "direction",
+        "type": "NinetyWatch_Watch_App.WatchAlarmOffsetDirection",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 42,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Direzione"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Vuoi spostare la sveglia in avanti o indietro?"
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+              "valueKind": "Enum",
+              "value": {
+                "name": "forward"
+              }
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Vuoi spostarla in avanti o indietro?"
+            },
+            {
+              "label": "requestDisambiguationDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "supportedValues",
+              "type": "Swift.Array<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+              "valueKind": "Runtime"
+            }
+          ]
+        },
+        "propertyWrappers": [
+          {
+            "type": "AppIntents.IntentParameter",
+            "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+            "line": 36,
+            "arguments": [
+              {
+                "label": "title",
+                "type": "Foundation.LocalizedStringResource",
+                "valueKind": "RawLiteral",
+                "value": "Direzione"
+              },
+              {
+                "label": "description",
+                "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+                "valueKind": "RawLiteral",
+                "value": "Vuoi spostare la sveglia in avanti o indietro?"
+              },
+              {
+                "label": "default",
+                "type": "Swift.Optional<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+                "valueKind": "Enum",
+                "value": {
+                  "name": "forward"
+                }
+              },
+              {
+                "label": "requestValueDialog",
+                "type": "Swift.Optional<AppIntents.IntentDialog>",
+                "valueKind": "RawLiteral",
+                "value": "Vuoi spostarla in avanti o indietro?"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "$direction",
+        "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchAlarmOffsetDirection>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 42,
+        "valueKind": "Runtime"
+      },
+      {
+        "label": "parameterSummary",
+        "type": "some AppIntents.ParameterSummary",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchUpdateNinetyAlarmIntent.swift",
+        "line": 44,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameterSummary<NinetyWatch_Watch_App.WatchUpdateNinetyAlarmIntent>",
+          "arguments": [
+            {
+              "label": "",
+              "type": "AppIntents.ParameterSummaryString<NinetyWatch_Watch_App.WatchUpdateNinetyAlarmIntent>",
+              "valueKind": "InterpolatedStringLiteral",
+              "value": {
+                "segments": [
+                  {
+                    "valueKind": "RawLiteral",
+                    "value": "Sposta la sveglia Ninety di "
+                  },
+                  {
+                    "valueKind": "KeyPath",
+                    "value": {
+                      "path": "$weekday",
+                      "rootType": "NinetyWatch_Watch_App.WatchUpdateNinetyAlarmIntent",
+                      "components": [
+                        {
+                          "label": "$weekday",
+                          "type": "AppIntents.IntentParameter<NinetyWatch_Watch_App.WatchNinetyWeekday>"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "valueKind": "RawLiteral",
+                    "value": " di "
+                  },
+                  {
+                    "valueKind": "KeyPath",
+                    "value": {
+                      "path": "$offsetMinutes",
+                      "rootType": "NinetyWatch_Watch_App.WatchUpdateNinetyAlarmIntent",
+                      "components": [
+                        {
+                          "label": "$offsetMinutes",
+                          "type": "AppIntents.IntentParameter<Swift.Int>"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "valueKind": "RawLiteral",
+                    "value": " minuti"
+                  }
+                ]
+              }
+            },
+            {
+              "label": "table",
+              "type": "Swift.Optional<Swift.String>",
+              "valueKind": "NilLiteral"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

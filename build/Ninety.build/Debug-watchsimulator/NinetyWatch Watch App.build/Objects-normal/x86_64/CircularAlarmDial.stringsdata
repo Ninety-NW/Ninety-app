@@ -1,0 +1,24 @@
+{
+  "source": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/CircularAlarmDial.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "12",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 61
+        }
+      }
+    ]
+  },
+  "version": 1
+}

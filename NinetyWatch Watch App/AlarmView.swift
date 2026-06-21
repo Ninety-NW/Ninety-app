@@ -24,7 +24,7 @@ struct AlarmView: View {
                     .foregroundColor(.orange)
                     .symbolEffect(.bounce, options: .repeating, value: hapticManager.isPlaying)
                 
-                Text("Wake Up!")
+                Text(WatchCopy.current.text(.wakeUp))
                     .font(.title2)
                     .fontWeight(.bold)
                 

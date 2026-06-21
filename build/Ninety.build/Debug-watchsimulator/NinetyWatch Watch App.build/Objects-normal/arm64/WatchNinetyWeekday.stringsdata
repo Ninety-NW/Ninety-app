@@ -1,0 +1,168 @@
+{
+  "source": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchNinetyWeekday.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Giorno",
+        "location": {
+          "startingColumn": 71,
+          "startingLine": 12
+        }
+      },
+      {
+        "comment": "",
+        "key": "domenica",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 15
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sunday",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 15
+        }
+      },
+      {
+        "comment": "",
+        "key": "lunedì",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 16
+        }
+      },
+      {
+        "comment": "",
+        "key": "lunedi",
+        "location": {
+          "startingColumn": 69,
+          "startingLine": 16
+        }
+      },
+      {
+        "comment": "",
+        "key": "Monday",
+        "location": {
+          "startingColumn": 79,
+          "startingLine": 16
+        }
+      },
+      {
+        "comment": "",
+        "key": "martedì",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "martedi",
+        "location": {
+          "startingColumn": 71,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "Tuesday",
+        "location": {
+          "startingColumn": 82,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "mercoledì",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "mercoledi",
+        "location": {
+          "startingColumn": 75,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "Wednesday",
+        "location": {
+          "startingColumn": 88,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "giovedì",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "giovedi",
+        "location": {
+          "startingColumn": 72,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "Thursday",
+        "location": {
+          "startingColumn": 83,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "venerdì",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "venerdi",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "Friday",
+        "location": {
+          "startingColumn": 81,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "sabato",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "Saturday",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 21
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,23 @@
+{
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/WatchSensorManager+AlarmSync.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+AlarmSync.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+AlarmSync.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+AlarmSync.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+AlarmSync.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+AlarmSync.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/WatchSensorManager+Connectivity.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+Connectivity.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+Connectivity.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+Connectivity.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+Connectivity.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager+Connectivity.swiftdeps"
+  },
+  "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/WatchSensorManager.swift" : {
+    "const-values" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager.swiftconstvalues",
+    "dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager.d",
+    "diagnostics" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager.dia",
+    "object" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager.o",
+    "swift-dependencies" : "/Users/michele/Documents/Ninety-app/build/Ninety.build/Debug-watchsimulator/NinetyWatch Watch App.build/Objects-normal/arm64/WatchSensorManager.swiftdeps"
+  }
+}

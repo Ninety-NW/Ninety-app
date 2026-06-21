@@ -1,0 +1,262 @@
+[
+  {
+    "typeName": "NinetyWatch_Watch_App.WatchGetNinetyAlarmIntent",
+    "mangledTypeName": "012NinetyWatch_B4_App0b3GetA11AlarmIntentV",
+    "kind": "struct",
+    "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+    "line": 4,
+    "conformances": [
+      "AppIntents.AppIntent",
+      "AppIntents.PersistentlyIdentifiable",
+      "AppIntents._SupportsAppDependencies",
+      "Swift.Sendable",
+      "Swift.SendableMetatype"
+    ],
+    "allConformances": [
+      {
+        "protocolName": "AppIntents.AppIntent",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents.PersistentlyIdentifiable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "AppIntents._SupportsAppDependencies",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.Sendable",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      },
+      {
+        "protocolName": "Swift.SendableMetatype",
+        "conformanceDefiningModule": "NinetyWatch_Watch_App"
+      }
+    ],
+    "associatedTypeAliases": [
+      {
+        "typeAliasName": "PerformResult",
+        "substitutedTypeName": "some AppIntents.ProvidesDialog",
+        "substitutedMangledTypeName": "012NinetyWatch_B4_App0b3GetA11AlarmIntentV7performQryYaKFQOy_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.ProvidesDialog"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      },
+      {
+        "typeAliasName": "SummaryContent",
+        "substitutedTypeName": "some AppIntents.ParameterSummary",
+        "substitutedMangledTypeName": "012NinetyWatch_B4_App0b3GetA11AlarmIntentV16parameterSummaryQrvpZQOy_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.ParameterSummary"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      }
+    ],
+    "properties": [
+      {
+        "label": "_weekday",
+        "type": "AppIntents.IntentParameter<Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 14,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Giorno"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Il giorno da controllare. Se non lo specifichi, Ninety userà la prossima sveglia attiva."
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Per quale giorno vuoi sapere l'orario?"
+            },
+            {
+              "label": "requestDisambiguationDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "supportedValues",
+              "type": "Swift.Array<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "Runtime"
+            }
+          ]
+        }
+      },
+      {
+        "label": "title",
+        "type": "Foundation.LocalizedStringResource",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 5,
+        "valueKind": "RawLiteral",
+        "value": "Controlla Sveglia Ninety"
+      },
+      {
+        "label": "description",
+        "type": "AppIntents.IntentDescription",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 6,
+        "valueKind": "RawLiteral",
+        "value": "Chiedi a Siri dall'Apple Watch a che ora è la sveglia Ninety."
+      },
+      {
+        "label": "openAppWhenRun",
+        "type": "Swift.Bool",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 7,
+        "valueKind": "RawLiteral",
+        "value": "false"
+      },
+      {
+        "label": "weekday",
+        "type": "Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 14,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameter<Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>>",
+          "arguments": [
+            {
+              "label": "title",
+              "type": "Foundation.LocalizedStringResource",
+              "valueKind": "RawLiteral",
+              "value": "Giorno"
+            },
+            {
+              "label": "description",
+              "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+              "valueKind": "RawLiteral",
+              "value": "Il giorno da controllare. Se non lo specifichi, Ninety userà la prossima sveglia attiva."
+            },
+            {
+              "label": "default",
+              "type": "Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "requestValueDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "RawLiteral",
+              "value": "Per quale giorno vuoi sapere l'orario?"
+            },
+            {
+              "label": "requestDisambiguationDialog",
+              "type": "Swift.Optional<AppIntents.IntentDialog>",
+              "valueKind": "NilLiteral"
+            },
+            {
+              "label": "inputConnectionBehavior",
+              "type": "AppIntents.InputConnectionBehavior",
+              "valueKind": "Runtime"
+            },
+            {
+              "label": "supportedValues",
+              "type": "Swift.Array<NinetyWatch_Watch_App.WatchNinetyWeekday>",
+              "valueKind": "Runtime"
+            }
+          ]
+        },
+        "propertyWrappers": [
+          {
+            "type": "AppIntents.IntentParameter",
+            "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+            "line": 9,
+            "arguments": [
+              {
+                "label": "title",
+                "type": "Foundation.LocalizedStringResource",
+                "valueKind": "RawLiteral",
+                "value": "Giorno"
+              },
+              {
+                "label": "description",
+                "type": "Swift.Optional<Foundation.LocalizedStringResource>",
+                "valueKind": "RawLiteral",
+                "value": "Il giorno da controllare. Se non lo specifichi, Ninety userà la prossima sveglia attiva."
+              },
+              {
+                "label": "requestValueDialog",
+                "type": "Swift.Optional<AppIntents.IntentDialog>",
+                "valueKind": "RawLiteral",
+                "value": "Per quale giorno vuoi sapere l'orario?"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "$weekday",
+        "type": "AppIntents.IntentParameter<Swift.Optional<NinetyWatch_Watch_App.WatchNinetyWeekday>>",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "false",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 14,
+        "valueKind": "Runtime"
+      },
+      {
+        "label": "parameterSummary",
+        "type": "some AppIntents.ParameterSummary",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "file": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchGetNinetyAlarmIntent.swift",
+        "line": 16,
+        "valueKind": "InitCall",
+        "value": {
+          "type": "AppIntents.IntentParameterSummary<NinetyWatch_Watch_App.WatchGetNinetyAlarmIntent>",
+          "arguments": [
+            {
+              "label": "",
+              "type": "AppIntents.ParameterSummaryString<NinetyWatch_Watch_App.WatchGetNinetyAlarmIntent>",
+              "valueKind": "RawLiteral",
+              "value": "Dimmi la sveglia Ninety"
+            },
+            {
+              "label": "table",
+              "type": "Swift.Optional<Swift.String>",
+              "valueKind": "NilLiteral"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

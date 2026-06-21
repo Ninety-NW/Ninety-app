@@ -1,0 +1,48 @@
+{
+  "source": "/Users/michele/Documents/Ninety-app/NinetyWatch Watch App/Intents/WatchCancelNinetyAlarmIntent.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Annulla Sveglia Ninety",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 5
+        }
+      },
+      {
+        "comment": "",
+        "key": "Annulla una sveglia Ninety settimanale dall'Apple Watch inoltrando il comando all'iPhone.",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 6
+        }
+      },
+      {
+        "comment": "",
+        "key": "Giorno",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 10
+        }
+      },
+      {
+        "comment": "",
+        "key": "Il giorno della sveglia da annullare.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 11
+        }
+      },
+      {
+        "comment": "",
+        "key": "Per quale giorno vuoi annullare la sveglia Ninety?",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 12
+        }
+      }
+    ]
+  },
+  "version": 1
+}

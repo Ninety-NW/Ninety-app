@@ -105,7 +105,6 @@ extension WatchSensorManager {
         clearAlarmTracking(preserveLocalAlarmRecord: keepHapticsRunning)
         stopSensors()
         resetLocalAnalysis()
-        clearPendingPayloadQueue()
         updatePipelineState(state, detail: detail)
         sendWatchStatusUpdate(sessionState)
     }
@@ -124,20 +123,12 @@ extension WatchSensorManager {
         startWatchHapticWakePhase()
         sendTriggerAlarmMessage()
 
-        if phoneReachable {
-            clearScheduledAlarmAndMonitoring(
-                detail: "Watch smart wake active",
-                state: .completed,
-                keepHapticsRunning: true
-            )
-        } else {
-            // Watch-only path: haptics are the available alert surface.
-            clearScheduledAlarmAndMonitoring(
-                detail: reason,
-                state: .completed,
-                keepHapticsRunning: true
-            )
-        }
+        let detail = phoneReachable ? "Watch smart wake active" : reason
+        clearScheduledAlarmAndMonitoring(
+            detail: detail,
+            state: .completed,
+            keepHapticsRunning: true
+        )
     }
 
     func enqueuePendingPayload(_ payload: SensorPayload) {
