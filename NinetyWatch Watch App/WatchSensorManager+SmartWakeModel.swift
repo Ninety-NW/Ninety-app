@@ -12,6 +12,7 @@ extension WatchSensorManager {
     func loadWatchModel() {
         guard let modelURL = Bundle.main.url(forResource: "NeuralWakeUP", withExtension: "mlmodelc") else {
             replayStatusText = "Watch ML missing"
+            watchModelStatus = "Missing"
             return
         }
 
@@ -19,8 +20,10 @@ extension WatchSensorManager {
             let configuration = MLModelConfiguration()
             watchStageModel = try MLModel(contentsOf: modelURL, configuration: configuration)
             replayStatusText = "Watch ML ready"
+            watchModelStatus = "Ready"
         } catch {
             replayStatusText = "Watch ML failed: \(error.localizedDescription)"
+            watchModelStatus = "Failed: \(error.localizedDescription)"
         }
     }
 
@@ -30,7 +33,10 @@ extension WatchSensorManager {
     /// to get stuck on the loading screen.
     func loadWatchModelAsync() async {
         guard let modelURL = Bundle.main.url(forResource: "NeuralWakeUP", withExtension: "mlmodelc") else {
-            await MainActor.run { self.replayStatusText = "Watch ML missing" }
+            await MainActor.run {
+                self.replayStatusText = "Watch ML missing"
+                self.watchModelStatus = "Missing"
+            }
             return
         }
 
@@ -43,10 +49,12 @@ extension WatchSensorManager {
             await MainActor.run {
                 self.watchStageModel = model
                 self.replayStatusText = "Watch ML ready"
+                self.watchModelStatus = "Ready"
             }
         } catch {
             await MainActor.run {
                 self.replayStatusText = "Watch ML failed: \(error.localizedDescription)"
+                self.watchModelStatus = "Failed: \(error.localizedDescription)"
             }
         }
     }
@@ -237,8 +245,6 @@ extension WatchSensorManager {
         stageTitle: String,
         isTestInjected: Bool
     ) {
-        guard let session = wcSession, session.activationState == .activated else { return }
-
         let diagnostic = WatchEpochDiagnostic(
             id: UUID(),
             timestamp: epoch.timestamp,
@@ -255,6 +261,9 @@ extension WatchSensorManager {
             isTestInjected: isTestInjected
         )
 
+        appendLocalDiagnostic(diagnostic)
+
+        guard let session = wcSession, session.activationState == .activated else { return }
         guard let encoded = try? JSONEncoder().encode(diagnostic) else { return }
 
         let message: [String: Any] = [
