@@ -8,7 +8,7 @@ window.addEventListener('scroll', updateHeader, { passive: true });
 
 const closeMenu = () => {
   menuButton.setAttribute('aria-expanded', 'false');
-  menuButton.setAttribute('aria-label', 'Apri il menu');
+  menuButton.setAttribute('aria-label', 'Open menu');
   navigation.classList.remove('open');
   document.body.style.overflow = '';
 };
@@ -16,7 +16,7 @@ const closeMenu = () => {
 menuButton.addEventListener('click', () => {
   const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
   menuButton.setAttribute('aria-expanded', String(!isOpen));
-  menuButton.setAttribute('aria-label', isOpen ? 'Apri il menu' : 'Chiudi il menu');
+  menuButton.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
   navigation.classList.toggle('open', !isOpen);
   document.body.style.overflow = isOpen ? '' : 'hidden';
 });

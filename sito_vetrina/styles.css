@@ -181,6 +181,10 @@ h1 em { color: var(--accent); font-style: normal; }
 .policy-copy article:last-child { border-bottom: 0; }
 .policy-copy h3 { margin-bottom: 14px; color: #ece9e2; font-size: 19px; }
 .policy-copy p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.8; }
+.policy-copy p + p, .policy-copy ul + p { margin-top: 16px; }
+.policy-copy ul { margin: 16px 0 0; padding-left: 20px; color: var(--muted); font-size: 15px; line-height: 1.8; }
+.policy-copy li + li { margin-top: 8px; }
+.policy-copy strong { color: #ece9e2; }
 
 .site-footer { padding-block: 60px; color: #9ba1aa; border-top: 1px solid var(--line); background: #030407; }
 .footer-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 24px 60px; align-items: center; }
