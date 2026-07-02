@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ninety analizza il sonno direttamente su Apple Watch e sceglie il momento migliore per svegliarti nella tua finestra di risveglio.">
+  <meta name="theme-color" content="#05070b">
+  <title>Ninety — Svegliati nel momento giusto</title>
+  <link rel="icon" href="assets/ninety-app-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+
+  <header class="site-header" id="top">
+    <div class="nav-shell">
+      <a class="brand" href="#top" aria-label="Ninety, torna all'inizio">
+        <img src="assets/ninety-app-icon.png" alt="" width="40" height="40">
+        <span>Ninety</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Apri il menu">
+        <span></span><span></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Navigazione principale">
+        <a href="#come-funziona">Come funziona</a>
+        <a href="#futuro">Il futuro</a>
+        <a href="#team">Team</a>
+        <a href="#privacy">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero section-shell">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="status-dot"></span> Sleep intelligence, on your wrist</p>
+        <h1>Non una sveglia.<br><em>Il momento giusto.</em></h1>
+        <p class="hero-lead">Ninety trasforma Apple Watch in un compagno del sonno: osserva cuore e movimento, interpreta i tuoi segnali e ti sveglia nel punto più favorevole della tua finestra.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#come-funziona">Scopri Ninety <span aria-hidden="true">↘</span></a>
+          <a class="button button-ghost" href="#privacy">Privacy by design</a>
+        </div>
+        <div class="hero-proof" aria-label="Caratteristiche principali">
+          <span>On-device ML</span>
+          <span>Apple Watch</span>
+          <span>Dati locali</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" aria-label="Anteprima concettuale di Ninety su Apple Watch">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="glow"></div>
+        <div class="watch">
+          <div class="watch-crown"></div>
+          <div class="watch-screen">
+            <div class="watch-topline"><span>NINETY</span><span>06:42</span></div>
+            <div class="sleep-ring">
+              <div class="sleep-ring-inner">
+                <span class="moon">☾</span>
+                <strong>ottimale</strong>
+                <small>fase rilevata</small>
+              </div>
+            </div>
+            <div class="signal-row">
+              <span class="heart">♥</span>
+              <div class="signal-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <strong>58</strong>
+            </div>
+          </div>
+        </div>
+        <div class="floating-card card-start"><span>Inizio analisi</span><strong>30 min prima</strong></div>
+        <div class="floating-card card-local"><span>Elaborazione</span><strong>100% locale</strong></div>
+      </div>
+    </section>
+
+    <section class="manifesto section-shell reveal" aria-label="La promessa di Ninety">
+      <p>Il sonno non finisce quando suona una sveglia.</p>
+      <h2>Finisce quando il tuo corpo è pronto a ripartire.</h2>
+    </section>
+
+    <section id="come-funziona" class="section-shell section-block">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Come funziona</p>
+        <h2>Tu scegli l’ora limite.<br>Ninety ascolta il resto.</h2>
+        <p>Una tecnologia discreta che lavora mentre dormi, senza trasformare la notte in un pannello di controllo.</p>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card reveal">
+          <span class="step-number">01</span>
+          <div class="step-icon">⌁</div>
+          <h3>Imposta il risveglio</h3>
+          <p>Scegli quando devi essere sveglio. Ninety prepara automaticamente una finestra intelligente nei 30 minuti precedenti.</p>
+        </article>
+        <article class="step-card reveal">
+          <span class="step-number">02</span>
+          <div class="step-icon">⌇</div>
+          <h3>Lascia fare al Watch</h3>
+          <p>Apple Watch rileva battito e movimento. L’analisi avviene sul dispositivo, in epoche continue di 30 secondi.</p>
+        </article>
+        <article class="step-card reveal">
+          <span class="step-number">03</span>
+          <div class="step-icon">◌</div>
+          <h3>Svegliati meglio</h3>
+          <p>Il modello individua il momento più favorevole e avvia un risveglio aptico progressivo, sempre entro l’orario scelto.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="feature-band">
+      <div class="section-shell feature-layout">
+        <div class="feature-visual reveal">
+          <div class="data-card">
+            <div class="data-header"><span>ANALISI NOTTURNA</span><span class="live-pill">LIVE</span></div>
+            <div class="chart" aria-hidden="true">
+              <svg viewBox="0 0 600 180" role="img">
+                <defs>
+                  <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#f5ad4e" stop-opacity=".38"/>
+                    <stop offset="1" stop-color="#f5ad4e" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path class="chart-area" d="M0 130 C40 125,55 74,95 82 S155 146,205 112 S275 52,320 78 S390 143,438 102 S510 44,600 68 L600 180 L0 180 Z"/>
+                <path class="chart-line" d="M0 130 C40 125,55 74,95 82 S155 146,205 112 S275 52,320 78 S390 143,438 102 S510 44,600 68"/>
+              </svg>
+            </div>
+            <div class="data-stats">
+              <div><span>Frequenza</span><strong>58 <small>bpm</small></strong></div>
+              <div><span>Movimento</span><strong>Basso</strong></div>
+              <div><span>Stato</span><strong class="accent-text">Fase ideale</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="feature-copy reveal">
+          <p class="eyebrow">Intelligenza locale</p>
+          <h2>Capisce il tuo riposo.<br>Non colleziona la tua vita.</h2>
+          <p>Ninety elabora i segnali direttamente sui tuoi dispositivi. Il modello osserva l’andamento, non giudica una singola lettura: cerca pattern utili per rendere il risveglio più naturale.</p>
+          <ul class="check-list">
+            <li><span>✓</span> Elaborazione Core ML su Apple Watch</li>
+            <li><span>✓</span> Nessun account obbligatorio</li>
+            <li><span>✓</span> Dati sensibili non venduti né profilati</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="futuro" class="section-shell section-block roadmap-section">
+      <div class="section-heading split-heading reveal">
+        <div>
+          <p class="eyebrow">Next, on Ninety</p>
+          <h2>Il futuro del risveglio<br>è ancora più personale.</h2>
+        </div>
+        <p>Le prossime direzioni che stiamo esplorando per trasformare ogni notte in un’esperienza sempre più consapevole.</p>
+      </div>
+
+      <div class="roadmap-grid">
+        <article class="roadmap-card roadmap-featured reveal">
+          <span class="roadmap-tag">In esplorazione</span>
+          <h3>Ninety Adaptive</h3>
+          <p>Un modello personale che impara gradualmente dai tuoi ritmi e adatta la finestra di risveglio alle tue abitudini.</p>
+          <div class="adaptive-rings" aria-hidden="true"><i></i><i></i><i></i><span>YOU</span></div>
+        </article>
+        <article class="roadmap-card reveal">
+          <span class="roadmap-tag">Prossimamente</span>
+          <h3>Sleep Trends</h3>
+          <p>Una vista settimanale essenziale per leggere costanza, qualità percepita e andamento del riposo senza sovraccarico di dati.</p>
+        </article>
+        <article class="roadmap-card reveal">
+          <span class="roadmap-tag">Concept</span>
+          <h3>Smart Room</h3>
+          <p>Un risveglio coordinato con luci e ambiente domestico, per accompagnare gradualmente corpo e stanza verso il mattino.</p>
+        </article>
+        <article class="roadmap-card reveal">
+          <span class="roadmap-tag">Concept</span>
+          <h3>Power Nap</h3>
+          <p>Sessioni brevi per recuperare energia durante il giorno, con durata flessibile e risveglio aptico silenzioso.</p>
+        </article>
+        <article class="roadmap-card reveal">
+          <span class="roadmap-tag">Ricerca</span>
+          <h3>Respiratory Insights</h3>
+          <p>Indicatori non diagnostici sull’andamento respiratorio notturno, presentati in modo comprensibile e rispettoso.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="team" class="team-section">
+      <div class="section-shell section-block">
+        <div class="team-intro reveal">
+          <p class="eyebrow">Il team</p>
+          <div class="team-count"><strong>5</strong><span>persone,<br>un’unica sveglia.</span></div>
+          <p>Siamo un piccolo team che unisce prodotto, tecnologia e cura dei dettagli per ripensare un gesto quotidiano: svegliarsi.</p>
+        </div>
+
+        <div class="team-grid">
+          <article class="person-card reveal"><div class="avatar">M</div><h3>Michele</h3><p>Ruolo da definire</p></article>
+          <article class="person-card reveal"><div class="avatar">G</div><h3>Gabriele</h3><p>Ruolo da definire</p></article>
+          <article class="person-card reveal"><div class="avatar">M</div><h3>Marco</h3><p>Ruolo da definire</p></article>
+          <article class="person-card reveal"><div class="avatar">G</div><h3>Giulia</h3><p>Ruolo da definire</p></article>
+          <article class="person-card reveal"><div class="avatar">C</div><h3>Cristian</h3><p>Ruolo da definire</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="section-shell section-block privacy-section">
+      <div class="privacy-heading reveal">
+        <div class="privacy-shield">⌾</div>
+        <div>
+          <p class="eyebrow">Privacy policy</p>
+          <h2>I tuoi dati del sonno<br>restano tuoi.</h2>
+        </div>
+        <p class="policy-date">Ultimo aggiornamento<br><strong>2 luglio 2026</strong></p>
+      </div>
+
+      <div class="privacy-grid">
+        <aside class="privacy-summary reveal">
+          <h3>In breve</h3>
+          <p>Ninety è progettata per elaborare localmente i dati necessari al proprio funzionamento. Non richiede la creazione di un account e non vende dati personali.</p>
+          <div class="privacy-badge"><span>✓</span> Elaborazione on-device</div>
+          <div class="privacy-badge"><span>✓</span> Nessuna profilazione pubblicitaria</div>
+          <div class="privacy-badge"><span>✓</span> Controllo tramite permessi Apple</div>
+        </aside>
+
+        <div class="policy-copy reveal">
+          <article>
+            <h3>1. Dati utilizzati</h3>
+            <p>Con il consenso dell’utente, Ninety può accedere ai dati necessari alle funzioni di monitoraggio, inclusi frequenza cardiaca, movimento del polso, impostazioni delle sveglie e informazioni tecniche sullo stato della sessione. L’accesso ai dati sanitari è regolato dai permessi HealthKit e può essere modificato dalle impostazioni Apple.</p>
+          </article>
+          <article>
+            <h3>2. Finalità e trattamento</h3>
+            <p>I dati sono utilizzati per analizzare localmente l’andamento del sonno, individuare un momento favorevole nella finestra di risveglio, attivare la sveglia e mostrare informazioni diagnostiche all’utente. Ninety non fornisce diagnosi né sostituisce un professionista sanitario.</p>
+          </article>
+          <article>
+            <h3>3. Dove rimangono i dati</h3>
+            <p>L’elaborazione principale avviene su Apple Watch e iPhone. Le informazioni possono essere trasferite tra i dispositivi associati tramite i sistemi Apple, come WatchConnectivity, e conservate localmente per garantire continuità alla sessione. Il sito vetrina non utilizza cookie di profilazione o strumenti di analisi.</p>
+          </article>
+          <article>
+            <h3>4. Condivisione e vendita</h3>
+            <p>Ninety non vende dati personali e non li utilizza per pubblicità comportamentale. I dati possono essere trattati dai servizi di sistema Apple necessari al funzionamento dell’app, nel rispetto delle impostazioni e delle condizioni applicabili ai dispositivi dell’utente.</p>
+          </article>
+          <article>
+            <h3>5. Conservazione e controllo</h3>
+            <p>I dati locali vengono conservati per il tempo necessario al funzionamento e alla continuità dell’esperienza. L’utente può revocare i permessi dalle impostazioni di iPhone e Apple Watch; può inoltre rimuovere i dati locali disinstallando l’app, ferme restando eventuali informazioni gestite autonomamente da Apple Health.</p>
+          </article>
+          <article>
+            <h3>6. Modifiche e contatti</h3>
+            <p>Questa informativa potrà essere aggiornata quando cambieranno le funzionalità di Ninety. Per richieste relative alla privacy sarà possibile utilizzare i recapiti ufficiali indicati nella pagina App Store dell’app.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-shell footer-inner">
+      <a class="brand" href="#top"><img src="assets/ninety-app-icon.png" alt="" width="36" height="36"><span>Ninety</span></a>
+      <p>Svegliati nel momento giusto.</p>
+      <div class="footer-links"><a href="#privacy">Privacy</a><a href="#team">Team</a><a href="#top">Torna su ↑</a></div>
+      <small>© 2026 Ninety Team. Tutti i diritti riservati. Apple Watch, HealthKit e Core ML sono marchi di Apple Inc.</small>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
