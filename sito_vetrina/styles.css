@@ -157,12 +157,15 @@ h1 em { color: var(--accent); font-style: normal; }
 .team-count { display: flex; align-items: center; gap: 22px; }
 .team-count strong { font-size: clamp(90px, 11vw, 145px); line-height: .78; letter-spacing: -.08em; font-weight: 620; }
 .team-count span { font-size: 18px; line-height: 1.25; }
-.team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-.person-card { padding: 18px; border: 1px solid rgba(18,19,25,.12); border-radius: 22px; background: rgba(255,255,255,.35); }
-.avatar { aspect-ratio: 1; margin-bottom: 24px; display: grid; place-items: center; border-radius: 16px; background: linear-gradient(145deg, #202632, #0b0e13); color: var(--accent-soft); font-size: 42px; font-weight: 680; }
+.team-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.person-card { min-width: 0; padding: 18px; border: 1px solid rgba(18,19,25,.12); border-radius: 22px; background: rgba(255,255,255,.35); }
+.avatar { aspect-ratio: 1; margin-bottom: 24px; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: linear-gradient(145deg, #202632, #0b0e13); color: var(--accent-soft); font-size: 36px; font-weight: 680; letter-spacing: -.04em; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); }
 .person-card:nth-child(even) .avatar { background: linear-gradient(145deg, #bf7926, #6e3e0d); color: #fff4df; }
 .person-card h3 { margin-bottom: 6px; font-size: 20px; }
 .person-card p { margin: 0; color: #6e7177; font-size: 13px; }
+.person-email { display: inline-block; margin-top: 14px; color: #8a5a18; font-size: 11px; font-weight: 650; line-height: 1.35; overflow-wrap: anywhere; text-decoration: none; }
+.person-email:hover { color: #5d390d; text-decoration: underline; text-underline-offset: 3px; }
 
 .privacy-section { padding-bottom: 150px; }
 .privacy-heading { display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: start; padding-bottom: 60px; border-bottom: 1px solid var(--line); }

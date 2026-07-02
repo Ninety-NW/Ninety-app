@@ -261,8 +261,6 @@ extension WatchSensorManager {
             isTestInjected: isTestInjected
         )
 
-        appendLocalDiagnostic(diagnostic)
-
         guard let session = wcSession, session.activationState == .activated else { return }
         guard let encoded = try? JSONEncoder().encode(diagnostic) else { return }
 

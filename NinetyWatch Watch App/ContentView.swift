@@ -6,7 +6,6 @@ struct ContentView: View {
     @StateObject var sensorManager = WatchSensorManager.shared
     @StateObject var hapticManager = HapticWakeUpManager.shared
     @State private var isEditingTime   = false
-    @State private var showDiagnostics = false
 
     var body: some View {
         NavigationStack {
@@ -15,8 +14,7 @@ struct ContentView: View {
 
                 WatchSingleAlarmView(
                     sensorManager: sensorManager,
-                    isEditingTime: $isEditingTime,
-                    showDiagnostics: $showDiagnostics
+                    isEditingTime: $isEditingTime
                 )
 
                 if !isEditingTime {
@@ -36,9 +34,6 @@ struct ContentView: View {
                 }
             }
             .containerBackground(.black.gradient, for: .navigation)
-            .navigationDestination(isPresented: $showDiagnostics) {
-                WatchDiagnosticsView(sensorManager: sensorManager)
-            }
             .onAppear {
                 sensorManager.refreshStoredAlarmStateIfNeeded()
                 sensorManager.requestHealthPermissions { _ in }
@@ -99,7 +94,6 @@ enum AlarmPeriod {
 struct WatchSingleAlarmView: View {
     @ObservedObject var sensorManager: WatchSensorManager
     @Binding var isEditingTime: Bool
-    @Binding var showDiagnostics: Bool
 
     // Internal 24h state (source of truth)
     @State private var internalHour   = 7
@@ -203,14 +197,6 @@ struct WatchSingleAlarmView: View {
                     .buttonStyle(.plain)
                 }
 
-                // ── Diagnostics ───────────────────────────────────────
-                Button { showDiagnostics = true } label: {
-                    Label("Diagnostics", systemImage: "waveform.path.ecg")
-                        .font(.system(size: 13, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
             }
             .padding(.horizontal, 8)
             .padding(.top, 8)

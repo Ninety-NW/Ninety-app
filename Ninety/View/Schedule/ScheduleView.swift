@@ -30,9 +30,6 @@ struct ScheduleView: View {
     @EnvironmentObject var viewModel: ScheduleViewModel
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var sleepManager: SleepSessionManager
-    @State var showingSettings = false
-    @State var isSettingsNavigationPending = false
-    @State var showingDiagnostics = false
     @State var showingWakeTimePicker = false
     @Namespace var glassNamespace
     @AppStorage("appLanguage") var appLanguage: String = AppLanguage.english.rawValue
@@ -365,55 +362,19 @@ struct ScheduleView: View {
             }
             .allowsHitTesting(!showGuidedTour)
             .toolbar {
-                if !showingWakeTimePicker && !showGuidedTour && !isSettingsNavigationPending {
+                if !showingWakeTimePicker && !showGuidedTour {
                     ToolbarItem(placement: .primaryAction) {
-                        Menu {
-                            Button {
-                                isSettingsNavigationPending = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                    isSettingsNavigationPending = false
-                                    showingSettings = true
-                                }
-                            } label: {
-                                Label("Settings".localized(for: appLanguage), systemImage: "gearshape")
-                            }
-                            Divider()
-                            Button {
-                                showingDiagnostics = true
-                            } label: {
-                                Label("Diagnostics".localized(for: appLanguage), systemImage: "ladybug")
-                            }
+                        NavigationLink {
+                            SettingsView()
                         } label: {
-                            Image(systemName: "ellipsis")
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(.primary)
-                                .font(.title2.weight(.medium))
-                                .frame(width: 36, height: 36)
-                                .contentShape(Rectangle())
+                            Label("Settings".localized(for: appLanguage), systemImage: "ellipsis")
+                                .labelStyle(.iconOnly)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }
             .navigationTitle(showingWakeTimePicker ? "Set Wake Time".localized(for: appLanguage) : "Ninety".localized(for: appLanguage))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(isPresented: $showingSettings) {
-                SettingsView()
-            }
-            .sheet(isPresented: $showingDiagnostics) {
-                NavigationStack {
-                    DiagnosticsView()
-                        .toolbar {
-                            ToolbarItem(placement: .confirmationAction) {
-                                Button("Done".localized(for: appLanguage)) {
-                                    showingDiagnostics = false
-                                }
-                            }
-                        }
-                }
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
-            }
             .overlay {
                 if showGuidedTour {
                     ZStack {

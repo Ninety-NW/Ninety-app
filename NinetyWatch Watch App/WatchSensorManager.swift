@@ -27,11 +27,9 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     static let actualAlarmTimeKey = "actualSmartAlarmTime"
     static let localAlarmRecordKey = "watchLocalAlarmRecord"
     static let stopTombstoneKey = "watchAlarmStopTombstone"
-    static let watchEpochDiagnosticLogKey = "watchEpochDiagnosticLog"
     static let pendingNextAlarmCommandKey = "pendingNextAlarmCommand"
     static let pendingStopAlarmCommandKey = "pendingStopAlarmCommand"
     static let lastProcessedPhoneCommandSequenceKey = "lastProcessedPhoneCommandSequence"
-    static let maxLocalDiagnosticLogs = 120
     let payloadInterval: TimeInterval = 5
     let motionThreshold = 0.08
     let maxPendingPayloads = 12_000
@@ -214,10 +212,6 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     @Published var weeklyAlarmSyncState: WatchWeeklyAlarmSyncState = .synced
     @Published var weeklyAlarmSyncDetail: String? = nil
     @Published var watchModelStatus: String = "Model not loaded"
-    @Published var epochDiagnostics: [WatchEpochDiagnostic] = []
-    @Published var validEpochCount: Int = 0
-    @Published var diagnosticBufferSummary: String = "0 payloads"
-    @Published var smartWakeConfirmationSummary: String = "0/3"
     
     var runtimeSession: WKExtendedRuntimeSession?
     /// Holds strong references to sessions that have been asked to invalidate
@@ -269,12 +263,11 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         super.init()
         // Restore lightweight UserDefaults state synchronously —
         // these are just tiny reads, safe on main thread at launch.
-        restoreLocalDiagnosticLogs()
+        UserDefaults.standard.removeObject(forKey: "watchEpochDiagnosticLog")
         restorePendingNextAlarmCommand()
         restorePendingStopAlarmCommand()
         setupWatchConnectivity()
         refreshNextAlarmDate()
-        refreshDiagnosticCounters()
 
         // Heavy I/O (pending payload queue) and ML model loading are moved off the
         // main thread to prevent blocking the SwiftUI render loop during launch.

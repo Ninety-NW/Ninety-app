@@ -17,7 +17,6 @@ Ninety doesn't just track; it acts. The system is designed around a precision mo
 - **Privacy by Design**: No servers, no cloud, no data harvesting. Your heart rate and movement data are processed entirely on your devices.
 - **Liquid Glass UI**: A stunning, state-of-the-art design system featuring gasmorphic elements, breathing horizon animations, and tactile interactions.
 - **Siri & App Intents**: Fully integrated with Siri. Set, update, or check your sleep schedule using voice commands or the Shortcuts app.
-- **Diagnostic Suite**: Built-in developer tools to monitor log streams, ML classification snapshots, and sensor health in real-time.
 
 ## 🛠 Tech Stack
 

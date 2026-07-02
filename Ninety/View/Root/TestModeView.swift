@@ -22,7 +22,7 @@ struct TestModeView: View {
                                 .font(.headline)
                                 .foregroundStyle(accent)
 
-                            Text("Smart wake decisions now run on Apple Watch. iPhone diagnostics show Watch epoch summaries, but the phone no longer loads a sleep-stage model or classifies raw sensor payloads.")
+                            Text("Smart wake decisions run locally on Apple Watch. The iPhone no longer loads a sleep-stage model or classifies raw sensor payloads.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
