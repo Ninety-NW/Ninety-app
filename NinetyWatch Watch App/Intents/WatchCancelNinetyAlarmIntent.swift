@@ -3,7 +3,7 @@ import Foundation
 
 struct WatchCancelNinetyAlarmIntent: AppIntent {
     static let title: LocalizedStringResource = "Annulla Sveglia Ninety"
-    static let description = IntentDescription("Annulla una sveglia Ninety settimanale dall'Apple Watch inoltrando il comando all'iPhone.")
+    static let description = IntentDescription("Disattiva la sveglia Ninety per un giorno della settimana.")
     static let openAppWhenRun = false
 
     @Parameter(

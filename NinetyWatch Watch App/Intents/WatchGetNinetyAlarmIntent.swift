@@ -3,7 +3,7 @@ import Foundation
 
 struct WatchGetNinetyAlarmIntent: AppIntent {
     static let title: LocalizedStringResource = "Controlla Sveglia Ninety"
-    static let description = IntentDescription("Chiedi a Siri dall'Apple Watch a che ora è la sveglia Ninety.")
+    static let description = IntentDescription("Controlla la prossima sveglia Ninety o quella di un giorno specifico.")
     static let openAppWhenRun = false
 
     @Parameter(

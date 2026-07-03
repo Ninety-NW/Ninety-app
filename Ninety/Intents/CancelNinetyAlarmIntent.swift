@@ -26,7 +26,7 @@ struct CancelNinetyAlarmIntent: AppIntent {
 
 struct StopNinetyWakeAlarmIntent: LiveActivityIntent {
     static let title: LocalizedStringResource = "Ferma Sveglia Ninety"
-    static let description = IntentDescription("Ferma la sveglia Ninety attiva su iPhone e Apple Watch.")
+    static let description = IntentDescription("Ferma la sveglia Ninety attiva.")
     static let openAppWhenRun = false
 
     @MainActor

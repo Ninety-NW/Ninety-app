@@ -15,7 +15,7 @@ enum WatchAlarmOffsetDirection: String, AppEnum {
 
 struct WatchUpdateNinetyAlarmIntent: AppIntent {
     static let title: LocalizedStringResource = "Sposta Sveglia Ninety"
-    static let description = IntentDescription("Sposta la sveglia Ninety dall'Apple Watch inoltrando il comando all'iPhone.")
+    static let description = IntentDescription("Sposta la sveglia Ninety di un giorno specifico senza creare duplicati.")
     static let openAppWhenRun = false
 
     @Parameter(

@@ -3,7 +3,7 @@ import Foundation
 
 struct WatchSetNinetyAlarmIntent: AppIntent {
     static let title: LocalizedStringResource = "Imposta Sveglia Ninety"
-    static let description = IntentDescription("Imposta la sveglia Ninety dall'Apple Watch inoltrando il comando all'iPhone.")
+    static let description = IntentDescription("Imposta una sveglia Ninety per un giorno della settimana e un orario specifici.")
     static let openAppWhenRun = false
 
     @Parameter(
