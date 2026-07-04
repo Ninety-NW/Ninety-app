@@ -131,8 +131,7 @@ extension WatchSensorManager {
             timestamp: Date(),
             hrSamples: hrSnapshot,
             motionCount: motionCountSnapshot,
-            accelerometerVariance: motionVariance,
-            isMockData: false
+            accelerometerVariance: motionVariance
         )
 
         transmit(payload: payload)

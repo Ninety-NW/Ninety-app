@@ -44,7 +44,7 @@
 		D00000000000000000000006 /* ScheduleViewModel+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000016 /* ScheduleViewModel+Storage.swift */; };
 		D00000000000000000000007 /* ScheduleView+WatchSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000017 /* ScheduleView+WatchSetup.swift */; };
 		D00000000000000000000008 /* SchedulePickerComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000018 /* SchedulePickerComponents.swift */; };
-		E1A2B3C92F96820000112233 /* TestModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A2B3C82F96820000112233 /* TestModeView.swift */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,7 +111,7 @@
 		D00000000000000000000017 /* ScheduleView+WatchSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleView+WatchSetup.swift"; sourceTree = "<group>"; };
 		D00000000000000000000018 /* SchedulePickerComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePickerComponents.swift; sourceTree = "<group>"; };
 		E1A2B3C42F96800000112233 /* NeuralWakeUP.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = NeuralWakeUP.mlmodel; sourceTree = "<group>"; };
-		E1A2B3C82F96820000112233 /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -241,7 +241,7 @@
 				001E1C962F853EB100AD4DC7 /* DiagnosticsView.swift */,
 				B1C2D3E32F90123400AABBCC /* GuidedTourView.swift */,
 				5BB3ED7B2C3ADCAB00CD4274 /* OnboardingView.swift */,
-				E1A2B3C82F96820000112233 /* TestModeView.swift */,
+
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -412,7 +412,7 @@
 				0095803E2F9F98EE005241FF /* SafariView.swift in Sources */,
 				5BB3ED7C2C3ADCAB00CD4274 /* OnboardingView.swift in Sources */,
 				B1C2D3E42F90123400AABBCC /* GuidedTourView.swift in Sources */,
-				E1A2B3C92F96820000112233 /* TestModeView.swift in Sources */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
