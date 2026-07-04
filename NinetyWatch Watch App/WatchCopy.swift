@@ -81,32 +81,12 @@ struct WatchCopy {
     }
 
     func text(_ key: WatchCopyKey) -> String {
-        let englishKey = key.englishKey
-        guard let path = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
-              let bundle = Bundle(path: path) else {
-            return fallbackText(key)
-        }
-        let localized = bundle.localizedString(forKey: englishKey, value: "KEY_NOT_FOUND", table: nil)
-        if localized == "KEY_NOT_FOUND" || localized == englishKey {
-            return fallbackText(key)
-        }
-        return localized
-    }
-
-    private func fallbackText(_ key: WatchCopyKey) -> String {
-        switch key {
-        case .deleteAlarm:
-            if languageCode == "it" { return "Elimina sveglia" }
-            if languageCode == "es" { return "Eliminar alarma" }
-            if languageCode == "zh-Hans" { return "删除闹钟" }
-            return "Delete Alarm"
-        default:
-            return NSLocalizedString(key.englishKey, comment: "")
-        }
+        return key.englishKey.localized(for: localeIdentifier)
     }
 
     static var current: WatchCopy {
-        WatchCopy(localeIdentifier: Locale.current.identifier)
+        let saved = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
+        return WatchCopy(localeIdentifier: saved)
     }
 }
 

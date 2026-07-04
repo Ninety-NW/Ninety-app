@@ -367,21 +367,11 @@ struct ScheduleView: View {
             .toolbar {
                 if !showingWakeTimePicker && !showGuidedTour && !isSettingsNavigationPending {
                     ToolbarItem(placement: .primaryAction) {
-                        Menu {
-                            Button {
-                                isSettingsNavigationPending = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                    isSettingsNavigationPending = false
-                                    showingSettings = true
-                                }
-                            } label: {
-                                Label("Settings".localized(for: appLanguage), systemImage: "gearshape")
-                            }
-                            Divider()
-                            Button {
-                                showingDiagnostics = true
-                            } label: {
-                                Label("Diagnostics".localized(for: appLanguage), systemImage: "ladybug")
+                        Button {
+                            isSettingsNavigationPending = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                isSettingsNavigationPending = false
+                                showingSettings = true
                             }
                         } label: {
                             Image(systemName: "ellipsis")
@@ -399,20 +389,6 @@ struct ScheduleView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $showingSettings) {
                 SettingsView()
-            }
-            .sheet(isPresented: $showingDiagnostics) {
-                NavigationStack {
-                    DiagnosticsView()
-                        .toolbar {
-                            ToolbarItem(placement: .confirmationAction) {
-                                Button("Done".localized(for: appLanguage)) {
-                                    showingDiagnostics = false
-                                }
-                            }
-                        }
-                }
-                .presentationDetents([.large])
-                .presentationDragIndicator(.visible)
             }
             .overlay {
                 if showGuidedTour {

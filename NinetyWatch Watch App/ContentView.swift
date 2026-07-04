@@ -6,7 +6,6 @@ struct ContentView: View {
     @StateObject var sensorManager = WatchSensorManager.shared
     @StateObject var hapticManager = HapticWakeUpManager.shared
     @State private var isEditingTime   = false
-    @State private var showDiagnostics = false
 
     var body: some View {
         NavigationStack {
@@ -15,8 +14,7 @@ struct ContentView: View {
 
                 WatchSingleAlarmView(
                     sensorManager: sensorManager,
-                    isEditingTime: $isEditingTime,
-                    showDiagnostics: $showDiagnostics
+                    isEditingTime: $isEditingTime
                 )
 
                 if !isEditingTime {
@@ -36,9 +34,7 @@ struct ContentView: View {
                 }
             }
             .containerBackground(.black.gradient, for: .navigation)
-            .navigationDestination(isPresented: $showDiagnostics) {
-                WatchDiagnosticsView(sensorManager: sensorManager)
-            }
+
             .onAppear {
                 sensorManager.refreshStoredAlarmStateIfNeeded()
                 sensorManager.requestHealthPermissions { _ in }
@@ -99,7 +95,6 @@ enum AlarmPeriod {
 struct WatchSingleAlarmView: View {
     @ObservedObject var sensorManager: WatchSensorManager
     @Binding var isEditingTime: Bool
-    @Binding var showDiagnostics: Bool
 
     // Internal 24h state (source of truth)
     @State private var internalHour   = 7
@@ -203,14 +198,7 @@ struct WatchSingleAlarmView: View {
                     .buttonStyle(.plain)
                 }
 
-                // ── Diagnostics ───────────────────────────────────────
-                Button { showDiagnostics = true } label: {
-                    Label("Diagnostics", systemImage: "waveform.path.ecg")
-                        .font(.system(size: 13, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
+
             }
             .padding(.horizontal, 8)
             .padding(.top, 8)
@@ -222,7 +210,7 @@ struct WatchSingleAlarmView: View {
 
     var editingView: some View {
         VStack(spacing: 12) {
-            Text("Set Alarm")
+            Text("Set Alarm".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en"))
                 .font(.system(size: 15, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white)
 
@@ -254,7 +242,7 @@ struct WatchSingleAlarmView: View {
     }
 
     var subtitleText: String {
-        guard let date = displayedAlarmDate else { return "Tap to set" }
+        guard let date = displayedAlarmDate else { return "Tap to set".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en") }
         return date.formatted(
             .dateTime
                 .weekday(.abbreviated).day().month(.abbreviated)
@@ -422,7 +410,7 @@ struct SmartWindowCard: View {
                     Text(fmt(startDate))
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.8))
-                    Text("Monitoring starts")
+                    Text("Monitoring starts".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en"))
                         .font(.system(size: 10, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
@@ -431,7 +419,7 @@ struct SmartWindowCard: View {
                     Text(fmt(alarmDate))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.green)
-                    Text("Hard deadline")
+                    Text("Hard deadline".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en"))
                         .font(.system(size: 10, design: .rounded))
                         .foregroundStyle(.green.opacity(0.7))
                 }
