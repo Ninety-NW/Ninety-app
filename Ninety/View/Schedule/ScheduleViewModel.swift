@@ -109,7 +109,6 @@ final class ScheduleViewModel: ObservableObject {
             if self.clockLogs.count > 100 {
                 self.clockLogs.removeFirst(self.clockLogs.count - 100)
             }
-            print(fullMsg)
         }
     }
 

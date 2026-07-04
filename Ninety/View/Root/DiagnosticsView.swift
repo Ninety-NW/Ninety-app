@@ -143,29 +143,7 @@ struct DiagnosticsView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
-                    diagnosticSection("Clock Debug Logs".localized(for: appLanguage)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Button("Copy Clock Logs to Clipboard".localized(for: appLanguage)) {
-                                let logString = viewModel.clockLogs.joined(separator: "\n")
-                                UIPasteboard.general.string = logString
-                            }
-                            .buttonStyle(GlassButtonStyle.glassProminent)
-                            .padding(.bottom, 8)
 
-                            if viewModel.clockLogs.isEmpty {
-                                Text("No clock logs yet.".localized(for: appLanguage))
-                                    .foregroundColor(.secondary)
-                            } else {
-                                ForEach(viewModel.clockLogs, id: \.self) { logMsg in
-                                    Text(logMsg)
-                                        .font(.system(size: 10, design: .monospaced))
-                                        .padding(.bottom, 2)
-                                    Divider()
-                                }
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
                 }
                 .padding()
             }

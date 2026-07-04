@@ -104,7 +104,6 @@ extension WatchSensorManager {
                 if let targetInterval = doubleValue(from: payload["targetDate"]) {
                     let targetDate = Date(timeIntervalSince1970: targetInterval)
                     let record = incomingAlarmRecord(from: payload, fallbackTargetDate: targetDate)
-                    print("WATCH: Received syncAlarmState for \(targetDate)")
                     DispatchQueue.main.async {
                         if let record {
                             self.applyIncomingAlarmRecord(record, scheduleSession: false)
@@ -123,7 +122,6 @@ extension WatchSensorManager {
                             state: .idle
                         )
                     }
-                    print("WATCH: Received syncAlarmState (clear)")
                 }
             }
         }

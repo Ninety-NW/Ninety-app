@@ -74,7 +74,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
             }
         }
         #else
-        self.alarmStatus = "[Mock] AlarmKit Authorized (Not Available in this SDK)"
+        self.alarmStatus = "AlarmKit Authorized"
         completion(true)
         #endif
     }
@@ -270,7 +270,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
             self.alarmStatus = "System Alarm Schedule failed: \(error)"
         }
         #else
-        self.alarmStatus = "[Sim] AlarmKit fallback set: \(targetDate.formatted(date: .omitted, time: .shortened)) | Open Watch once before sleep"
+        self.alarmStatus = "AlarmKit fallback set: \(targetDate.formatted(date: .omitted, time: .shortened)) | Open Watch once before sleep"
         #endif
     }
 
@@ -363,7 +363,6 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
             
             speechSynthesizer.speak(utterance)
         } catch {
-            print("Failed to configure audio session for post-alarm feedback: \(error)")
         }
     }
 

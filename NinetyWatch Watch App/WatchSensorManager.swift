@@ -103,7 +103,6 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
         let rawStage: WatchSleepStage
         let smoothedStage: WatchSleepStage
         let epoch: WatchEpochAggregate
-        let isTestInjected: Bool
     }
 
     struct PendingPayloadEnvelope: Codable, Sendable {
@@ -209,7 +208,6 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     @Published var sessionState: String = "Inactive"
     @Published var lastPayloadSent: String = "No data sent yet"
     @Published var connectionStatus: String = "Disconnected"
-    @Published var isMocking: Bool = false
     @Published var nextAlarmDate: Date? = nil
     @Published var weeklyAlarmSyncState: WatchWeeklyAlarmSyncState = .synced
     @Published var weeklyAlarmSyncDetail: String? = nil
@@ -261,9 +259,6 @@ class WatchSensorManager: NSObject, ObservableObject, WKExtendedRuntimeSessionDe
     /// inside this queue (either async for the accelerometer handler, or sync
     /// for the snapshot in compileAndTransmitPayload).
     let motionBufferQueue = DispatchQueue(label: "Ninety.Watch.motionBuffer")
-    
-    // For Mocking
-    var mockTimer: AnyCancellable?
     
     override init() {
         super.init()

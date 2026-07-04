@@ -122,11 +122,7 @@ extension WatchSensorManager {
             return
         }
 
-        #if targetEnvironment(simulator)
-        self.isMocking = true
-        #else
-        self.isMocking = false
-        #endif
+
 
         // Invalidate the existing session and park it in pendingInvalidationSessions
         // so ARC keeps it alive until the async CarouselServices RPC completes.

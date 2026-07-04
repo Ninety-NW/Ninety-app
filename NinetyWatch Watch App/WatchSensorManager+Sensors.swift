@@ -16,11 +16,7 @@ extension WatchSensorManager {
             localAnalysisStartDate = Date()
         }
         sensorsRunning = true
-        #if targetEnvironment(simulator)
-        startMockDataStream()
-        #else
         startRealSensors()
-        #endif
     }
     
     func stopSensors() {
@@ -39,8 +35,6 @@ extension WatchSensorManager {
             self.motionCountBuffer = 0
         }
         hrSamplesBuffer.removeAll()
-        mockTimer?.cancel()
-        mockTimer = nil
     }
     
     func startRealSensors() {
@@ -146,7 +140,6 @@ extension WatchSensorManager {
 
         if let alarmDate = nextAlarmDate, Date() >= alarmDate {
             DispatchQueue.main.async {
-                print("WATCH: Reached scheduled wake time.")
                 self.handleScheduledAlarmReached(reason: "Alarm active (local deadline)")
             }
         }

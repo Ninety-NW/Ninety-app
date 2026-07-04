@@ -46,8 +46,7 @@ extension SleepSessionManager {
             motionMagMean: diagnostic.motionMagMean,
             motionMagMax: diagnostic.motionMagMax,
             motionJerk: diagnostic.motionJerk,
-            modelStage: stageText,
-            isWatchTestInjected: diagnostic.isTestInjected
+            modelStage: stageText
         )
 
         if let lastEpoch = epochHistory.last, diagnostic.timestamp.timeIntervalSince(lastEpoch.timestamp) > AnalysisConstants.maxSensorGapThreshold {
