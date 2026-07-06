@@ -10,6 +10,9 @@ import WatchKit
 
 final class WatchAppDelegate: NSObject, WKApplicationDelegate {
     func applicationDidFinishLaunching() {
+        UserDefaults.standard.register(defaults: [
+            "appLanguage": WatchCopy.deviceLanguage
+        ])
         _ = WatchSensorManager.shared
     }
 

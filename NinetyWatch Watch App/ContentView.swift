@@ -243,18 +243,20 @@ struct WatchSingleAlarmView: View {
 
     var subtitleText: String {
         guard let date = displayedAlarmDate else { return "Tap to set".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en") }
+        let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         return date.formatted(
             .dateTime
                 .weekday(.abbreviated).day().month(.abbreviated)
-                .locale(Locale.autoupdatingCurrent)
+                .locale(Locale(identifier: lang))
         )
     }
 
     func timeText(for date: Date?) -> String {
         guard let date else { return "--:--" }
+        let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         return date.formatted(
             Date.FormatStyle()
-                .locale(Locale.autoupdatingCurrent)
+                .locale(Locale(identifier: lang))
                 .hour().minute()
         )
     }
@@ -356,7 +358,8 @@ struct SmartWindowCard: View {
 
     private func fmt(_ d: Date?) -> String {
         guard let d else { return "--:--" }
-        return d.formatted(Date.FormatStyle().locale(Locale.autoupdatingCurrent).hour().minute())
+        let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
+        return d.formatted(Date.FormatStyle().locale(Locale(identifier: lang)).hour().minute())
     }
 
     var body: some View {

@@ -38,7 +38,6 @@ struct ScheduleView: View {
     @AppStorage("appLanguage") var appLanguage: String = AppLanguage.english.rawValue
     @AppStorage("hapticFeedbackEnabled") var hapticFeedbackEnabled: Bool = true
     @AppStorage("showGuidedTour") var showGuidedTour: Bool = false
-    @State var showingWatchDetails = false
     let impactHaptic = UIImpactFeedbackGenerator(style: .medium)
     var accent: Color { .scheduleAccent(for: colorScheme) }
     var isSelectedDayActive: Bool { viewModel.isAlarmEnabledForSelectedDay }
@@ -80,8 +79,10 @@ struct ScheduleView: View {
             )
         }
 
-        if let readyStartDate = sleepManager.watchReadyStartDate {
-            let formatted = readyStartDate.formatted(date: .omitted, time: .shortened)
+        // Show "Synced" whenever the watch has a ready or queued session
+        if sleepManager.watchReadyStartDate != nil || sleepManager.watchQueuedStartDate != nil {
+            let date = sleepManager.watchReadyStartDate ?? sleepManager.watchQueuedStartDate!
+            let formatted = date.formatted(date: .omitted, time: .shortened)
             return WatchSetupSummary(
                 state: .ready,
                 title: "Smart Alarm ready".localized(for: appLanguage),
@@ -89,14 +90,14 @@ struct ScheduleView: View {
                     format: "Apple Watch will start sleep tracking at %@.".localized(for: appLanguage),
                     formatted
                 ),
-                badge: "Ready".localized(for: appLanguage),
+                badge: "Synced".localized(for: appLanguage),
                 symbol: "checkmark.circle.fill",
                 tint: Color(red: 0.18, green: 0.70, blue: 0.48)
             )
         }
 
-        let pendingStartDate = sleepManager.watchQueuedStartDate ?? scheduledSession.monitoringStartDate
-        let formatted = pendingStartDate.formatted(date: .omitted, time: .shortened)
+        // Fallback: no queued or ready session — user needs to open the watch app
+        let formatted = scheduledSession.monitoringStartDate.formatted(date: .omitted, time: .shortened)
         return WatchSetupSummary(
             state: .needsAction,
             title: "Open the Watch app to finish setting up".localized(for: appLanguage),
@@ -104,9 +105,9 @@ struct ScheduleView: View {
                 format: "Open Ninety once on your Apple Watch before sleep. No extra tap is needed after that. Tracking starts at %@.".localized(for: appLanguage),
                 formatted
             ),
-            badge: "Open Watch".localized(for: appLanguage),
+            badge: "Open in Watch".localized(for: appLanguage),
             symbol: "applewatch",
-            tint: accent
+            tint: .blue
         )
     }
 
@@ -223,37 +224,16 @@ struct ScheduleView: View {
                                 ))
                                 
                                 if let summary = watchSetupSummary, isSelectedDayActive {
-                                    Button {
-                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                                            showingWatchDetails.toggle()
-                                        }
-                                    } label: {
-                                        HStack(spacing: 6) {
-                                            Circle()
-                                                .fill(summary.tint)
-                                                .frame(width: 8, height: 8)
-                                            
-                                            Text(summary.badge)
-                                                .font(.system(.subheadline, design: .rounded))
-                                                .fontWeight(.medium)
-                                            
-                                            Image(systemName: "chevron.up.circle.fill")
-                                                .font(.caption2)
-                                                .opacity(0.3)
-                                                .rotationEffect(.degrees(showingWatchDetails ? 180 : 0))
-                                        }
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background {
-                                            Capsule()
-                                                .fill(.ultraThinMaterial)
-                                                .overlay {
-                                                    Capsule()
-                                                        .strokeBorder(.white.opacity(0.1), lineWidth: 1)
-                                                }
-                                        }
+                                    HStack(spacing: 6) {
+                                        Circle()
+                                            .fill(summary.tint)
+                                            .frame(width: 6, height: 6)
+                                        
+                                        Text(summary.badge)
+                                            .font(.system(.subheadline, design: .rounded))
+                                            .fontWeight(.medium)
+                                            .foregroundStyle(.secondary)
                                     }
-                                    .buttonStyle(.plain)
                                     .padding(.top, -80) // Pull it closer to the clock
                                 }
                             }
@@ -298,34 +278,6 @@ struct ScheduleView: View {
                     Spacer().frame(height: 20)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                // Watch status panel — centered between the status pill and the day selector
-                if viewModel.isAlarmEnabled && !showingWakeTimePicker && showingWatchDetails {
-                    if let summary = watchSetupSummary {
-                        GeometryReader { geo in
-                            // The VStack layout is top-aligned with:
-                            // 1. Spacer(60)
-                            // 2. Clock block (280) with offset(-60) -> Visual bottom at 280
-                            // 3. Spacer(40)
-                            // 4. Day selector with offset(70) -> Visual top at 450
-                            // We place the card in that ~170pt gap.
-                            
-                            // Center of gap is 365. We use 350 to push it slightly higher 
-                            // toward the pill as requested.
-                            let targetY: CGFloat = 350
-
-                            watchSetupBanner(summary)
-                                .padding(.horizontal, 24)
-                                .frame(maxWidth: .infinity)
-                                .position(x: geo.size.width / 2, y: targetY)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .allowsHitTesting(true)
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .bottom).combined(with: .opacity),
-                            removal: .move(edge: .bottom).combined(with: .opacity)
-                        ))
-                    }
-                }
                 VStack {
                     Spacer()
                     if showingWakeTimePicker {
@@ -365,11 +317,12 @@ struct ScheduleView: View {
             }
             .allowsHitTesting(!showGuidedTour)
             .toolbar {
-                if !showingWakeTimePicker && !showGuidedTour && !isSettingsNavigationPending {
+                if !showingWakeTimePicker && !showGuidedTour {
                     ToolbarItem(placement: .primaryAction) {
                         Button {
+                            guard !isSettingsNavigationPending else { return }
                             isSettingsNavigationPending = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                                 isSettingsNavigationPending = false
                                 showingSettings = true
                             }
@@ -390,32 +343,24 @@ struct ScheduleView: View {
             .navigationDestination(isPresented: $showingSettings) {
                 SettingsView()
             }
-            .overlay {
-                if showGuidedTour {
-                    ZStack {
-                        Rectangle()
-                            .fill(Color.black.opacity(0.001))
-                            .contentShape(Rectangle())
-                            .ignoresSafeArea()
-                            .onTapGesture {}
-
-                        GuidedTourView(isPresented: $showGuidedTour)
-                            .transition(.opacity)
-                    }
-                }
+        }
+        .overlay {
+            if showGuidedTour {
+                GuidedTourView(isPresented: $showGuidedTour)
+                    .transition(.opacity)
             }
-            .alert(
-                "Scheduling Error".localized(for: appLanguage),
-                isPresented: Binding(
-                    get: { viewModel.schedulingError != nil },
-                    set: { if !$0 { viewModel.schedulingError = nil } }
-                ),
-                presenting: viewModel.schedulingError
-            ) { _ in
-                Button("OK".localized(for: appLanguage), role: .cancel) { }
-            } message: { errorText in
-                Text(errorText)
-            }
+        }
+        .alert(
+            "Scheduling Error".localized(for: appLanguage),
+            isPresented: Binding(
+                get: { viewModel.schedulingError != nil },
+                set: { if !$0 { viewModel.schedulingError = nil } }
+            ),
+            presenting: viewModel.schedulingError
+        ) { _ in
+            Button("OK".localized(for: appLanguage), role: .cancel) { }
+        } message: { errorText in
+            Text(errorText)
         }
     }
 

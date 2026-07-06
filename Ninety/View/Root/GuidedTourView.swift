@@ -89,6 +89,14 @@ struct GuidedTourView: View {
     // Reserved bottom space for the fixed navigation row.
     private let bottomBarClearance: CGFloat = 24
 
+    private var safeAreaTop: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.top ?? 59
+    }
+
     init(isPresented: Binding<Bool>) {
         self._isPresented = isPresented
     }
@@ -114,7 +122,36 @@ struct GuidedTourView: View {
 
                 group(in: proxy)
                     .allowsHitTesting(false)
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: close) {
+                            Image(systemName: "xmark")
+                                .font(.title2.weight(.medium))
+                                .foregroundStyle(.primary)
+                                .frame(width: 36, height: 36)
+                                .background(
+                                    Circle()
+                                        .fill(.white.opacity(0.15))
+                                        .overlay(
+                                            Circle()
+                                                .strokeBorder(.white.opacity(0.15), lineWidth: 1)
+                                        )
+                                        .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, safeAreaTop + 4)
+                        .padding(.trailing, 16)
+                    }
+                    Spacer()
+                }
+                .opacity(step == .ready ? 0 : 1)
+                .allowsHitTesting(step != .ready)
+                .animation(.easeInOut(duration: 0.2), value: step)
             }
+            .frame(width: proxy.size.width, height: proxy.size.height)
             .opacity(show ? 1 : 0)
             .highPriorityGesture(
                 DragGesture(minimumDistance: 30)

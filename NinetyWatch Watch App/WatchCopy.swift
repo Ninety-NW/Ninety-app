@@ -84,6 +84,15 @@ struct WatchCopy {
         return key.englishKey.localized(for: localeIdentifier)
     }
 
+    static var deviceLanguage: String {
+        guard let preferred = Locale.preferredLanguages.first else { return "en" }
+        let prefix = String(preferred.prefix(2)).lowercased()
+        if ["en", "it", "es", "zh", "ar"].contains(prefix) {
+            return prefix
+        }
+        return "en"
+    }
+
     static var current: WatchCopy {
         let saved = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         return WatchCopy(localeIdentifier: saved)

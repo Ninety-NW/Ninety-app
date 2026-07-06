@@ -226,94 +226,115 @@ struct SettingsView: View {
 
 private struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     @AppStorage("appLanguage") private var appLanguage: String = AppLanguage.english.rawValue
     
-    @State private var showingTerms = false
+    @State private var showingWebsite = false
     @State private var showingPrivacy = false
+
+    private var accent: Color { .themeAccent(for: colorScheme) }
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 48) {
-                    // branding
-                    VStack(spacing: 20) {
-                        Image("Logo design")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 160)
-                            .accessibilityLabel("Ninety logo".localized(for: appLanguage))
-                            .cornerRadius(32)
+        ZStack(alignment: .topTrailing) {
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 48) {
+                        // branding
+                        VStack(spacing: 20) {
+                            Image("Logo design")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 160)
+                                .accessibilityLabel("Ninety logo".localized(for: appLanguage))
+                                .cornerRadius(32)
 
-                        VStack(spacing: 6) {
-                            Text("Ninety".localized(for: appLanguage))
-                                .font(.system(size: 34, weight: .bold, design: .rounded))
-                            Text("\("Version".localized(for: appLanguage)) \(appVersion)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                            VStack(spacing: 6) {
+                                Text("Ninety".localized(for: appLanguage))
+                                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                                Text("\("Version".localized(for: appLanguage)) \(appVersion)")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
-                    }
-                    .padding(.top, 60)
+                        .padding(.top, 60)
 
-                    // copy
-                    VStack(spacing: 0) {
-                        Text("Smart sleep tracking powered by on-device ML. Your data stays on your devices.".localized(for: appLanguage))
-                            .font(.body)
-                            .lineSpacing(8)
-                            .foregroundStyle(.primary.opacity(0.85))
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(32)
-                            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 32))
-                    }
-                    .padding(.horizontal, 24)
-
-                    // Legal links
-                    HStack(spacing: 16) {
-                        Button("Terms of Service".localized(for: appLanguage)) {
-                            showingTerms = true
+                        // copy
+                        VStack(spacing: 0) {
+                            Text("Smart sleep tracking powered by on-device ML. Your data stays on your devices.".localized(for: appLanguage))
+                                .font(.body)
+                                .lineSpacing(8)
+                                .foregroundStyle(.primary.opacity(0.85))
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(32)
+                                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 32))
                         }
-                        
-                        Text("•")
-                            .foregroundColor(.secondary.opacity(0.5))
+                        .padding(.horizontal, 24)
 
-                        Button("Privacy Policy".localized(for: appLanguage)) {
-                            showingPrivacy = true
+                        // Legal links
+                        HStack(spacing: 16) {
+                            Button("Website".localized(for: appLanguage)) {
+                                showingWebsite = true
+                            }
+                            .foregroundColor(accent)
+                            
+                            Text("•")
+                                .foregroundColor(.secondary.opacity(0.5))
+
+                            Button("Privacy Policy".localized(for: appLanguage)) {
+                                showingPrivacy = true
+                            }
+                            .foregroundColor(accent)
                         }
-                    }
-                    .font(.footnote.bold())
-                    .foregroundColor(.secondary)
-                    .padding(.top, 8)
+                        .font(.footnote.bold())
+                        .padding(.top, 8)
 
-                    Spacer(minLength: 40)
+                        Spacer(minLength: 40)
+                    }
                 }
-            }
-            .background {
-                HorizonBackground(isActive: false)
-                    .ignoresSafeArea()
-            }
-            .navigationTitle("About Ninety".localized(for: appLanguage))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done".localized(for: appLanguage)) { dismiss() }
+                .background {
+                    HorizonBackground(isActive: false)
+                        .ignoresSafeArea()
                 }
+                .navigationTitle("About Ninety".localized(for: appLanguage))
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .sheet(isPresented: $showingTerms) {
-                if let url = URL(string: "https://ninety.app/terms") {
+            .sheet(isPresented: $showingWebsite) {
+                if let url = URL(string: "https://wakeupwithninety.me") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }
             }
             .sheet(isPresented: $showingPrivacy) {
-                if let url = URL(string: "https://ninety.app/privacy") {
+                if let url = URL(string: "https://wakeupwithninety.me/#privacy") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }
             }
+
+            // Floating Custom Circular Close Button (Liquid Glass)
+            Button(action: { dismiss() }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(.primary)
+                    .frame(width: 36, height: 36)
+                    .background(
+                        Circle()
+                            .fill(.white.opacity(0.15))
+                            .overlay(
+                                Circle()
+                                    .strokeBorder(.white.opacity(0.15), lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+                    )
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 4)
+            .padding(.trailing, 16)
         }
     }
 }

@@ -29,6 +29,7 @@
 		A1B2C3D22C3FDC8200353790 /* LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D12C3FDC8200353790 /* LiquidGlass.swift */; };
 		A1B2C3E12C3FDC8200353790 /* RedesignedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3E02C3FDC8200353790 /* RedesignedComponents.swift */; };
 		B1C2D3E42F90123400AABBCC /* GuidedTourView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E32F90123400AABBCC /* GuidedTourView.swift */; };
+		00B643A22F9F98EE005241FF /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B643A12F9F98EE005241FF /* AppLanguage.swift */; };
 		C0D3B0010000000000000001 /* NinetyAlarmIntentSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3F0010000000000000001 /* NinetyAlarmIntentSupport.swift */; };
 		C0D3B0020000000000000001 /* SetNinetyAlarmIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3F0020000000000000001 /* SetNinetyAlarmIntent.swift */; };
 		C0D3B0030000000000000001 /* GetNinetyAlarmIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3F0030000000000000001 /* GetNinetyAlarmIntent.swift */; };
@@ -93,6 +94,7 @@
 		A1B2C3D12C3FDC8200353790 /* LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlass.swift; sourceTree = "<group>"; };
 		A1B2C3E02C3FDC8200353790 /* RedesignedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedesignedComponents.swift; sourceTree = "<group>"; };
 		B1C2D3E32F90123400AABBCC /* GuidedTourView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidedTourView.swift; sourceTree = "<group>"; };
+		00B643A12F9F98EE005241FF /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
 		C0D3F0010000000000000001 /* NinetyAlarmIntentSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NinetyAlarmIntentSupport.swift; sourceTree = "<group>"; };
 		C0D3F0020000000000000001 /* SetNinetyAlarmIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetNinetyAlarmIntent.swift; sourceTree = "<group>"; };
 		C0D3F0030000000000000001 /* GetNinetyAlarmIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNinetyAlarmIntent.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 		A1B2C3D02C3FDC8200353790 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				00B643A12F9F98EE005241FF /* AppLanguage.swift */,
 				0095803D2F9F98EE005241FF /* SafariView.swift */,
 				A1B2C3D12C3FDC8200353790 /* LiquidGlass.swift */,
 			);
@@ -402,6 +405,7 @@
 				D00000000000000000000008 /* SchedulePickerComponents.swift in Sources */,
 				A1B2C3E12C3FDC8200353790 /* RedesignedComponents.swift in Sources */,
 				A1B2C3D22C3FDC8200353790 /* LiquidGlass.swift in Sources */,
+				00B643A22F9F98EE005241FF /* AppLanguage.swift in Sources */,
 				0095803E2F9F98EE005241FF /* SafariView.swift in Sources */,
 				5BB3ED7C2C3ADCAB00CD4274 /* OnboardingView.swift in Sources */,
 				B1C2D3E42F90123400AABBCC /* GuidedTourView.swift in Sources */,

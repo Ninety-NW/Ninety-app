@@ -106,7 +106,7 @@ struct OnboardingView: View {
                 }
             }
             .sheet(isPresented: $showPrivacyPolicy) {
-                if let url = URL(string: "https://ninety.app/privacy") {
+                if let url = URL(string: "https://wakeupwithninety.me/#privacy") {
                     SafariView(url: url)
                         .ignoresSafeArea()
                 }
