@@ -72,6 +72,16 @@ extension SleepSessionManager {
                 alarmID: tombstone.alarmInstanceID,
                 stoppedAt: tombstone.stoppedAt
             )
+            
+            if let targetDate = tombstone.targetDate {
+                let weekday = Calendar.current.component(.weekday, from: targetDate)
+                let scheduleVM = ScheduleViewModel(observesExternalChanges: false)
+                if scheduleVM.scheduledWeekdays.contains(weekday) {
+                    scheduleVM.scheduledWeekdays.remove(weekday)
+                    scheduleVM.markMutation(for: weekday)
+                    scheduleVM.postExternalScheduleChange(weekday: weekday)
+                }
+            }
         }
     }
 

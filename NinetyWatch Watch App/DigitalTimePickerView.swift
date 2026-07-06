@@ -64,7 +64,9 @@ struct DigitalTimePickerView: View {
             isResettingCrown = true
             crown   = Self.crownMid
             frac    = 0
-            focused = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                focused = true
+            }
         }
         // Re-center crown and re-grab focus when switching fields
         .onChange(of: field) { _, _ in
