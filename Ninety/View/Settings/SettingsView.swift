@@ -86,16 +86,6 @@ struct SettingsView: View {
                             )
                         }
                     }
-                    // Permissions Section
-//                    settingsSection("PERMISSIONS".localized(for: appLanguage)) {
-//                        VStack(spacing: 0) {
-//                            settingsToggleRow(icon: "bell.badge.fill", color: .red, title: "Notifications".localized(for: appLanguage), isOn: $settingsViewModel.isNotificationsEnabled)
-//                            
-//                            Divider()
-//                            
-//                            settingsToggleRow(icon: "heart.text.square.fill", color: .pink, title: "Apple Health".localized(for: appLanguage), isOn: $settingsViewModel.saveToHealthKit)
-//                        }
-//                    }
                     
                     // General Section
                     settingsSection("GENERAL".localized(for: appLanguage)) {

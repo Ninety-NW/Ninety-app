@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 import UserNotifications
-import AVFoundation
 import AppIntents
 
 #if canImport(AlarmKit)
@@ -40,7 +39,6 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
     private var countdownTimer: Timer?    // updates the countdown string every second
     private var wakeTargetDate: Date?
     private var alarmCreatedAt: Date?
-    private let speechSynthesizer = AVSpeechSynthesizer()
     
     override init() {
         super.init()
@@ -341,29 +339,6 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
         #if canImport(AlarmKit)
         try? AlarmManager.shared.cancel(id: alarmID)
         #endif
-    }
-    
-    // MARK: - Post-Alarm Feedback
-    
-    func playPostAlarmFeedback(minutesSaved: Int) {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            let message = "Buongiorno, ti ho svegliato \(minutesSaved) minuti prima del tuo limite massimo perché il tuo ciclo era al picco di efficienza."
-            let utterance = AVSpeechUtterance(string: message)
-            
-            // Prefer an Italian voice since the dialog is in Italian.
-            if let voice = AVSpeechSynthesisVoice(language: "it-IT") {
-                utterance.voice = voice
-            }
-            
-            utterance.rate = AVSpeechUtteranceDefaultSpeechRate
-            utterance.volume = 1.0
-            
-            speechSynthesizer.speak(utterance)
-        } catch {
-        }
     }
 
     private func normalizedWakeUpDate(from requestedWakeUpDate: Date) -> Date {

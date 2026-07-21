@@ -42,7 +42,7 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("smartWakeWindow") var smartWakeWindow: Int = 30 // minutes before alarm to start sensing
     @AppStorage("hapticAlarm") var hapticAlarm: Bool = true // vibrate gently before ringing
     @AppStorage("hapticFeedbackEnabled") var hapticFeedbackEnabled: Bool = true // UI haptic feedback
-    @AppStorage("saveToHealthKit") var saveToHealthKit: Bool = true // save sleep data
+
     
     /// Guard flag to prevent re-entrant didSet → enableNotifications → didSet loop.
     private var isUpdatingNotifications = false

@@ -16,9 +16,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Ninety reads your heart rate and motion data to detect the optimal wake-up time within your sleep window.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Ninety uses HealthKit to monitor your sleep quality and provide smart alarm functionality.</string>
 </dict>
 </plist>
