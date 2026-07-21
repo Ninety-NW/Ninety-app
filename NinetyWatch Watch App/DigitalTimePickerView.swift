@@ -61,17 +61,25 @@ struct DigitalTimePickerView: View {
             }
         }
         .onAppear {
-            isResettingCrown = true
-            crown   = Self.crownMid
+            if crown == Self.crownMid {
+                isResettingCrown = false
+            } else {
+                isResettingCrown = true
+                crown   = Self.crownMid
+            }
             frac    = 0
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            DispatchQueue.main.async {
                 focused = true
             }
         }
         // Re-center crown and re-grab focus when switching fields
         .onChange(of: field) { _, _ in
-            isResettingCrown = true
-            crown   = Self.crownMid
+            if crown == Self.crownMid {
+                isResettingCrown = false
+            } else {
+                isResettingCrown = true
+                crown   = Self.crownMid
+            }
             frac    = 0
             focused = true
         }
@@ -112,6 +120,7 @@ struct DigitalTimePickerView: View {
                     .foregroundStyle(.white.opacity(0.85))
             }
             .buttonStyle(.plain)
+            .focusable(false)
         }
     }
 
@@ -137,6 +146,7 @@ struct DigitalTimePickerView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .focusable(false)
         .animation(.snappy(duration: 0.15), value: active)
     }
 
@@ -161,5 +171,6 @@ struct DigitalTimePickerView: View {
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
+        .focusable(false)
     }
 }
