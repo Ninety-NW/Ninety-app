@@ -7,7 +7,6 @@ struct SensorPayload: Codable, Sendable {
     let hrSamples: [Double]
     let motionCount: Double
     let accelerometerVariance: Double
-    let isMockData: Bool
 }
 
 /// A 30-second epoch already aggregated and classified on Apple Watch.
@@ -24,7 +23,6 @@ struct WatchEpochDiagnostic: Codable, Sendable {
     let rawStage: Int?
     let smoothedStage: Int?
     let stageTitle: String
-    let isTestInjected: Bool
 }
 
 enum AnalysisConstants {

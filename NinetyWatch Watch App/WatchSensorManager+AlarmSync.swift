@@ -8,23 +8,6 @@ import CoreML
 
 extension WatchSensorManager {
     // MARK: - Mocking Data
-    
-    func startMockDataStream() {
-        mockTimer = Timer.publish(every: payloadInterval, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-            let mockPayload = SensorPayload(
-                id: UUID(),
-                timestamp: Date(),
-                hrSamples: [Double.random(in: 55...65), Double.random(in: 50...60)],
-                motionCount: Double.random(in: 0...30),
-                accelerometerVariance: Double.random(in: 0.0...0.5),
-                isMockData: true
-            )
-            self?.transmit(payload: mockPayload)
-            self?.processPayloadForLocalSmartWake(mockPayload)
-        }
-    }
 
     func setNextAlarm(wakeTime: Date) {
         let components = Calendar.current.dateComponents([.hour, .minute], from: wakeTime)

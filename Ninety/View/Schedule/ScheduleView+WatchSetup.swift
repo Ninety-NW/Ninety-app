@@ -92,7 +92,7 @@ extension ScheduleView {
             )
             watchSetupConnector(isActive: summary.state.rawValue >= WatchSetupState.ready.rawValue, tint: summary.tint)
             watchSetupProgressNode(
-                label: "Open Watch".localized(for: appLanguage),
+                label: "Status".localized(for: appLanguage),
                 symbol: summary.state == .needsAction ? "applewatch" : "checkmark",
                 style: summary.state == .needsAction ? .current : .complete,
                 tint: summary.state == .needsAction ? summary.tint : Color(red: 0.18, green: 0.70, blue: 0.48)

@@ -47,7 +47,6 @@ final class SleepSessionManager: NSObject, ObservableObject, WCSessionDelegate {
         let motionMagMax: Double      // max of motion counts in epoch
         let motionJerk: Double        // |current_motion - previous_motion|
         let modelStage: String?
-        let isWatchTestInjected: Bool?
     }
 
     enum AnalysisSessionState: String, Codable, Sendable {

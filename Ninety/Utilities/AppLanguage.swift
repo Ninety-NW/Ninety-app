@@ -4,7 +4,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case english = "en"
     case italian = "it"
     case spanish = "es"
-    case chinese = "zh"
+    case chinese = "zh-Hans"
     case arabic = "ar"
     
     var id: String { self.rawValue }
@@ -18,20 +18,49 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .arabic: return "العربية"
         }
     }
+    static var deviceLanguage: AppLanguage {
+        guard let preferred = Locale.preferredLanguages.first else { return .english }
+        let prefix = String(preferred.prefix(2)).lowercased()
+        if prefix == "zh" {
+            return .chinese
+        }
+        return AppLanguage(rawValue: prefix) ?? .english
+    }
 }
 
 extension String {
     func localized(for languageCode: String) -> String {
-        guard let langDict = translations[languageCode],
+        #if os(watchOS)
+        let code = languageCode.hasPrefix("zh") ? "zh" : String(languageCode.prefix(2)).lowercased()
+        guard let langDict = translations[code],
               let translated = langDict[self] else {
-            return self // Fallback to English (the key itself)
+            return self
         }
         return translated
+        #else
+        // Normalize language code (e.g. zh-Hans -> zh-Hans, it-US -> it)
+        let code = languageCode.hasPrefix("zh") ? "zh-Hans" : String(languageCode.prefix(2)).lowercased()
+        if let path = Bundle.main.path(forResource: code, ofType: "lproj"),
+           let bundle = Bundle(path: path) {
+            let localizedString = bundle.localizedString(forKey: self, value: nil, table: nil)
+            if localizedString != self {
+                return localizedString
+            }
+        }
+        // Fallback to our hardcoded dictionary for new/missing keys
+        let cleanCode = code.hasPrefix("zh") ? "zh" : String(code.prefix(2)).lowercased()
+        if let langDict = translations[cleanCode],
+           let translated = langDict[self] {
+            return translated
+        }
+        return self
+        #endif
     }
 }
 
 private let translations: [String: [String: String]] = [
     "it": [
+        "Website": "Sito Web",
         "Track your sleep pattern and wake up refreshed.": "Monitora il tuo sonno e svegliati riposato.",
         "Get Started": "Inizia ora",
         "By continuing, you agree to Ninety's \n**Terms of Service** and **Privacy Policy.**": "Continuando, accetti i **Termini di Servizio** e l'**Informativa sulla Privacy** di Ninety.",
@@ -97,6 +126,33 @@ private let translations: [String: [String: String]] = [
         "Watch Session:": "Sessione Watch:",
         "Delivery:": "Consegna:",
         "Model:": "Modello:",
+
+        // Watch UI Strings
+        "Next alarm": "Prossima sveglia",
+        "Tap to change": "Tocca per modificare",
+        "No active alarms": "Nessuna sveglia attiva",
+        "Set your next alarm on iPhone": "Imposta la prossima sveglia da iPhone",
+        "Monitoring active": "Monitoraggio attivo",
+        "Alarm scheduled": "Sveglia programmata",
+        "Waiting for the next alarm": "In attesa della sveglia",
+        "Attention": "Attenzione",
+        "Open the Watch app to set it": "Apri l'app sul Watch per impostarla",
+        "Synced": "Sincronizzato",
+        "Connected": "Connesso",
+        "Watch only": "Solo Watch",
+        "Set Ninety Alarm": "Imposta Sveglia Ninety",
+        "Save": "Salva",
+        "Saved": "Salvato",
+        "Pending sync": "Sincronizzazione in attesa",
+        "iPhone unavailable": "iPhone non disponibile",
+        "Sync failed": "Sincronizzazione fallita",
+        "Syncing": "Sincronizzazione...",
+        "Wake Up!": "Sveglia!",
+        "Delete Alarm": "Elimina sveglia",
+        "Set Alarm": "Imposta Sveglia",
+        "Tap to set": "Tocca per impostare",
+        "Monitoring starts": "Inizio monitoraggio",
+        "Hard deadline": "Sveglia garantita",
         "Raw Stage:": "Fase Raw:",
         "Official Stage:": "Fase Ufficiale:",
         "Epoch:": "Epoca:",
@@ -135,7 +191,7 @@ private let translations: [String: [String: String]] = [
         "Sleep stage model ready": "Modello fasi del sonno pronto",
         "Clear Logs": "Cancella Log",
         "Alarm saved": "Sveglia salvata",
-        "Open Watch": "Apri Watch",
+        "Open in Watch": "Apri in Watch",
         "Tracking": "Monitoraggio",
         "Arm on Apple Watch": "Imposta su Apple Watch",
         "Open Ninety once on your Apple Watch before sleep. No extra tap is needed after that. Tracking starts at %@.": "Apri Ninety una volta sul tuo Apple Watch prima di dormire. Dopo non serve nessun altro tocco. Il monitoraggio inizia alle %@.",
@@ -145,10 +201,12 @@ private let translations: [String: [String: String]] = [
         "The sleep window is running on Apple Watch now.": "La finestra di monitoraggio è attiva ora su Apple Watch.",
         "Open Ninety on Apple Watch once before sleep to set Smart Alarm. After that it starts automatically.": "Apri Ninety su Apple Watch una volta prima di dormire per impostare la Smart Alarm. Dopo partirà automaticamente.",
         "Watch queued for:": "Watch in coda per:",
-        "Watch ready for:": "Watch pronto per:"
+        "Watch ready for:": "Watch pronto per:",
+        "Skip": "Salta"
     ],
     "es": [
-        "Track your sleep pattern and wake up refreshed.": "Sigue tus horas de sueño y despierta renovado.",
+        "Website": "Sitio Web",
+        "Track your sleep pattern and wake up refreshed.": "Monitorea tu patrón de sueño y despierta renovado.",
         "Get Started": "Empezar",
         "By continuing, you agree to Ninety's \n**Terms of Service** and **Privacy Policy.**": "Al continuar, aceptas los **Términos de Servicio** y la **Política de Privacidad** de Ninety.",
         "Set Wake Time": "Ajustar Alarma",
@@ -190,6 +248,20 @@ private let translations: [String: [String: String]] = [
         "No alarms configured.": "Sin alarmas configuradas.",
         "Ready": "Listo",
         "Scheduled": "Programada",
+        "Synced": "Sincronizado",
+        "Connected": "Conectado",
+        "Attention": "Atención",
+        "Open the Watch app to set it": "Abre la app en el Watch para configurarlo",
+        "Watch only": "Solo Watch",
+        "Set Ninety Alarm": "Configurar Alarma Ninety",
+        "Save": "Guardar",
+        "Saved": "Guardado",
+        "Pending sync": "Sincronización pendiente",
+        "iPhone unavailable": "iPhone no disponible",
+        "Sync failed": "Sincronización fallida",
+        "Syncing": "Sincronizando",
+        "Wake Up!": "¡Despierta!",
+        "Delete Alarm": "Eliminar alarma",
         "Wake-up triggered": "Alarma activada",
         "Waiting for 10 epochs": "Esperando 10 épocas",
         "No 30-second epoch yet": "Sin épocas de 30s",
@@ -251,7 +323,7 @@ private let translations: [String: [String: String]] = [
         "Sleep stage model ready": "Modelo de fases del sueño listo",
         "Clear Logs": "Borrar registros",
         "Alarm saved": "Alarma guardada",
-        "Open Watch": "Abrir Watch",
+        "Open in Watch": "Abrir en Watch",
         "Tracking": "Seguimiento",
         "Epoch Processing": "Procesamiento de Época",
         "No processed epoch yet.": "Aún no hay una época procesada.",
@@ -264,10 +336,12 @@ private let translations: [String: [String: String]] = [
         "HR range:": "HR rango:",
         "Motion mean:": "Motion media:",
         "Motion max:": "Motion max:",
-        "Motion jerk:": "Motion jerk:"
+        "Motion jerk:": "Motion jerk:",
+        "Skip": "Omitir"
     ],
     "zh": [
-        "Track your sleep pattern and wake up refreshed.": "追踪您的睡眠模式，焕发活力地醒来。",
+        "Website": "官方网站",
+        "Track your sleep pattern and wake up refreshed.": "追踪您的睡眠模式，焕然一新地醒来。",
         "Get Started": "开始使用",
         "By continuing, you agree to Ninety's \n**Terms of Service** and **Privacy Policy.**": "继续即表示您同意 Ninety 的 **服务条款** 和 **隐私政策**。",
         "Set Wake Time": "设置唤醒时间",
@@ -309,6 +383,20 @@ private let translations: [String: [String: String]] = [
         "No alarms configured.": "未配置闹钟。",
         "Ready": "准备就绪",
         "Scheduled": "已排期",
+        "Synced": "已同步",
+        "Connected": "已连接",
+        "Attention": "注意",
+        "Open the Watch app to set it": "请打开 Watch 应用进行设置",
+        "Watch only": "仅 Watch",
+        "Set Ninety Alarm": "设置 Ninety 闹钟",
+        "Save": "保存",
+        "Saved": "已保存",
+        "Pending sync": "等待同步",
+        "iPhone unavailable": "iPhone 不可用",
+        "Sync failed": "同步失败",
+        "Syncing": "同步中",
+        "Wake Up!": "起床！",
+        "Delete Alarm": "删除闹钟",
         "Wake-up triggered": "闹钟已触发",
         "Waiting for 10 epochs": "等待 10 个周期",
         "No 30-second epoch yet": "尚无 30 秒周期",
@@ -363,7 +451,7 @@ private let translations: [String: [String: String]] = [
         "Sleep stage model ready": "睡眠阶段模型已就绪",
         "Clear Logs": "清除日志",
         "Alarm saved": "闹钟已保存",
-        "Open Watch": "打开 Watch",
+        "Open in Watch": "在 Watch 中打开",
         "Tracking": "追踪",
         "Epoch Processing": "周期处理",
         "No processed epoch yet.": "还没有处理过的周期。",
@@ -376,10 +464,12 @@ private let translations: [String: [String: String]] = [
         "HR range:": "心率范围：",
         "Motion mean:": "运动均值：",
         "Motion max:": "运动最大值：",
-        "Motion jerk:": "运动突变量："
+        "Motion jerk:": "运动突变量：",
+        "Skip": "跳过"
     ],
     "ar": [
-        "Track your sleep pattern and wake up refreshed.": "تتبع أنماط نومك واستيقظ منتعشاً.",
+        "Website": "الموقع الإلكتروني",
+        "Track your sleep pattern and wake up refreshed.": "تتبع نمط نومك واستيقظ نشيطًا.",
         "Get Started": "ابدأ الآن",
         "By continuing, you agree to Ninety's \n**Terms of Service** and **Privacy Policy.**": "بالاستمرار، فإنك توافق على **شروط الخدمة** و**سياسة الخصوصية** الخاصة بـ Ninety.",
         "Set Wake Time": "تعيين وقت الاستيقاظ",
@@ -421,6 +511,20 @@ private let translations: [String: [String: String]] = [
         "No alarms configured.": "لا توجد منبهات معدة.",
         "Ready": "جاهز",
         "Scheduled": "مجدول",
+        "Synced": "تمت المزامنة",
+        "Connected": "متصل",
+        "Attention": "تنبيه",
+        "Open the Watch app to set it": "افتح تطبيق الساعة لضبطه",
+        "Watch only": "الساعة فقط",
+        "Set Ninety Alarm": "ضبط منبه Ninety",
+        "Save": "حفظ",
+        "Saved": "تم الحفظ",
+        "Pending sync": "مزامنة معلقة",
+        "iPhone unavailable": "iPhone غير متوفر",
+        "Sync failed": "فشلت المزامنة",
+        "Syncing": "جاري المزامنة",
+        "Wake Up!": "استيقظ!",
+        "Delete Alarm": "حذف المنبه",
         "Wake-up triggered": "تم إطلاق المنبه",
         "Waiting for 10 epochs": "بانتظار 10 دورات",
         "No 30-second epoch yet": "لا توجد دورة 30 ثانية بعد",
@@ -475,7 +579,7 @@ private let translations: [String: [String: String]] = [
         "Sleep stage model ready": "نموذج مراحل النوم جاهز",
         "Clear Logs": "مسح السجلات",
         "Alarm saved": "تم حفظ المنبه",
-        "Open Watch": "افتح Watch",
+        "Open in Watch": "افتح في Watch",
         "Tracking": "التتبع",
         "Epoch Processing": "معالجة الدورة",
         "No processed epoch yet.": "لا توجد دورة معالجة بعد.",
@@ -488,6 +592,7 @@ private let translations: [String: [String: String]] = [
         "HR range:": "نطاق HR:",
         "Motion mean:": "متوسط الحركة:",
         "Motion max:": "أقصى حركة:",
-        "Motion jerk:": "تغيّر الحركة:"
+        "Motion jerk:": "تغيّر الحركة:",
+        "Skip": "تخطي"
     ]
 ]

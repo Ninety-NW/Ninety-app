@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 import UserNotifications
-import AVFoundation
 import AppIntents
 
 #if canImport(AlarmKit)
@@ -40,7 +39,6 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
     private var countdownTimer: Timer?    // updates the countdown string every second
     private var wakeTargetDate: Date?
     private var alarmCreatedAt: Date?
-    private let speechSynthesizer = AVSpeechSynthesizer()
     
     override init() {
         super.init()
@@ -74,7 +72,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
             }
         }
         #else
-        self.alarmStatus = "[Mock] AlarmKit Authorized (Not Available in this SDK)"
+        self.alarmStatus = "AlarmKit Authorized"
         completion(true)
         #endif
     }
@@ -270,7 +268,7 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
             self.alarmStatus = "System Alarm Schedule failed: \(error)"
         }
         #else
-        self.alarmStatus = "[Sim] AlarmKit fallback set: \(targetDate.formatted(date: .omitted, time: .shortened)) | Open Watch once before sleep"
+        self.alarmStatus = "AlarmKit fallback set: \(targetDate.formatted(date: .omitted, time: .shortened)) | Open Watch once before sleep"
         #endif
     }
 
@@ -341,30 +339,6 @@ class SmartAlarmManager: NSObject, ObservableObject, UNUserNotificationCenterDel
         #if canImport(AlarmKit)
         try? AlarmManager.shared.cancel(id: alarmID)
         #endif
-    }
-    
-    // MARK: - Post-Alarm Feedback
-    
-    func playPostAlarmFeedback(minutesSaved: Int) {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            let message = "Buongiorno, ti ho svegliato \(minutesSaved) minuti prima del tuo limite massimo perché il tuo ciclo era al picco di efficienza."
-            let utterance = AVSpeechUtterance(string: message)
-            
-            // Prefer an Italian voice since the dialog is in Italian.
-            if let voice = AVSpeechSynthesisVoice(language: "it-IT") {
-                utterance.voice = voice
-            }
-            
-            utterance.rate = AVSpeechUtteranceDefaultSpeechRate
-            utterance.volume = 1.0
-            
-            speechSynthesizer.speak(utterance)
-        } catch {
-            print("Failed to configure audio session for post-alarm feedback: \(error)")
-        }
     }
 
     private func normalizedWakeUpDate(from requestedWakeUpDate: Date) -> Date {

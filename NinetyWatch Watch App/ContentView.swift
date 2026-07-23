@@ -34,6 +34,7 @@ struct ContentView: View {
                 }
             }
             .containerBackground(.black.gradient, for: .navigation)
+
             .onAppear {
                 sensorManager.refreshStoredAlarmStateIfNeeded()
                 sensorManager.requestHealthPermissions { _ in }
@@ -197,6 +198,7 @@ struct WatchSingleAlarmView: View {
                     .buttonStyle(.plain)
                 }
 
+
             }
             .padding(.horizontal, 8)
             .padding(.top, 8)
@@ -208,7 +210,7 @@ struct WatchSingleAlarmView: View {
 
     var editingView: some View {
         VStack(spacing: 12) {
-            Text("Set Alarm")
+            Text("Set Alarm".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en"))
                 .font(.system(size: 15, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white)
 
@@ -240,19 +242,21 @@ struct WatchSingleAlarmView: View {
     }
 
     var subtitleText: String {
-        guard let date = displayedAlarmDate else { return "Tap to set" }
+        guard let date = displayedAlarmDate else { return "Tap to set".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en") }
+        let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         return date.formatted(
             .dateTime
                 .weekday(.abbreviated).day().month(.abbreviated)
-                .locale(Locale.autoupdatingCurrent)
+                .locale(Locale(identifier: lang))
         )
     }
 
     func timeText(for date: Date?) -> String {
         guard let date else { return "--:--" }
+        let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         return date.formatted(
             Date.FormatStyle()
-                .locale(Locale.autoupdatingCurrent)
+                .locale(Locale(identifier: lang))
                 .hour().minute()
         )
     }
@@ -354,7 +358,8 @@ struct SmartWindowCard: View {
 
     private func fmt(_ d: Date?) -> String {
         guard let d else { return "--:--" }
-        return d.formatted(Date.FormatStyle().locale(Locale.autoupdatingCurrent).hour().minute())
+        let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
+        return d.formatted(Date.FormatStyle().locale(Locale(identifier: lang)).hour().minute())
     }
 
     var body: some View {
@@ -408,7 +413,7 @@ struct SmartWindowCard: View {
                     Text(fmt(startDate))
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.8))
-                    Text("Monitoring starts")
+                    Text("Monitoring starts".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en"))
                         .font(.system(size: 10, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
@@ -417,7 +422,7 @@ struct SmartWindowCard: View {
                     Text(fmt(alarmDate))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.green)
-                    Text("Hard deadline")
+                    Text("Hard deadline".localized(for: UserDefaults.standard.string(forKey: "appLanguage") ?? "en"))
                         .font(.system(size: 10, design: .rounded))
                         .foregroundStyle(.green.opacity(0.7))
                 }

@@ -51,6 +51,12 @@ extension WatchSensorManager {
     }
     
     func processIncomingCommand(_ payload: [String: Any]) {
+        if let appLanguage = payload["appLanguage"] as? String {
+            DispatchQueue.main.async {
+                UserDefaults.standard.set(appLanguage, forKey: "appLanguage")
+            }
+        }
+
         if let action = payload["action"] as? String {
             if action == "ackPayloads" {
                 let idStrings = payload["ids"] as? [String] ?? []
@@ -104,7 +110,6 @@ extension WatchSensorManager {
                 if let targetInterval = doubleValue(from: payload["targetDate"]) {
                     let targetDate = Date(timeIntervalSince1970: targetInterval)
                     let record = incomingAlarmRecord(from: payload, fallbackTargetDate: targetDate)
-                    print("WATCH: Received syncAlarmState for \(targetDate)")
                     DispatchQueue.main.async {
                         if let record {
                             self.applyIncomingAlarmRecord(record, scheduleSession: false)
@@ -123,7 +128,6 @@ extension WatchSensorManager {
                             state: .idle
                         )
                     }
-                    print("WATCH: Received syncAlarmState (clear)")
                 }
             }
         }

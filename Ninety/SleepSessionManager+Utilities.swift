@@ -86,6 +86,7 @@ extension SleepSessionManager {
         var command = extra
         command["action"] = action
         command["commandSequence"] = nextWatchCommandSequence()
+        command["appLanguage"] = UserDefaults.standard.string(forKey: "appLanguage") ?? AppLanguage.english.rawValue
         return command
     }
 

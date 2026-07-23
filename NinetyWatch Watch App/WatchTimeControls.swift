@@ -232,68 +232,7 @@ struct SoftControlBackground: View {
     }
 }
 
-// MARK: - Debug View
 
-#if DEBUG
-struct DebugNodeView: View {
-    @ObservedObject var sensorManager: WatchSensorManager
-    
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("🛠 Debug Node")
-                    .font(.headline)
-                    .foregroundColor(.orange)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Session: \(sensorManager.sessionState)")
-                        .foregroundColor(.blue)
-                    Text("Link: \(sensorManager.connectionStatus)")
-                        .foregroundColor(.secondary)
-                    
-                    if sensorManager.hasPendingSchedule, let pending = sensorManager.pendingScheduleDescription {
-                        Text("Queue: \(pending)")
-                            .foregroundColor(.orange)
-                    }
-
-                    if sensorManager.hasReadySchedule, let ready = sensorManager.readyScheduleDescription {
-                        Text("Ready: \(ready)")
-                            .foregroundColor(.green)
-                    }
-                }
-                .font(.caption2)
-                
-                Divider()
-                
-                if !sensorManager.lastPayloadSent.isEmpty {
-                    Text("Last Payload:")
-                        .font(.caption2.bold())
-                    Text(sensorManager.lastPayloadSent)
-                        .font(.system(size: 10, design: .monospaced))
-                        .foregroundColor(.secondary)
-                }
-                
-                Divider()
-                
-                // Manual overrides for testing routing
-                Group {
-                    Button("Simulate Start (5s)") {
-                        sensorManager.scheduleSmartAlarmSession(at: Date().addingTimeInterval(5))
-                    }
-                    .tint(.green)
-                    
-                    Button("Force Stop Session") {
-                        sensorManager.stopSession()
-                    }
-                    .tint(.red)
-                }
-                .font(.caption)
-            }
-            .padding()
-        }
-    }
-}
-#endif
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

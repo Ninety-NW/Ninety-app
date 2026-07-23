@@ -34,40 +34,6 @@ enum AppTheme: String, CaseIterable, Identifiable {
     }
 }
 
-enum AppLanguage: String, CaseIterable, Identifiable {
-    case english = "en"
-    case italian = "it"
-    case chinese = "zh-Hans"
-    case spanish = "es"
-    case arabic = "ar"
-
-    var id: String { rawValue }
-
-    var displayName: String {
-        switch self {
-        case .english:
-            return "English"
-        case .italian:
-            return "Italiano"
-        case .chinese:
-            return "中文"
-        case .spanish:
-            return "Español"
-        case .arabic:
-            return "العربية"
-        }
-    }
-}
-
-extension String {
-    func localized(for languageCode: String) -> String {
-        guard let path = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
-              let bundle = Bundle(path: path) else {
-            return NSLocalizedString(self, comment: "")
-        }
-        return bundle.localizedString(forKey: self, value: nil, table: nil)
-    }
-}
 
 class SettingsViewModel: ObservableObject {
     @AppStorage("appTheme") var selectedTheme: AppTheme = .system
@@ -76,7 +42,7 @@ class SettingsViewModel: ObservableObject {
     @AppStorage("smartWakeWindow") var smartWakeWindow: Int = 30 // minutes before alarm to start sensing
     @AppStorage("hapticAlarm") var hapticAlarm: Bool = true // vibrate gently before ringing
     @AppStorage("hapticFeedbackEnabled") var hapticFeedbackEnabled: Bool = true // UI haptic feedback
-    @AppStorage("saveToHealthKit") var saveToHealthKit: Bool = true // save sleep data
+
     
     /// Guard flag to prevent re-entrant didSet → enableNotifications → didSet loop.
     private var isUpdatingNotifications = false

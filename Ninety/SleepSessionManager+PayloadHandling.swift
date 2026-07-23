@@ -72,6 +72,16 @@ extension SleepSessionManager {
                 alarmID: tombstone.alarmInstanceID,
                 stoppedAt: tombstone.stoppedAt
             )
+
+            if let targetDate = tombstone.targetDate {
+                let weekday = Calendar.current.component(.weekday, from: targetDate)
+                let scheduleVM = ScheduleViewModel(observesExternalChanges: false)
+                if scheduleVM.scheduledWeekdays.contains(weekday) {
+                    scheduleVM.scheduledWeekdays.remove(weekday)
+                    scheduleVM.markMutation(for: weekday)
+                    scheduleVM.postExternalScheduleChange(weekday: weekday)
+                }
+            }
         }
     }
 
@@ -434,11 +444,11 @@ extension SleepSessionManager {
                 }
             }
 
-            if let pendingPayloadCount, pendingPayloadCount > 0 {
-                self.setSessionState(.deliveringBacklog)
-            } else if let pipelineStateRaw, let pipelineState = AnalysisSessionState(rawValue: pipelineStateRaw) {
+            if let pipelineStateRaw, let pipelineState = AnalysisSessionState(rawValue: pipelineStateRaw) {
                 self.setSessionState(pipelineState)
-            } else if self.activeWakeTargetDate != nil || self.sessionStartDate != nil {
+            } else if let pendingPayloadCount, pendingPayloadCount > 0 {
+                self.setSessionState(.deliveringBacklog)
+            } else if self.sessionState != .scheduled && (self.activeWakeTargetDate != nil || self.sessionStartDate != nil) {
                 self.setSessionState(.recording)
             }
 

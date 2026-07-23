@@ -137,8 +137,7 @@ extension WatchSensorManager {
                 for: epoch,
                 rawStage: nil,
                 smoothedStage: nil,
-                stageTitle: "Warming \(epochHistory.count)/\(minimumEpochsForFeatures)",
-                isTestInjected: false
+                stageTitle: "Warming \(epochHistory.count)/\(minimumEpochsForFeatures)"
             )
             return
         }
@@ -148,8 +147,7 @@ extension WatchSensorManager {
                 for: epoch,
                 rawStage: nil,
                 smoothedStage: nil,
-                stageTitle: "Unavailable",
-                isTestInjected: false
+                stageTitle: "Unavailable"
             )
             return
         }
@@ -158,8 +156,7 @@ extension WatchSensorManager {
             for: prediction.epoch,
             rawStage: prediction.rawStage,
             smoothedStage: prediction.smoothedStage,
-            stageTitle: prediction.smoothedStage.title,
-            isTestInjected: prediction.isTestInjected
+            stageTitle: prediction.smoothedStage.title
         )
         updatePipelineState(.recording, detail: "Watch ML \(prediction.smoothedStage.title)")
         evaluateLocalSmartWake(for: prediction, targetDate: targetDate)
@@ -197,8 +194,7 @@ extension WatchSensorManager {
             return WatchPredictionSnapshot(
                 rawStage: rawStage,
                 smoothedStage: smoothedStage,
-                epoch: epoch,
-                isTestInjected: false
+                epoch: epoch
             )
         } catch {
             replayStatusText = "Watch ML prediction failed: \(error.localizedDescription)"
@@ -242,8 +238,7 @@ extension WatchSensorManager {
         for epoch: WatchEpochAggregate,
         rawStage: WatchSleepStage?,
         smoothedStage: WatchSleepStage?,
-        stageTitle: String,
-        isTestInjected: Bool
+        stageTitle: String
     ) {
         let diagnostic = WatchEpochDiagnostic(
             id: UUID(),
@@ -257,8 +252,7 @@ extension WatchSensorManager {
             motionJerk: epoch.motionJerk,
             rawStage: rawStage?.rawValue,
             smoothedStage: smoothedStage?.rawValue,
-            stageTitle: stageTitle,
-            isTestInjected: isTestInjected
+            stageTitle: stageTitle
         )
 
         guard let session = wcSession, session.activationState == .activated else { return }

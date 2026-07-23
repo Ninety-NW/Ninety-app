@@ -16,6 +16,11 @@ struct NinetyApp: App {
     @StateObject private var tourFrameStore = TourFrameStore()
     
     init() {
+        // Register default app language matching the user's device settings
+        UserDefaults.standard.register(defaults: [
+            "appLanguage": AppLanguage.deviceLanguage.rawValue
+        ])
+
         // Core initialization to bind WCSession & UNUserNotification delegates immediately on launch.
         let sleepManager = SleepSessionManager()
         self._sleepSessionManager = StateObject(wrappedValue: sleepManager)
